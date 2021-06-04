@@ -1,85 +1,8 @@
 <!DOCTYPE html>
 	<head >
 		<title>KO test</title>
-		<script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
-		<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script type="text/javascript" src="dateformat.js"></script>  
-	</head>
-   
+	</head?
 	<body>
-		<font size="6">
-			DateTime: <span data-bind="text: currDate"></span><br>
-			<button data-bind='click: updateDate'>updateDate</button>
-		</font>
-
-		<p>
-		<button data-bind='click: addTask'>Add</button>
-		<button data-bind='click: saveName'>saveName</button>
-		<button data-bind='click: saveJSON'>saveJSON</button>
-		<p>
-		<table id="mytable" cellpadding="0" cellspacing="1" bgcolor="#FFEAD5" style="border:1px solid #990000;">
-			<thead>
-				<tr>
-					<th><input type="button" data-bind='click: extendUnextendAll' value="..."></th>
-					<th>Task</th>
-					<th>Start Date</th>
-					<th>End Date</th>
-					<th>% Passed</th>
-					<th></th>
-					<th>Year</a></th>
-					<th>Month</th><th>Week</th><th>Day</th><th>Hour</th><th>Minute</th><th>Second</th><th id='th11'>Milliseconds</th>
-				</tr>
-			</thead>
-			<tbody data-bind="foreach: tasks">
-				<tr>
-					<td><a href='#' data-bind='click: extendToggle'>...</td>
-					<td><input type="text" data-bind="value: name, enable: extended" onfocus="this.select();" ></td>
-					<td><input type="text" data-bind="value: startDate, attr: { disabled: !extended() }" maxlength=23 size="25"></td>
-					<td><input type="text" data-bind="value: endDate, attr: { disabled: !extended() }" maxlength=23 size="25"></td>
-					<td><input type="text" data-bind="value: passedPer" onfocus="this.select();" disabled ></td>
-
-					<td>Passed</td>
-					<td><input disabled type="text" data-bind="value: passyr" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: passmth" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: passwk" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: passday" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: passhr" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: passmin" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: passsec" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: passedtime" onfocus="this.select();"></td>
-				</tr>
-				<tr data-bind="visible: extended">
-					<td><a href='#' data-bind='click: al'>U</td>
-					<td></td><td></td><td></td><td></td>
-					
-					<td>Remain</td>	
-					<td><input disabled type="text" data-bind="value: remyr" ></td>
-					<td><input disabled type="text" data-bind="value: remmth" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: remwk" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: remday" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: remhr" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: remmin" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: remsec" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: remaintime" onfocus="this.select();"></td>
-				</tr>
-
-				<tr data-bind="visible: extended">
-					<td><a href='#' data-bind='click: $root.removeTask'>D</a></td>
-					<td></td><td></td><td></td><td></td>
-					
-					<td>Total</td>
-					<td><input disabled type="text" data-bind="value: totyr" ></td>
-					<td><input disabled type="text" data-bind="value: totmth" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: totwk" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: totday" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: tothr" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: totmin" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: totsec" onfocus="this.select();"></td>
-					<td><input disabled type="text" data-bind="value: totaltime" onfocus="this.select();"></td>
-				</tr>
-			</tbody>
-		</table>
+		<a href="https://munix24.github.io/Countdown/">Countdown</a>
 	</body>
-   
-	<script src = "Countdown.js"></script>
 </html>
