@@ -11,16 +11,12 @@
 		<script type="text/javascript" src="dateformat.js"></script>  
 	</head>
 	<body>
-		<font size="6">
-			DateTime: <span data-bind="text: currDate"></span><br>
-			<button data-bind='click: updateDate'>updateDate</button>
-		</font>
-
-		<p>
-		<button data-bind='click: addTask'>Add</button>
-		<button data-bind='click: saveName'>saveName</button>
-		<button data-bind='click: saveJSON'>saveJSON</button>
-		<p>
+		<div style="text-align: center;">
+			<font size="6">
+				DateTime: <span data-bind="text: currDate"></span>
+				<button data-bind='click: updateDate'>updateDate</button>
+			</font>
+		</div>
 		<table id="mytable" cellpadding="0" cellspacing="1" bgcolor="#FFEAD5" style="border:1px solid #990000;">
 			<thead>
 				<tr>
@@ -83,6 +79,11 @@
 				</tr>
 			</tbody>
 		</table>
+		<p>
+		<button data-bind='click: addTask'>Add</button>
+		<button data-bind='click: saveName'>saveName</button>
+		<button data-bind='click: saveJSON'>saveJSON</button>
+		<p>
 	</body>
 
 	<script src = "Countdown.js"></script>
