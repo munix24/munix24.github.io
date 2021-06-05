@@ -192,7 +192,7 @@ var taskModel = function() {
 	
 	// Operations
     self.addTask = function() {
-		self.tasks.push(new Task(1, new Date(2020,0,1), new Date(2021,0,1), new Date(self.currDate())));
+			self.tasks.push(new Task(1, new Date(new Date().getFullYear(),0,1), new Date(new Date().getFullYear() + 1,0,1), new Date(self.currDate())));
 	};
 	
 	self.removeTask = function(task) {
