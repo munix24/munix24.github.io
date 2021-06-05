@@ -171,9 +171,9 @@ var taskModel = function() {
 	
 	var initialTasks = 
 	[
-		new Task(1, new Date(2020,0,1), new Date(2021,0,1), new Date(self.currDate())),
-		new Task(2, new Date(2020,0,1), new Date(2021,0,1), new Date(self.currDate())),
-		new Task(3, new Date(2020,0,1), new Date(2021,0,1), new Date(self.currDate()))
+		new Task(1, new Date(new Date().getFullYear(),0,1), new Date(new Date().getFullYear() + 1,0,1), new Date(self.currDate())),
+		new Task(2, new Date(new Date().getFullYear(),0,1), new Date(new Date().getFullYear() + 1,0,1), new Date(self.currDate())),
+		new Task(3, new Date(new Date().getFullYear(),0,1), new Date(new Date().getFullYear() + 1,0,1), new Date(self.currDate()))
 	];
 
     self.tasks = ko.observableArray(initialTasks);
