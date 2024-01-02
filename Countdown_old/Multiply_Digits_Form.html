@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+    <style>
+        body {
+            background-color:grey;
+            margin: 50% 20%;
+        }
+        td {
+            text-align: center;
+        }
+        input { 
+            text-align: center; 
+        }
+        input[type=text] { 
+            width: 18px;    
+            text-align: center; 
+        }
+        input[type=button] { 
+            width: 25px;
+            text-align: center; 
+        }
+    </style>
+	<head>
+        <title>Multiply Digits Form</title>
+		<script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+	</head>
+	<body>
+		<table cellpadding="0" cellspacing="0" bgcolor="#FFEAD5" >
+            <tr>
+                <td>
+                    <table cellpadding="0" cellspacing="1" bgcolor="#FFEAD5" >
+                        <tr data-bind="foreach: num1.num_digits">
+                            <td>
+                                <input type="button" value="+" onclick="increment(this)"><br>
+                                <input type="button" value="-" onclick="increment(this)"><br>
+                                <input type="text" data-bind="value: $data">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="vertical-align: bottom;">
+                    <input type="button" value="Rand" style="width: 47px;" data-bind="click: num1.randomize">
+                </td>
+            </tr>
+            <td>x</td>
+            <tr>
+                <td>
+                    <table cellpadding="0" cellspacing="1" bgcolor="#FFEAD5" >
+                        <tr data-bind="foreach: num2.num_digits">
+                            <td>
+                                <input type="button" value="+" onclick="increment(this)"><br>
+                                <input type="button" value="-" onclick="increment(this)"><br>
+                                <input type="text" data-bind="value: $data">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="vertical-align: bottom;">
+                    <input type="button" value="Rand" style="width: 47px;" onclick="taskM.num2.randomize()">
+                </td>
+            </tr>
+            <tr><td>=</td></tr>
+            <tr><td><input type="text" style="width: 50px;" data-bind="value: prod"></td></tr>
+        </table>
+        <p></p> 
+		<table cellpadding="0" cellspacing="0" bgcolor="#FFEAD5" data-bind="foreach: nums">
+            <tr>
+                <td>
+                    <table cellpadding="0" cellspacing="1" bgcolor="#FFEAD5" >
+                        <tr data-bind="foreach: num_digits">
+                            <td>
+                                <input type="button" value="+" onclick="increment(this)"><br>
+                                <input type="button" value="-" onclick="increment(this)"><br>
+                                <input type="text" data-bind="value: $data">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="vertical-align: bottom;">
+                    <input type="text" data-bind="value: num">
+                </td>
+                <td style="vertical-align: bottom;">
+                    <input type="button" value="Rand" style="width: 47px;" data-bind="click: randomize">
+                </td>
+            </tr>
+            <td>x</td>
+        </table>
+        <tr><td><input type="button" value="Rand" style="width: 47px;" data-bind="click: randomize"></td></tr>
+        <tr><td><input type="text" style="width: 50px;" data-bind="value: prod"></td></tr>
+    </body>
+
+    <script>
+        var taskModel = function() {
+	        var self = this;
+
+            var Num = function(length) {
+                var self = this;
+                self.num_digits = ko.observableArray();
+                self.length=length;
+
+                self.randomize = function() {
+                    num_digits_arr = [];
+
+                    if (self.length > 0){
+                        num_digits_arr.push(Math.floor((Math.random() * 9))+1) //1st rand btw 1-9
+                    }
+                    for (i = 1; i < self.length; i++) {
+                        num_digits_arr.push(Math.floor((Math.random() * 10))) //rand btw 0-9
+                    }
+                    self.num_digits(num_digits_arr);
+                };
+                self.randomize(); //on initialize, randomize digits
+
+                self.increment = function(dig) {
+                    //num_digits_arr = self.num_digits();
+                    //self.num_digits(num_digits_arr);
+                    alert(dig);
+                };
+
+                self.num = ko.computed(function(){
+                    num = 0;
+                    num_digits_arr = self.num_digits();
+                    for (i = 0; i < num_digits_arr.length; i++) {
+                        num += num_digits_arr[i]*10**(num_digits_arr.length-1-i);
+                    }
+                    return num;
+                });
+            }
+
+            self.randomize = function() {
+                alert(1);
+            };
+            
+            self.num1=new Num(3);
+            self.num2=new Num(3);
+            self.nums=ko.observableArray([self.num1,self.num2]);
+
+            //keep function after num declaration or it won't work
+            self.prod = ko.computed(function(){ 
+                return self.num1.num();// * self.num2.num();
+            });
+        }
+        var taskM = new taskModel();
+        ko.applyBindings(taskM);
+    </script>
+</html>
