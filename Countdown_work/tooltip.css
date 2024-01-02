@@ -1,0 +1,27 @@
+.tip {
+
+/*KEEP THE FOLLOWING 3 TO WORK*/
+
+	position:absolute; z-index:100;
+	visibility:hidden; 
+
+/*Problem with Stacking Order relating to some form fields so you should try to avoid placing links that use these tooltips near to form fields, particularly drop down selection lists. */
+
+font-family: Calibri, Tahoma, Geneva, sans-serif; 
+background: #9FDAEE; border: 4px solid #2BB0D7; 
+padding: 5px 5px;
+border-radius: 05px 25px 25px 25px; 
+box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.1); 
+
+/* DEFAULT
+font:10px/14px Arial,Helvetica,sans-serif; border:solid 1px #666666; 
+width:270px; padding:1px;
+color:#333333; top:20px;
+left:90px; background-color:#ffffcc;
+layer-background-color:#ffffcc;
+*/
+
+// works by creating an element on your page with .tip class asigned to make it hidden (format however you like). Then on mouseout/in event activate "popup" function in tooltip.js to show. EZPZ
+
+}
+                  
