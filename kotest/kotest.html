@@ -1,0 +1,51 @@
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.2/knockout-min.js"></script> -->
+<script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+
+<div id="tableContainer">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <!-- Use knockout binding to generate table headers -->
+                <!-- Assume champions and results are properties of the view model -->
+                <!-- Loop through champion names -->
+                <!-- Loop through result rows -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through each champion -->
+            <tr>
+                <!-- Display champion name -->
+                <!-- Loop through results for this champion -->
+                <!-- Display result -->
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Define the Knockout view model
+    function TableViewModel() {
+        var self = this;
+
+        // Define properties for champion names and fight results
+        self.champions = ko.observableArray([]);
+        self.results = ko.observableArray([]);
+
+        // Populate the champion names and fight results (assuming they are provided)
+        // For demonstration purposes, I'll assume you have a function to get these values
+        // Replace it with your actual implementation
+        function getChampionNamesAndResults() {
+            // Assuming you have these functions to get champion names and results
+            // Replace them with your actual implementation
+            self.champions([...]); // Populate with champion names
+            self.results([...]); // Populate with fight results
+        }
+
+        // Call the function to populate champion names and results
+        getChampionNamesAndResults();
+    }
+
+    // Apply Knockout bindings
+    ko.applyBindings(new TableViewModel(), document.getElementById('tableContainer'));
+</script>
