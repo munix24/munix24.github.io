@@ -16,39 +16,18 @@
 
         .container {
             display: flex;
-            width: 95%;
+            width: 100%;
+            align-content: center;
         }
 
         .column {
+            min-width: 280px;
             flex: 1;
-            margin: 0 10px;
-            text-align: left;
+            margin: 0px 0px 20px;
+            text-align: center;
             justify-content: center;
             display: flex;
             flex-direction: column;
-        }
-
-        .fight {
-            text-align: center;
-            flex: 3;
-            border: 1px solid black;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .fight-top, .fight-bottom {
-            overflow: auto;
-        }
-
-        .fight-top {
-            flex: 5;
-            width: 100vh;
-            border-bottom: 1px solid black;
-        }
-
-        .fight-bottom {
-            flex: 1;
         }
 
         .column-top {
@@ -59,14 +38,78 @@
         }
 
         .column-bottom {
+            text-align: center;
             display: flex;
             flex-direction: column;
+            flex: 1;
+        }
+
+        .fight {
+            text-align: center;
+            flex: 3;
+            border: 1px solid black;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 50%;                 /* doesn't matter what size is set to it just works */
+        }
+
+        .fight-top, .fight-bottom {
+            overflow: auto;
+        }
+
+        .fight-top {
+            flex: 5;
+            border-bottom: 1px solid black;
+        }
+
+        .fight-bottom {
             flex: 1;
         }
 
         h1 {margin-top: 0; margin-bottom: 0;}
         h2 {margin-top: 0; margin-bottom: 0;}
         h3 {margin-top: 0; margin-bottom: 0;}
+
+        .clickable {
+            cursor: default;
+            color: blue;
+        }
+
+        table {
+            text-align: center;
+            border-spacing: 0;
+            table-layout: fixed;
+            width: 100%; /* Set the table width to fill its container */
+        }
+
+        thead th {
+            width: 50px; 
+            position: sticky;
+            top: 0; /* Stick to the top */
+            background-color: white; /* set to table bg color or it will overlap with data when scrolling */
+        }
+
+        tbody th {
+            text-align: left;
+            /* outline: 1px solid #ccc;
+            outline-offset: -1px; */
+            width: 75px; /* a little longer on the side*/
+            position: sticky;
+            left: 0;
+            background-color: white; /* set to table bg color or it will overlap with data when scrolling */
+        }
+
+        th {
+            max-width: 60px; 
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncate text with an ellipsis */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        tr {
+            line-height: 1;
+        }
     </style>
 </head>
 
@@ -91,7 +134,7 @@
         </div>
 
         <div class="fight">
-            <div class="fight-top"  id="fightSimulation"></div>
+            <div class="fight-top" id="fightSimulation"></div>
             <div class="fight-bottom" id="fightActions"></div>
         </div>
 
@@ -157,11 +200,13 @@
             championStatsDiv.innerHTML = `
                 <h2>${champion.name}</h2>
                 <table>
-                    <tr>
-                        <th></th>
-                        <th>Stat</th>
-                        <th>Per Lvl</th>
-                    </tr>        
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Stat</th>
+                            <th>Per Lvl</th>
+                        </tr>  
+                    </thead>      
                     <tr>
                         <td><strong>HP</strong></td>
                         <td>${champion.stats.hp != 0 ? champion.stats.hp : ''}</td>
@@ -183,7 +228,7 @@
                         <td>${champion.stats.armorperlevel != 0 ? champion.stats.armorperlevel : ''}</td>
                     </tr>
                     <tr>
-                        <td><strong>Spell Block</strong></td>
+                        <td><strong>Magic Resist</strong></td>
                         <td>${champion.stats.spellblock != 0 ? champion.stats.spellblock : ''}</td>
                         <td>${champion.stats.spellblockperlevel != 0 ? champion.stats.spellblockperlevel : ''}</td>
                     </tr>
@@ -208,12 +253,12 @@
                         <td>${champion.stats.critperlevel != 0 ? champion.stats.critperlevel : ''}</td>
                     </tr>
                     <tr>
-                        <td><strong>Attack Damage</strong></td>
+                        <td><strong>Atk Damage</strong></td>
                         <td>${champion.stats.attackdamage != 0 ? champion.stats.attackdamage : ''}</td>
                         <td>${champion.stats.attackdamageperlevel != 0 ? champion.stats.attackdamageperlevel : ''}</td>
                     </tr>
                     <tr>
-                        <td><strong>Attack Speed</strong></td>
+                        <td><strong>Atk Speed</strong></td>
                         <td>${champion.stats.attackspeed != 0 ? champion.stats.attackspeed : ''}</td>
                         <td>${champion.stats.attackspeedperlevel != 0 ? champion.stats.attackspeedperlevel : ''}</td>
                     </tr>
@@ -287,32 +332,37 @@
             });
         }
 
+        async function selectedChampionFight(champion1, champion2){
+            document.getElementById('champion1').value = champion1;
+            document.getElementById('champion2').value = champion2;
+            displayStatsAndFight();
+        }
+
         // Function to populate the dropdowns with champions
         async function populateAllChampionsSimulateFight() {
             // Get the list of champions
             const champions = Object.keys(window.json.data);
 
             // Generate the table header with champion names
-            let tableHTML = `<h1>Fight Simulation Table</h1><table><tr><th></th>${champions.map(champion => `<th>${champion}</th>`).join('')}</tr>`;
-
-            console.log(tableHTML);
+            let tableHTML = `<table><thead><tr><th></th>${champions.map(champion => `<th>${champion}</th>`).join('')}</tr></thead><tbody>`;
 
             // Simulate fights and fill in the table
             for (const champion1 of champions) {
                 tableHTML += `<tr><th>${champion1}</th>`;
                 for (const champion2 of champions) {
-                    const champ1 = new Champ(champion1, 1);
-                    const champ2 = new Champ(champion2, 1);
-                    // console.log(champ1);
-                    // console.log(champ2);
-                    const { winner, remainingHp } = await simulateFight(champ1, champ2);
-                    // console.log(winner);
-                    tableHTML += `<td>${winner.name}</td>`;
+                    if (champion1 == champion2){
+                        tableHTML += `<td>-</td>`;
+                    } else {
+                        const champ1 = new Champ(champion1, 1);
+                        const champ2 = new Champ(champion2, 1);
+                        const { winner, remainingHp } = await simulateFight(champ1, champ2);
+                        tableHTML += `<td class="clickable" onclick="selectedChampionFight('${champion1}', '${champion2}')">${winner.name == champion1 ? 1 : 0}</td>`;
+                    }
                 }
                 tableHTML += `</tr>`;
             }
 
-            tableHTML += `</table>`;
+            tableHTML += `</tbody></table>`;
 
             // Append the table to the fightSimulationDiv
             const fightSimulationDiv = document.getElementById('fightSimulation')
