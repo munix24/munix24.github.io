@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,67 +13,104 @@
             margin: 0;
             padding: 0;
         }
+
         .container {
-            text-align: center;
             display: flex;
-            justify-content: space-between;
-            width: 95%; 
+            width: 95%;
         }
+
         .column {
             flex: 1;
             margin: 0 10px;
             text-align: left;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
         }
+
         .fight {
+            text-align: center;
             flex: 3;
             border: 1px solid black;
             padding: 10px;
             display: flex;
             flex-direction: column;
         }
+
         .fight-top, .fight-bottom {
-            flex: 1;
-            overflow-y: auto;
+            overflow: auto;
         }
+
         .fight-top {
+            flex: 5;
+            width: 100vh;
             border-bottom: 1px solid black;
-            height: 75%; 
         }
+
         .fight-bottom {
-            border-bottom: 1px solid black;
-            height: 25%; 
+            flex: 1;
         }
+
+        .column-top {
+            text-align: center;
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-bottom {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        h1 {margin-top: 0; margin-bottom: 0;}
+        h2 {margin-top: 0; margin-bottom: 0;}
+        h3 {margin-top: 0; margin-bottom: 0;}
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="column" style="text-align: left;">
-            <h1>Champion 1</h1>
+            <div class="column-top">
+                <p><h1>Champion 1</h1></p>
 
-            <label for="champion1">Select Champion:</label>
-            <select id="champion1">
-                <!-- Champions will be populated dynamically with JavaScript -->
-            </select>
+                <div>
+                    <label for="champion1">Select Champion:</label>
+                    <select id="champion1">
+                        <!-- Champions will be populated dynamically with JavaScript -->
+                    </select>
+                    <label for="levelSelect1">Lvl:</label>
+                    <select id="levelSelect1">
+                    </select>
+                </div>
+            </div>
 
-            <div id="championStats1"></div>
+            <div id="championStats1" class="column-bottom"></div>
         </div>
 
         <div class="fight">
-            <div class="fight-top">
-                <h1>Fight Simulation</h1>
-            </div>
+            <div class="fight-top"  id="fightSimulation"></div>
             <div class="fight-bottom" id="fightActions"></div>
         </div>
 
-        <div class="column" style="text-align: right;">
-            <h1>Champion 2</h1>
+        <div class="column">
+            <div class="column-top">
+                <p><h1>Champion 2</h1></p>
 
-            <label for="champion2">Select Champion:</label>
-            <select id="champion2">
-                <!-- Champions will be populated dynamically with JavaScript -->
-            </select>
+                <div>
+                    <label for="champion2">Select Champion:</label>
+                    <select id="champion2">
+                        <!-- Champions will be populated dynamically with JavaScript -->
+                    </select>
+                    <label for="levelSelect2">Lvl:</label>
+                    <select id="levelSelect2">
+                    </select>
+                </div>
+            </div>
 
-            <div id="championStats2"></div>
+            <div id="championStats2" class="column-bottom"></div>
         </div>
     </div>
 
@@ -95,81 +133,195 @@
                 champion2Select.appendChild(option2);
             }
 
+            // Populate the level select box
+            const levelSelect1 = document.getElementById('levelSelect1');
+            const levelSelect2 = document.getElementById('levelSelect2');
+            for (let level = 1; level <= 18; level++) {
+                const option1 = document.createElement('option');
+                option1.value = level;
+                option1.textContent = level;
+                const option2 = option1.cloneNode(true);
+                levelSelect1.appendChild(option1);
+                levelSelect2.appendChild(option2);
+            }
+
             // Add event listeners to both selects to display stats and simulate fight
             champion1Select.addEventListener('change', displayStatsAndFight);
             champion2Select.addEventListener('change', displayStatsAndFight);
+
+            displayStatsAndFight();
+        }
+
+        // Function to display the stats of selected champions
+        async function displayStats(championStatsDiv, champion) {
+            championStatsDiv.innerHTML = `
+                <h2>${champion.name}</h2>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Stat</th>
+                        <th>Per Lvl</th>
+                    </tr>        
+                    <tr>
+                        <td><strong>HP</strong></td>
+                        <td>${champion.stats.hp != 0 ? champion.stats.hp : ''}</td>
+                        <td>${champion.stats.hpperlevel != 0 ? champion.stats.hpperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MP</strong></td>
+                        <td>${champion.stats.mp != 0 ? champion.stats.mp : ''}</td>
+                        <td>${champion.stats.mpperlevel != 0 ? champion.stats.mpperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Move Speed</strong></td>
+                        <td>${champion.stats.movespeed != 0 ? champion.stats.movespeed : ''}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Armor</strong></td>
+                        <td>${champion.stats.armor != 0 ? champion.stats.armor : ''}</td>
+                        <td>${champion.stats.armorperlevel != 0 ? champion.stats.armorperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Spell Block</strong></td>
+                        <td>${champion.stats.spellblock != 0 ? champion.stats.spellblock : ''}</td>
+                        <td>${champion.stats.spellblockperlevel != 0 ? champion.stats.spellblockperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attack Range</strong></td>
+                        <td>${champion.stats.attackrange != 0 ? champion.stats.attackrange : ''}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>HP Regen</strong></td>
+                        <td>${champion.stats.hpregen != 0 ? champion.stats.hpregen : ''}</td>
+                        <td>${champion.stats.hpregenperlevel != 0 ? champion.stats.hpregenperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MP Regen</strong></td>
+                        <td>${champion.stats.mpregen != 0 ? champion.stats.mpregen : ''}</td>
+                        <td>${champion.stats.mpregenperlevel != 0 ? champion.stats.mpregenperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Crit</strong></td>
+                        <td>${champion.stats.crit != 0 ? champion.stats.crit : ''}</td>
+                        <td>${champion.stats.critperlevel != 0 ? champion.stats.critperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attack Damage</strong></td>
+                        <td>${champion.stats.attackdamage != 0 ? champion.stats.attackdamage : ''}</td>
+                        <td>${champion.stats.attackdamageperlevel != 0 ? champion.stats.attackdamageperlevel : ''}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attack Speed</strong></td>
+                        <td>${champion.stats.attackspeed != 0 ? champion.stats.attackspeed : ''}</td>
+                        <td>${champion.stats.attackspeedperlevel != 0 ? champion.stats.attackspeedperlevel : ''}</td>
+                    </tr>
+                </table>
+            `;
+                    // ${Object.entries(champion.stats).map(([stat, value]) => `
+                    //         ${!stat.includes('perlevel') && !stat.includes('attackspeed')  ? `<tr><td><b>${stat}</b></td><td>${value !== 0 ? value : ''}</td>` : ''}
+                    //         ${stat.includes('perlevel') && !stat.includes('attackspeed')  ? `<td>${value !== 0 ? value : ''}</td>` : ''}
+                    // `).join('')}
+                    // <tr><td><b>attackspeed</b></td><td>${champion.stats.attackspeed}</td><td>${champion.stats.attackspeedperlevel}</td>
         }
 
         // Function to display the stats of selected champions and simulate fight
         async function displayStatsAndFight() {
             const champion1Name = document.getElementById('champion1').value;
             const champion2Name = document.getElementById('champion2').value;
-            const level = 1; // You can modify this to set the level dynamically if needed
+            const champion1level = document.getElementById('levelSelect1').value; 
+            const champion2level = document.getElementById('levelSelect2').value; 
 
-            const champion1 = new Champ(champion1Name, level);
-            const champion2 = new Champ(champion2Name, level);
+            const champion1 = new Champ(champion1Name, champion1level);
+            const champion2 = new Champ(champion2Name, champion2level);
 
-            // Display champion stats
-            const championStatsDiv1 = document.getElementById('championStats1');
-            championStatsDiv1.innerHTML = `
-                <h2>${champion1Name} stats:</h2>
-                <pre>${JSON.stringify(champion1.stats, null, 2)}</pre>
-            `;
-
-            const championStatsDiv2 = document.getElementById('championStats2');
-            championStatsDiv2.innerHTML = `
-                <h2>${champion2Name} stats:</h2>
-                <pre>${JSON.stringify(champion2.stats, null, 2)}</pre>
-            `;
+            displayStats(document.getElementById('championStats1'), champion1)
+            displayStats(document.getElementById('championStats2'), champion2)
 
             // Simulate fight
             const fightActionsDiv = document.getElementById('fightActions');
             fightActionsDiv.innerHTML = ''; // Clear previous fight actions
 
             const { winner, remainingHp } = await simulateFight(champion1, champion2, fightActionsDiv, true);
-			fightActionsDiv.innerHTML += `<p>${winner.name} wins with ${remainingHp.toFixed(2)} HP remaining!</p>`;
+            fightActionsDiv.innerHTML += `<h3>${winner.name} wins with ${remainingHp} HP remaining!</h3>`;
+
+            // Scroll to the bottom of the container
+            fightActionsDiv.scrollTop = fightActionsDiv.scrollHeight;
         }
 
-		// Function to simulate the fight between two champions
-		async function simulateFight(champion1, champion2, fightActionsDiv, instant = true) {
-			return new Promise(resolve => {
-				const attackQueue = [{ time: 0, attacker: champion1, attacked: champion2 }, { time: 0, attacker: champion2, attacked: champion1 }];
-				attackQueue.sort((a, b) => a.time - b.time);
+        // Function to simulate the fight between two champions
+        async function simulateFight(champion1, champion2, fightActionsDiv, instant = true) {
+            return new Promise(resolve => {
+                const attackQueue = [{ time: 0, attacker: champion1, attacked: champion2 }, { time: 0, attacker: champion2, attacked: champion1 }];
+                attackQueue.sort((a, b) => a.time - b.time);
 
-				if (instant) {
-					while (attackQueue.length && !champion1.isDefeated() && !champion2.isDefeated()) {
-						const { time, attacker, attacked } = attackQueue.shift();
-						attacker.attack(attacked);
-						fightActionsDiv.innerHTML += `<p>${time.toFixed(2)}s: ${attacked.name} took ${attacker.attackdamage} damage. ${attacked.name}'s HP: ${attacked.hp}</p>`;
-						attackQueue.push({ time: attacker.attack_cd, attacker, attacked });
-						attackQueue.sort((a, b) => a.time - b.time);
-					}
-					resolve({
-						winner: champion1.isDefeated() ? champion2 : champion1,
-						remainingHp: champion1.isDefeated() ? champion2.hp : champion1.hp
-					});
-				} else {
-					const interval = setInterval(() => {
-						if (!attackQueue.length || champion1.isDefeated() || champion2.isDefeated()) {
-							clearInterval(interval);
-							resolve({
-								winner: champion1.isDefeated() ? champion2 : champion1,
-								remainingHp: champion1.isDefeated() ? champion2.hp : champion1.hp
-							});
-						} else {
-							const { time, attacker, attacked } = attackQueue.shift();
-							attacker.attack(attacked);
-							fightActionsDiv.innerHTML += `<p>${time.toFixed(2)}s: ${attacked.name} took ${attacker.attackdamage} damage. ${attacked.name}'s HP: ${attacked.hp}</p>`;
-							attackQueue.push({ time: attacker.attack_cd, attacker, attacked });
-							attackQueue.sort((a, b) => a.time - b.time);
-						}
-					}, 1000);
-				}
-			});
-		}
+                if (instant) {
+                    while (attackQueue.length && !champion1.isDefeated() && !champion2.isDefeated()) {
+                        const { time, attacker, attacked } = attackQueue.shift();
+                        attacker.attack(attacked);
+                        if (fightActionsDiv) 
+                            fightActionsDiv.innerHTML += `${time.toFixed(2)}s: ${attacked.name} took ${attacker.attackdamage} damage. ${attacked.name}'s HP: ${attacked.hp}<br>`;
+                        
+                        attackQueue.push({ time: attacker.attack_cd, attacker, attacked });
+                        attackQueue.sort((a, b) => a.time - b.time);
+                    }
+                } else {
+                    const interval = setInterval(() => {
+                        if (!attackQueue.length || champion1.isDefeated() || champion2.isDefeated()) {
+                            clearInterval(interval);
+                        } else {
+                            const { time, attacker, attacked } = attackQueue.shift();
+                            attacker.attack(attacked);
+                            if (fightActionsDiv) 
+                                fightActionsDiv.innerHTML += `${time.toFixed(2)}s: ${attacked.name} took ${attacker.attackdamage} damage. ${attacked.name}'s HP: ${attacked.hp}<br>`;
+                            attackQueue.push({ time: attacker.attack_cd, attacker, attacked });
+                            attackQueue.sort((a, b) => a.time - b.time);
+                        }
+                    }, 1000);
+                }
+
+                winner=champion1.isDefeated() ? champion2 : champion1,
+                remainingHp=champion1.isDefeated() ? champion2.hp : champion1.hp
+                resolve({winner,remainingHp});
+            });
+        }
+
+        // Function to populate the dropdowns with champions
+        async function populateAllChampionsSimulateFight() {
+            // Get the list of champions
+            const champions = Object.keys(window.json.data);
+
+            // Generate the table header with champion names
+            let tableHTML = `<h1>Fight Simulation Table</h1><table><tr><th></th>${champions.map(champion => `<th>${champion}</th>`).join('')}</tr>`;
+
+            console.log(tableHTML);
+
+            // Simulate fights and fill in the table
+            for (const champion1 of champions) {
+                tableHTML += `<tr><th>${champion1}</th>`;
+                for (const champion2 of champions) {
+                    const champ1 = new Champ(champion1, 1);
+                    const champ2 = new Champ(champion2, 1);
+                    // console.log(champ1);
+                    // console.log(champ2);
+                    const { winner, remainingHp } = await simulateFight(champ1, champ2);
+                    // console.log(winner);
+                    tableHTML += `<td>${winner.name}</td>`;
+                }
+                tableHTML += `</tr>`;
+            }
+
+            tableHTML += `</table>`;
+
+            // Append the table to the fightSimulationDiv
+            const fightSimulationDiv = document.getElementById('fightSimulation')
+            fightSimulationDiv.innerHTML = tableHTML;
+        }
 
         // Populate the dropdowns and simulate the fight when the page loads
-        window.onload = populateChampions;
+        populateChampions();
+        populateAllChampionsSimulateFight();
     </script>
 </body>
 </html>
