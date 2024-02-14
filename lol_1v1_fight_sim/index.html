@@ -12,6 +12,11 @@
             height: 100vh;
             margin: 0;
             padding: 0;
+            /* background-image: url('https://github.com/InFinity54/LoL_DDragon/blob/master/extras/loadingscreen/basictutorial_loadingscreen.png');   3rd prty cookie*/
+            /* background-image: url('https://raw.communitydragon.org/14.3/game/assets/characters/aatrox/skins/skin01/aatroxloadscreen_1.png');  */
+            /* background-image: url('tutorialfirstmodule_loadingscreen.png'); */
+            background-size: cover; /* Adjust background size as needed */
+            background-position: center; /* Center the background image */
         }
 
         .container {
@@ -35,6 +40,10 @@
             flex: 3;
             display: flex;
             flex-direction: column;
+        }
+
+        .column-mid {
+            height: 100%;
         }
 
         .column-bottom {
@@ -127,9 +136,11 @@
                     <label for="levelSelect1">Lvl:</label>
                     <select id="levelSelect1">
                     </select>
+                    <p>
                 </div>
             </div>
 
+            <div id="championSplash1" class="column-mid"></div>
             <div id="championStats1" class="column-bottom"></div>
         </div>
 
@@ -150,9 +161,11 @@
                     <label for="levelSelect2">Lvl:</label>
                     <select id="levelSelect2">
                     </select>
+                    <p>
                 </div>
             </div>
 
+            <div id="championSplash2" class="column-mid"></div>
             <div id="championStats2" class="column-bottom"></div>
         </div>
     </div>
@@ -281,9 +294,17 @@
             const champion1 = new Champ(champion1Name, champion1level);
             const champion2 = new Champ(champion2Name, champion2level);
 
-            displayStats(document.getElementById('championStats1'), champion1)
-            displayStats(document.getElementById('championStats2'), champion2)
+            displayStats(document.getElementById('championStats1'), champion1);
+            displayStats(document.getElementById('championStats2'), champion2);
 
+            cc_url='https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/';
+            // cc_url='https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/aatrox/skins/base/';
+            cc_url1=`${cc_url}${champion1Name.toLowerCase()}/skins/base/${champion1Name.toLowerCase()}loadscreen.jpg`;
+            cc_url2=`${cc_url}${champion2Name.toLowerCase()}/skins/base/${champion2Name.toLowerCase()}loadscreen.jpg`;
+            // console.log(cc_url1);
+            document.getElementById('championSplash1').style.backgroundImage = `url(${cc_url1})`;
+            document.getElementById('championSplash2').style.backgroundImage = `url(${cc_url2})`;
+            
             // Simulate fight
             const fightActionsDiv = document.getElementById('fightActions');
             fightActionsDiv.innerHTML = ''; // Clear previous fight actions
@@ -372,6 +393,7 @@
         // Populate the dropdowns and simulate the fight when the page loads
         populateChampions();
         populateAllChampionsSimulateFight();
+        // document.body.style.backgroundImage = "url('')";
     </script>
 </body>
 </html>
