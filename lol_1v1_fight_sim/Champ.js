@@ -13,15 +13,17 @@ class Champ {
         this.attackspeed = this.calculateStatAtLevel(this.stats["attackspeed"], this.stats["attackspeedperlevel"]);
 
         this.attack_cd = 0;  // Initialize attack cooldown to 0
+
+        this.vsChampions = [];  //array to hold win/lose result of simFight vs all other champions
     }
 
     getChampStats(name) {
-		if (window.json === undefined) {	//check if global json data was brought in
+		if (window.championsData === undefined) {	//check if global json data was brought in
 			throw new Error('Could not find champion json data');
 		} else {
-			if (json['data'].hasOwnProperty(name))
+			if (window.championsData['data'].hasOwnProperty(name))
 			{
-				return json['data'][name].stats;
+				return window.championsData['data'][name].stats;
 			} else {
 				throw new Error('Could not find champion name in json data');
 			}

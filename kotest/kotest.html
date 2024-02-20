@@ -45,6 +45,25 @@
         // Call the function to populate champion names and results
         getChampionNamesAndResults();
     }
+	
+	class Champ {
+		constructor(name, level) {
+			this.name = name;
+			this.level = level;
+		}
+	}
+	
+	var championModel = function() {
+		var self = this;
+		
+		var vsChampion = 
+		[
+			new Champ('Aatrox', 1),
+			new Champ('Ahri', 1)
+		];
+
+		self.tasks = ko.observableArray(initialTasks);
+	}
 
     // Apply Knockout bindings
     ko.applyBindings(new TableViewModel(), document.getElementById('tableContainer'));
