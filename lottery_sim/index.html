@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kentucky Lottery Ticket Simulator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+    }
+
+    #buttonsTable {
+      width: 50%;
+    }
+
+    #buttonsTable td {
+      vertical-align: bottom;
+      border: 1px solid #fff;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    th,
+    td {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      width: 180px;
+      /* Set fixed width for columns */
+      height: 20px;
+      /* Set fixed height for rows */
+    }
+
+    th {
+      background-color: #555;
+      color: #fff;
+    }
+
+    #matchCounts th,
+    #matchCounts td {
+      border: 1px solid #fff;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .explanation {
+      text-align: left;
+      width: 70%;
+      margin: 0 auto;
+    }
+
+    #congratulations {
+      height: 200px;
+      overflow: auto;
+    }
+
+    #progress {
+      color: #fff;
+      margin-top: 20px;
+    }
+
+    #printLastTicket {
+      color: #fff;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Kentucky Lottery Ticket Simulator</h1>
+  <div class="explanation">
+    <p>Welcome to the Kentucky Lottery Ticket Simulator!</p>
+    <p>This tool allows you to simulate lottery tickets and counts how many matches there are with the winning lottery
+      numbers.</p>
+    <p>Here's how it works:</p>
+    <ol>
+      <li>Enter the number of tickets you want to simulate in the input field and click the "Simulate" button to run the
+        simulation for a fixed number of tickets.
+        <br>
+        OR Click the "Simulate Until Win" button to continuously simulate tickets until a ticket with all 6 matches is
+        created.
+      </li>
+      <li>The table below will display the counts of tickets and the number of matches with the winning lottery numbers.
+      </li>
+      <li>You can click the "Reset" button to reset all tickets, generate new winning numbers, and start fresh.</li>
+    </ol>
+    <p>Each ticket contains 6 numbers, each ranging from 1 to 49. A winning ticket is one that matches all 6 winning
+      numbers the probability of which is approximately 1 in 13,983,816.</p>
+    <p>Have fun simulating your own lottery draws!</p>
+  </div>
+  <p>Simulated Winning Numbers:</p>
+  <div id="winningNumbers"></div>
+  <table id="buttonsTable">
+    <tr>
+      <td>
+        <p>Enter the number of tickets you want to simulate:</p>
+        <input type="number" id="numTickets">
+        <p></p>
+        <button onclick="simulateLottery(false)">Simulate</button>
+        <br>
+        <input type="checkbox" id="printLastTicket">
+        <label for="printLastTicket">Print Last Ticket</label>
+      </td>
+      <td>
+        <button onclick="simulateLottery(true)">Simulate Until Win</button>
+      </td>
+      <td>
+        <button onclick="resetSimulation()">Reset</button>
+      </td>
+    </tr>
+  </table>
+  <p>Total Tickets Simulated: <span id="totalTickets">0</span></p>
+  <table id="matchCounts">
+    <thead>
+      <tr>
+        <th style="width: 260px;">Numbers Matched</th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Number of Tickets</td>
+        <td id="count0">0</td>
+        <td id="count1">0</td>
+        <td id="count2">0</td>
+        <td id="count3">0</td>
+        <td id="count4">0</td>
+        <td id="count5">0</td>
+        <td id="count6">0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div id="progress" style="display: none;">Simulating...</div>
+  <div id="congratulations"></div>
+
+  <script>
+    // Initialize match counts
+    var matchCounts = [0, 0, 0, 0, 0, 0, 0];
+    var totalTickets = 0;
+    var winningNumbers = generateTicket(); // Generate winning numbers once
+    document.getElementById('winningNumbers').textContent = winningNumbers.join(', '); // Display winning numbers
+
+    function hideProgress(hide) {
+      document.getElementById('progress').hidden = hide;
+    }
+
+    function showProgress(show) {
+      if (show) {
+        document.body.style.cursor = "wait"; // Change cursor to loading spinner
+        document.getElementById('progress').hidden = show;
+        document.getElementById('progress').style.display = "none";
+        document.getElementById('progress').offsetHeight; // force reflow
+        document.getElementById('progress').style.display = "block";
+        document.getElementById('progress').hidden = show;
+      } else {
+        document.body.style.cursor = "auto"; // Revert cursor to default
+        document.getElementById('progress').hidden = show;
+        document.getElementById('progress').style.display = "none";
+        document.getElementById('progress').offsetHeight; // force reflow
+        document.getElementById('progress').hidden = show;
+      }
+    }
+
+    function simulateLottery(untilWin) {
+      if (untilWin) {
+        showProgress(true);
+        setTimeout(function() { // workaround to force DOM update/reflow
+          var currentWinners = matchCounts[6]; // Store the initial number of winning tickets
+          while (matchCounts[6] == currentWinners) { // loop until another winner is found
+            simulateTicket(false);
+          }
+          showProgress(false);
+          displayMatchCounts();
+          displayTotalTickets();
+        }, 0);
+      } else {
+        showProgress(true);
+        setTimeout(function() { // workaround to force DOM update/reflow
+          var numTickets = parseInt(document.getElementById('numTickets').value);
+          for (var i = 0; i < numTickets - 1; i++) {
+            simulateTicket(false);
+          }
+          simulateTicket(document.getElementById('printLastTicket').checked);
+          showProgress(false);
+          displayMatchCounts();
+          displayTotalTickets();
+        }, 0);
+      }
+    }
+
+    function simulateTicket(printLastTicket = false) {
+      var ticketNumbers = generateTicket();
+      var matchedNumbers = checkMatch(ticketNumbers);
+
+      // Increment the corresponding match count
+      matchCounts[matchedNumbers]++;
+      totalTickets++;
+
+      // Check if all numbers matched
+      if (matchedNumbers === 6) {
+        // Print congratulations and ticket details
+        document.getElementById('congratulations').innerHTML += '<p>Congratulations! Ticket ' + totalTickets.toLocaleString() + ' matched all 6 numbers: ' + ticketNumbers.join(', ') + '</p>';
+      }
+
+      if (printLastTicket) {
+        document.getElementById('congratulations').innerHTML += '<p>Ticket ' + totalTickets.toLocaleString() + ` matched ${matchedNumbers} numbers: ` + ticketNumbers.join(', ') + '</p>';
+      }
+    }
+
+    function generateTicket() {
+      var ticketNumbers = [];
+      while (ticketNumbers.length < 6) {
+        var randomNum = Math.floor(Math.random() * 49) + 1;
+        if (!ticketNumbers.includes(randomNum)) {
+          ticketNumbers.push(randomNum);
+        }
+      }
+      return ticketNumbers;
+    }
+
+    function checkMatch(ticketNumbers) {
+      var matchedNumbers = 0;
+      for (var j = 0; j < 6; j++) {
+        if (winningNumbers.includes(ticketNumbers[j])) {
+          matchedNumbers++;
+        }
+      }
+      return matchedNumbers;
+    }
+
+    function displayMatchCounts() {
+      for (var i = 0; i < matchCounts.length; i++) {
+        document.getElementById('count' + i).textContent = matchCounts[i].toLocaleString();
+      }
+    }
+
+    function displayTotalTickets() {
+      document.getElementById('totalTickets').textContent = totalTickets.toLocaleString();
+    }
+
+    function clearTable() {
+      matchCounts = [0, 0, 0, 0, 0, 0, 0];
+      totalTickets = 0;
+      document.getElementById('congratulations').innerHTML = ''; // Clear congratulations messages
+      displayMatchCounts();
+      displayTotalTickets();
+    }
+
+    function resetSimulation() {
+      clearTable();
+      winningNumbers = generateTicket(); // Generate new winning numbers
+      document.getElementById('winningNumbers').textContent = winningNumbers.join(', '); // Display new winning numbers
+    }
+  </script>
+</body>
+
+</html>
