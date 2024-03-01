@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coin Flip Simulator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #222;
+    color: #fff;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+  }
+  .results-container {
+    max-width: 80%;
+    overflow: auto; /* Use auto for scrollbar */
+    white-space: nowrap;
+    height: 40px; /* Fixed height */
+  }
+  .result {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    line-height: 30px;
+    font-size: 14px;
+    margin-right: 5px;
+    display: inline-block; /* Display results horizontally */
+  }
+  table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+  }
+  th, td {
+    border: 1px solid #fff;
+    padding: 8px;
+  }
+  th {
+    background-color: #444;
+  }
+  td {
+    background-color: #333;
+  }
+  #coin {
+    width: 100px;
+    height: 100px;
+    margin: 50px auto;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    line-height: 100px;
+    font-size: 24px;
+    background-color: #333;
+  }
+  button {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  button:hover {
+    background-color: #555;
+  }
+</style>
+</head>
+<body>
+
+<h1>Coin Flip Simulator</h1>
+<div class="container">
+  <button onclick="flipCoin()">Flip Coin</button>
+  <div id="coin" class="result">?</div>
+  <div id="results" class="results-container"></div>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Result</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody id="resultsTableBody"></tbody>
+</table>
+<table>
+  <thead>
+    <tr>
+      <th>Streak</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody id="streaksTableBody"></tbody>
+</table>
+
+<script>
+  let flipCounter = {'Heads': 0, 'Tails': 0, 'Total': 0};
+  let streak = 0;
+  let streakCounter = {};
+  let lastResult;
+  const maxResults = 20;
+
+  function flipCoin() {
+    const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
+    document.getElementById('coin').textContent = result;
+    displayResult(result);
+    updateFlipCounter(result);
+    updateStreaks(result);
+  }
+  
+  function displayResult(result) {
+    const resultsDiv = document.getElementById('results');
+    const resultDiv = document.createElement('div');
+    resultDiv.textContent = result[0];
+    resultDiv.className = 'result';
+    if (resultsDiv.childElementCount >= maxResults) {
+      resultsDiv.removeChild(resultsDiv.firstChild);
+    }
+    resultsDiv.appendChild(resultDiv);
+  }
+  
+  function updateFlipCounter(result) {
+    flipCounter[result]++;
+    flipCounter['Total']++;
+    updateTable('resultsTableBody', flipCounter);
+  }
+
+  function updateStreaks(result) {
+    if (result === lastResult){
+      streak++;
+      if (streakCounter[streak]){
+        streakCounter[streak]++;
+      } else {
+        streakCounter[streak] = 1;  // if not in initial object then initialize
+      }
+      streakCounter[streak-1]--;
+    } else{
+      streak = 1;
+      if (streakCounter[streak]){
+        streakCounter[streak]++;
+      } else {
+        streakCounter[streak] = 1;  // if not in initial object then initialize
+      }
+      lastResult = result;
+    }
+    updateTable('streaksTableBody', streakCounter);
+  }
+
+  function updateTable(tableId, data) {
+    const tableBody = document.getElementById(tableId);
+    tableBody.innerHTML = '';
+    for (let key in data) {
+      const row = document.createElement('tr');
+      const streakCell = document.createElement('td');
+      streakCell.textContent = key;
+      const countCell = document.createElement('td');
+      countCell.textContent = data[key];
+      row.appendChild(streakCell);
+      row.appendChild(countCell);
+      tableBody.appendChild(row);
+    }
+  }
+
+  updateTable('resultsTableBody', flipCounter);
+  updateTable('streaksTableBody', streakCounter);
+</script>
+
+</body>
+</html>
