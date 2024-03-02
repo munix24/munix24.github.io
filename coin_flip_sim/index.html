@@ -38,7 +38,7 @@
   table {
     margin: 20px auto;
     border-collapse: collapse;
-    width: 30%; /* Adjusted width */
+    width: 40%; /* Adjusted width */
   }
   th, td {
     border: 1px solid #fff;
@@ -73,10 +73,10 @@
     background-color: #444;
     color: #fff;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 5px 10px; /* Adjusted padding */
+    font-size: 12px; /* Adjusted font size */
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 3px;
   }
   button:hover {
     background-color: #555;
@@ -91,7 +91,7 @@
     <label for="numFlips">Number of flips:</label>
     <input type="number" id="numFlips" value="10" min="1">
   </div>
-  <div id="coin" class="result" onclick="flipCoin()">?</div> <!-- Make coin clickable -->
+  <div id="coin" class="result" onclick="flipCoin(document.getElementById('numFlips').value, true)">?</div> <!-- Make coin clickable -->
   <div id="results" class="results-container"></div>
 </div>
 <table>
@@ -108,6 +108,7 @@
     <tr>
       <th>Streak</th>
       <th>Count</th>
+      <th>Flip Until Streak</th> <!-- New column -->
     </tr>
   </thead>
   <tbody id="streaksTableBody"></tbody>
@@ -120,14 +121,17 @@
   let lastResult;
   const maxResults = 20;
 
-  function flipCoin() {
-    const numFlips = document.getElementById('numFlips').value;
+  function flipCoin(numFlips, updateTables) {
     for (let i = 0; i < numFlips; i++) {
       const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
       document.getElementById('coin').textContent = result;
       displayResult(result);
       updateFlipCounter(result);
       updateStreaks(result);
+    }
+    if (updateTables){
+      updateTable('resultsTableBody', flipCounter);
+      updateTable('streaksTableBody', streakCounter);
     }
   }
   
@@ -145,7 +149,6 @@
   function updateFlipCounter(result) {
     flipCounter[result]++;
     flipCounter['Total']++;
-    updateTable('resultsTableBody', flipCounter);
   }
 
   function updateStreaks(result) {
@@ -166,7 +169,6 @@
       }
       lastResult = result;
     }
-    updateTable('streaksTableBody', streakCounter);
   }
 
   function updateTable(tableId, data) {
@@ -180,8 +182,32 @@
       countCell.textContent = data[key];
       row.appendChild(streakCell);
       row.appendChild(countCell);
+      if (tableId == 'streaksTableBody') {  // only add continuous flip button on streaks table
+        const flipButtonCell = document.createElement('td');
+        const flipButton = document.createElement('button');
+        flipButton.textContent = 'Flip';
+        flipButton.onclick = function() {
+          flipUntilStreak(parseInt(key));
+        };
+        flipButtonCell.appendChild(flipButton);
+        row.appendChild(flipButtonCell);
+      }
       tableBody.appendChild(row);
     }
+  }
+
+  function flipUntilStreak(streakTarget) {
+    if (streak >= streakTarget){
+      flipCoin(1, false)  //if already on a streak then break it before setting the target
+      if (streakTarget == 1 && streak ==1) //if streakTarget was 1 and the flipCoin reset strea, then we are done
+        return;
+    }
+    let streakCounterTarget = streakCounter[streakTarget] + 1;   //loop until streakCounter increases by 1
+    while (streakCounter[streakTarget] < streakCounterTarget) {
+      flipCoin(1, false)
+    }
+    updateTable('resultsTableBody', flipCounter);
+    updateTable('streaksTableBody', streakCounter);
   }
 
   updateTable('resultsTableBody', flipCounter);
