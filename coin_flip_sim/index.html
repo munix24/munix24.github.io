@@ -16,14 +16,15 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 25px; /* Adjusted margin */
-    margin-bottom: 25px; /* Adjusted margin */
+    margin-top: 20px; /* Adjusted margin */
+    margin-bottom: 20px; /* Adjusted margin */
   }
   .results-container {
     max-width: 80%;
     overflow: auto; /* Use auto for scrollbar */
     white-space: nowrap;
     height: 40px; /* Fixed height */
+    margin-top: 20px;
   }
   .result {
     width: 30px;
@@ -32,13 +33,16 @@
     border-radius: 50%;
     line-height: 30px;
     font-size: 14px;
-    margin-right: 5px;
+    margin: 2px;
     display: inline-block; /* Display results horizontally */
   }
   table {
     margin: 20px auto;
     border-collapse: collapse;
     width: 40%; /* Adjusted width */
+  }
+  #streaksTable {
+    width: 50%; /* Adjusted width */
   }
   th, td {
     border: 1px solid #fff;
@@ -78,6 +82,11 @@
     cursor: pointer;
     border-radius: 3px;
   }
+  #ResetButton {
+    padding: 10px 20px; /* Adjusted padding */
+    font-size: 16px; /* Adjusted font size */
+    border-radius: 5px;
+  }
   button:hover {
     background-color: #555;
   }
@@ -92,9 +101,10 @@
     <input type="number" id="numFlips" value="10" min="1">
   </div>
   <div id="coin" class="result" onclick="flipCoin(document.getElementById('numFlips').value, true)">?</div> <!-- Make coin clickable -->
+  <button id="ResetButton" onclick="reset()">Reset</button>
   <div id="results" class="results-container"></div>
 </div>
-<table>
+<table id="resultsTable">
   <thead>
     <tr>
       <th>Result</th>
@@ -103,12 +113,17 @@
   </thead>
   <tbody id="resultsTableBody"></tbody>
 </table>
-<table>
+
+<table id="streaksTable">
   <thead>
     <tr>
       <th>Streak</th>
-      <th>Count</th>
-      <th>Flip Until Streak</th> <!-- New column -->
+      <th>Exact Count</th>
+      <th>Total Count</th>
+      <th>Flip Until Streak</th>
+      <th>Odds 1 in</th>
+      <th>Expected Flips</th>
+      <th>Expected Total Streaks</th>
     </tr>
   </thead>
   <tbody id="streaksTableBody"></tbody>
@@ -118,8 +133,30 @@
   let flipCounter = {'Heads': 0, 'Tails': 0, 'Total': 0};
   let streak = 0;
   let streakCounter = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0, '8': 0}; // Populated with 0 for first 1-8 counts
+  let cumStreakCounter = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0, '8': 0}; // Populated with 0 for first 1-8 counts
   let lastResult;
   const maxResults = 20;
+
+  function reset() {
+    flipCounter = {'Heads': 0, 'Tails': 0, 'Total': 0};
+    streak = 0;
+    streakCounter = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0, '8': 0};
+    lastResult = undefined;
+    document.getElementById('results').innerHTML = '';
+    updateTable('resultsTableBody', flipCounter);
+    updateTable('streaksTableBody', streakCounter);
+  }
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === "Enter") {
+      flipCoin(document.getElementById('numFlips').value, true);
+    }
+  });
+
+  // Expected number of tosses to get n heads
+  function Expected_Flips_Per_Streak(n){
+      return (n == 0) ? 0 : 2**n + Expected_Flips_Per_Streak(n-1)
+    }
 
   function flipCoin(numFlips, updateTables) {
     for (let i = 0; i < numFlips; i++) {
@@ -169,6 +206,12 @@
       }
       lastResult = result;
     }
+
+    if(cumStreakCounter[streak]){
+      cumStreakCounter[streak]++;
+    } else {
+      cumStreakCounter[streak] = 1;  // if not in initial object then initialize
+    }
   }
 
   function updateTable(tableId, data) {
@@ -180,9 +223,13 @@
       streakCell.textContent = key;
       const countCell = document.createElement('td');
       countCell.textContent = data[key];
+
       row.appendChild(streakCell);
       row.appendChild(countCell);
+
       if (tableId == 'streaksTableBody') {  // only add continuous flip button on streaks table
+        const cumCountCell = document.createElement('td');
+        cumCountCell.textContent = cumStreakCounter[key];
         const flipButtonCell = document.createElement('td');
         const flipButton = document.createElement('button');
         flipButton.textContent = 'Flip';
@@ -190,15 +237,36 @@
           flipUntilStreak(parseInt(key));
         };
         flipButtonCell.appendChild(flipButton);
+
+        const streakNum = parseInt(key);
+        // Probability of getting the streak
+        const probCell = document.createElement('td');
+        const probability = (streakNum === 0) ? 0 : (Math.pow(2, streakNum));
+        probCell.textContent = probability;
+
+        // Expected number of flips to reach the streak
+        const expectedFlipsCell = document.createElement('td');
+        const expectedFlips = Expected_Flips_Per_Streak(streakNum);
+        expectedFlipsCell.textContent = expectedFlips;
+
+        // Expected number of streaks for the count
+        const expectedStreaksCell = document.createElement('td');
+        const expectedStreaks = (streakNum === 0) ? 0 : Math.floor(flipCounter['Total'] / Expected_Flips_Per_Streak(streakNum));
+        expectedStreaksCell.textContent = expectedStreaks;
+        
+        row.appendChild(cumCountCell);
         row.appendChild(flipButtonCell);
-      }
+        row.appendChild(probCell);
+        row.appendChild(expectedFlipsCell);
+        row.appendChild(expectedStreaksCell);
+    }
       tableBody.appendChild(row);
     }
   }
 
   function flipUntilStreak(streakTarget) {
     if (streak >= streakTarget){
-      flipCoin(1, false)  //if already on a streak then break it before setting the target
+      flipCoin(1, true)  //if already on a streak then break it before setting the target
       if (streakTarget == 1 && streak ==1) //if streakTarget was 1 and the flipCoin reset strea, then we are done
         return;
     }
