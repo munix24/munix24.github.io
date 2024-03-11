@@ -200,6 +200,7 @@
             <div class="fight-header">
                 <button onclick="populateChampionsFightTable()">1v1Table</button>
                 <button onclick="populateChampionsStatsTable()">Stats</button>
+                <button onclick="populateChampionsSpellsTable()">Spells</button>
                 <input id="test" style="display: none;">
             </div>
             <div class="fight-top">
@@ -253,7 +254,8 @@
     </div>
 
     <script src="Champ.js"></script>
-    <script src="champion.js"></script>
+    <!-- <script src="champion.js"></script> -->
+    <script src="championFull.js"></script>
     <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
     <script>
         function insertEmptyCellToRow(){
@@ -498,7 +500,7 @@
             document.getElementById('fightSimulationTableBody').innerHTML = tableBodyHTML;
         }
 
-        async function addWinColumn(){
+        async function addWinColumn(){  // not used but kept for research
             await populateChampionsFightTable();
 
             var table = document.querySelector('#fightSimulationTable');
@@ -518,13 +520,12 @@
         }
 
         function populateChampionsStatsTable(){
-            const stats = ['hp', 'hp/lv', 'mp', 'mp/lv', 'mvm', 'armor', 'ar/lv', 'mr', 'mr/lv', 'range', 'hp+', 'hp+/lv', 'mp+', 'mp+/lv', 'crit', 'crit/lv', 'ad', 'ad/lv', 'as/lv', 'as'];
-
             // Generate the table header with champion stats based on first champion
             // console.log(champions[0].stats.map(stat => stat.join('')));
             // let tableHeadHTML = `${Object.keys(champions[0].stats).map(stat => `<th><div>${stat}</div></th>`).join('')}`;
             // document.getElementById('fightSimulationTableHeader').innerHTML = '<th><div></div></th>'+tableHeadHTML;
-
+            
+            const stats = ['hp', 'hp/lv', 'mp', 'mp/lv', 'mvm', 'armor', 'ar/lv', 'mr', 'mr/lv', 'range', 'hp+', 'hp+/lv', 'mp+', 'mp+/lv', 'crit', 'crit/lv', 'ad', 'ad/lv', 'as/lv', 'as'];
             document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"><div id="resizable">______________</div></th>';
             //TODO: add dps stat?
             document.getElementById('fightSimulationTableHeader').innerHTML += stats.map(stat => `<th onclick="sortTableColumns(this)">${stat}</th>`).join('')
@@ -538,6 +539,30 @@
                 Object.keys(champion.stats).map(stat => {
                     row += `<td>${champion.stats[stat]}</td>`;
                 });
+                row += '</tr>';
+                tableBody.innerHTML += row;
+            });
+        }
+
+        function populateChampionsSpellsTable(){
+            // Generate the table header with champion stats based on first champion
+            // console.log(champions[0].stats.map(stat => stat.join('')));
+            // let tableHeadHTML = `${Object.keys(champions[0].stats).map(stat => `<th><div>${stat}</div></th>`).join('')}`;
+            // document.getElementById('fightSimulationTableHeader').innerHTML = '<th><div></div></th>'+tableHeadHTML;
+
+            const stats = ['maxrank'];
+            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"><div id="resizable">______________</div></th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML += stats.map(stat => `<th onclick="sortTableColumns(this)">${stat}</th>`).join('')
+            // new ResizeObserver(resizeTableColumns).observe(document.getElementById('resizable'))    //make a dragable resizable column
+            // document.getElementById('resizable').addEventListener('resize', function(event) {resizeTableColumns();});    //resize event only works on window
+
+            const tableBody = document.getElementById('fightSimulationTableBody');
+            tableBody.innerHTML = '';
+            champions.forEach(champion => {
+                let row = `<tr><th>${champion.name}</th>`;
+                // Object.keys(champion.spells).map(stat => {
+                //     row += `<td>${champion.stats[stat]}</td>`;
+                // });
                 row += '</tr>';
                 tableBody.innerHTML += row;
             });
@@ -643,9 +668,9 @@
 
         // KObindings();
         populateChampionSelects();
-        // addWinColumn()
-        populateChampionsFightTable();
-        // populateChampionsStatsTable(); test
+        // populateChampionsFightTable();
+        // populateChampionsStatsTable(); 
+        populateChampionsSpellsTable();
     </script>
 </body>
 </html>
