@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoL Champion Fight Simulation</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        table {
+            table-layout: auto;
+        }
+
+        td {
+            min-width: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="fight">
+            <div class="fight-header">
+                <button onclick="document.location='index.html'">1v1Table</button>
+                <button id='Stats' onclick="populateChampionsStatsTable()">Stats</button>
+                <button id='Spells' onclick="populateChampionsSpellsTable()">Spells</button>
+            </div>
+            <div class="fight-top">
+                <table id="fightSimulationTable">
+                    <thead>
+                        <tr id="fightSimulationTableHeader">
+                        </tr>
+                    </thead>
+                    <tbody id="fightSimulationTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src = "Champ.js"></script>
+    <script src = "championFull.js"></script>
+    <script src = "tableSort.js"></script>
+    <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+    <script>
+        function populateChampionsStatsTable(){
+            removeButtonsSelectedClass();
+            document.getElementById('Stats').classList.add('selected');
+
+            // Generate the table header with champion stats based on first champion
+            // console.log(champions[0].stats.map(stat => stat.join('')));
+            // let tableHeadHTML = `${Object.keys(champions[0].stats).map(stat => `<th><div>${stat}</div></th>`).join('')}`;
+            // document.getElementById('fightSimulationTableHeader').innerHTML = '<th><div></div></th>'+tableHeadHTML;
+            
+            const stats = ['hp', 'hp/lv', 'mp', 'mp/lv', 'mvm', 'armor', 'ar/lv', 'mr', 'mr/lv', 'range', 'hp+', 'hp+/lv', 'mp+', 'mp+/lv', 'crit', 'crit/lv', 'ad', 'ad/lv', 'as/lv', 'as'];
+            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"></th>';
+            //TODO: add dps stat?
+            document.getElementById('fightSimulationTableHeader').innerHTML += stats.map(stat => `<th onclick="sortTableColumns(this)">${stat}</th>`).join('')
+
+            let tableBodyHTML = ``;
+            champions.forEach(champion => {
+                let row = `<tr><th>${champion.name}</th>`
+                row += Object.keys(champion.stats).map(stat => `<td>${champion.stats[stat]}</td>`).join('');
+                row += '</tr>';
+                tableBodyHTML += row;
+            });
+            document.getElementById('fightSimulationTableBody').innerHTML = tableBodyHTML;
+        }
+
+        function populateChampionsSpellsTable(){
+            removeButtonsSelectedClass();
+            document.getElementById('Spells').classList.add('selected');
+
+            const spellFields = ['Maxrank', 'CD', 'CDmax', 'Cost', 'CostMax', 'CostType', 'MaxAmmo', 'Range', 'RangeMax'];
+            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"></th><th onclick="sortTableColumns(this)">Spell</th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML += spellFields.map(spellField => `<th onclick="sortTableColumns(this)">${spellField}</th>`).join('')
+
+            let tableBodyHTML = ``;
+            //forEach() function lets you iterate over an array, but not over an object
+            // champions.forEach(champion => {
+            Object.keys(window.championsData.data).map(champion => {
+                window.championsData.data[champion].spells.forEach(spell => {
+                    tableBodyHTML +=    `<tr>
+                                            <th>${window.championsData.data[champion].name}</th>
+                                            <th>${spell['id']}</th>
+                                            <td>${spell['maxrank']}</td>
+                                            <td>${spell['cooldown'][0]}</td>
+                                            <td>${spell['cooldown'][spell['cooldown'].length - 1]}</td>
+                                            <td>${spell['cost'][0]}</td>
+                                            <td>${spell['cost'][spell['cost'].length - 1]}</td>
+                                            <td>${spell['costType']}</td>
+                                            <td>${spell['maxammo']}</td>
+                                            <td>${spell['range'][0]}</td>
+                                            <td>${spell['range'][spell['range'].length - 1]}</td>
+                                        </tr>`;
+                }); 
+            });
+            document.getElementById('fightSimulationTableBody').innerHTML = tableBodyHTML;
+        }
+
+        // Function to remove the 'selected' class from all buttons
+        function removeButtonsSelectedClass() {
+            const buttons = document.querySelectorAll('.fight-header button');
+            buttons.forEach(button => {
+                button.classList.remove('selected');
+            });
+        }
+	
+        // Get the list of champions assuming data brought into global variable via script tab
+        // Works offline. alternatively use ajax fetch call to webservice (cors error offline)
+        const champs = Object.keys(window.championsData.data);
+        // const champs = ['Aatrox', 'Ahri'];
+        const champions = champs.map(championName => new Champ(championName, 1));
+        // const champions = JSON.parse(window.championsData); //Uncaught SyntaxError: "[object Object]", it is already an object, not json string
+        // console.log(JSON.stringify(champions));
+
+        // populateChampionsStatsTable(); 
+        populateChampionsSpellsTable();
+    </script>
+</body>
+</html>

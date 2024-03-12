@@ -7,6 +7,10 @@
     <title>LoL Champion Fight Simulation</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        .container {
+            width: 100%;
+        }
+
         .column {
             min-width: 280px;
             max-width: 300px;   /* 300px due to size of champion loading screen splash art */
@@ -38,6 +42,11 @@
 
         .fight {
             border: 1px solid black;
+            display: flex;
+            flex: 3;
+            padding: 10px;
+            flex-direction: column;
+            width: 50%;                 /* doesn't matter what size is set to it just works */
         }
 
         .fight-top {
@@ -48,6 +57,11 @@
         .fight-bottom {
             margin-top: 10px;
             flex: 1;
+        }
+
+        table {
+            table-layout: fixed;
+            width: 100%; /* Set the table width to fill its container */
         }
 
         #resizable {
