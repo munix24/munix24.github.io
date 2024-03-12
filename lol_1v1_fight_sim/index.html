@@ -5,26 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoL Champion Fight Simulation</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            /* background-image: url('https://github.com/InFinity54/LoL_DDragon/blob/master/extras/loadingscreen/basictutorial_loadingscreen.png');   3rd prty cookie*/
-            /* background-image: url('https://raw.communitydragon.org/14.3/game/assets/characters/aatrox/skins/skin01/aatroxloadscreen_1.png');  */
-            /* background-image: url('tutorialfirstmodule_loadingscreen.png'); */
-            background-size: cover; /* Adjust background size as needed */
-            background-position: center; /* Center the background image */
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-            align-content: center;
-        }
-
         .column {
             min-width: 280px;
             max-width: 300px;   /* 300px due to size of champion loading screen splash art */
@@ -35,18 +17,18 @@
             display: flex;
             flex-direction: column;
         }
-
+        
         .column-top {
             display: flex;
             text-align: center;
             flex: 3;
             flex-direction: column;
         }
-
+        
         .column-mid {
             height: 100%;
         }
-
+        
         .column-bottom {
             text-align: center;
             display: flex;
@@ -55,17 +37,7 @@
         }
 
         .fight {
-            display: flex;
-            text-align: center;
-            flex: 3;
             border: 1px solid black;
-            padding: 10px;
-            flex-direction: column;
-            width: 50%;                 /* doesn't matter what size is set to it just works */
-        }
-
-        .fight-top, .fight-bottom {
-            overflow: auto;
         }
 
         .fight-top {
@@ -78,101 +50,11 @@
             flex: 1;
         }
 
-        h1 {margin-top: 0; margin-bottom: 0;}
-        h2 {margin-top: 0; margin-bottom: 0;}
-        h3 {margin-top: 0; margin-bottom: 0;}
-
-        .clickable {
-            cursor: default;
-            color: blue;
-        }
-
-        table {
-            text-align: center;
-            border-spacing: 0;
-            table-layout: fixed;
-            width: 100%; /* Set the table width to fill its container */
-        }
-
-        #fightSimulationTableHeader th {
-        }
-
-        th:first-child {  
-            width: 48px;    /* effectivery min-width since table is set to use 100% */
-        }
-
         #resizable {
             width: 100%;    /* hard code width so it doesn't automatically change on window resize */
             resize: horizontal;     
             overflow: hidden;
             /* overflow-clip-margin: 10px; */
-        }
-
-        thead th {
-            width: 30px;     /* effectivery min-width since table is set to use 100% */
-            position: sticky;
-            top: 0; /* Stick to the top */
-            background-color: white; /* set to table bg color or it will overlap with data when scrolling */
-            padding-left: 5px; /* Add margin between buttons */
-            padding-right: 5px; /* Add margin between buttons */
-            cursor: pointer; /* Change cursor to pointer on hover */
-        }
-
-        tbody th {
-            position: sticky;
-            left: 0; /* Stick to the left */
-            background-color: white; /* set to table bg color or it will overlap with data when scrolling */
-            text-align: left;
-            /* outline: 1px solid #ccc;
-            outline-offset: -1px; */
-        }
-
-        th {
-            /* max-width: 60px;  */
-            overflow: hidden;
-            /* text-overflow: ellipsis; /* Truncate text with an ellipsis */
-            white-space: nowrap; /* Prevent text from wrapping */
-        }
-
-        th:hover {  
-            overflow: visible;      /* won't worh on thead due to white bg but works on sides*/
-            white-space: normal;
-        }
-
-        th:active {  
-            background-color: blue;
-            color: white;
-        }
-
-        tr {
-            line-height: 1;
-        }
-
-        .fight-header {
-            display: flex;
-            justify-content: left;
-            margin-bottom: 10px; /* Add margin as needed */
-        }
-
-        .fight-header button {
-            width: 100px; /* Set a fixed width */
-            padding: 10px; /* Add padding as needed */
-            margin-right: 10px; /* Add margin between buttons */
-            background-color: #2196F3; /* Blue background color */
-            color: white; /* White text color */
-            font-size: 16px; /* Font size */
-            border-radius: 2px; /* Add border radius */
-            transition: background-color 0.1s; /* Smooth background color transition */
-            border: none; /* Remove button border */
-            cursor: pointer; /* Change cursor to pointer on hover */
-        }
-
-        .fight-header button:hover {
-            background-color: #0b7dda; /* Darker blue background color on hover */
-        }
-
-        .fight-header button:active {
-            background-color: #0a5c97; /* Dark blue background color on click */
         }
     </style>
 </head>
@@ -198,11 +80,8 @@
 
         <div class="fight">
             <div class="fight-header">
-                <button onclick="populateChampionsFightTable()">1v1Table</button>
-                <button onclick="populateChampionsStatsTable()">Stats</button>
-                <button onclick="populateChampionsSpellsTable()">Spells</button>
-                <button onclick="document.location='test.html'">test</button>
-                <input id="test" style="display: none;">
+                <button id='button1v1Table' onclick="populateChampionsFightTable()">1v1Table</button>
+                <button id='buttonStats' onclick="document.location='champ_stats.html'">Stats</button>
             </div>
             <div class="fight-top">
                 <table id="fightSimulationTable">
@@ -254,9 +133,10 @@
         </div>
     </div>
 
-    <script src="Champ.js"></script>
+    <script src = "Champ.js"></script>
     <!-- <script src="champion.js"></script> -->
-    <script src="championFull.js"></script>
+    <script src = "championFull.js"></script>
+    <script src = "tableSort.js"></script>
     <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
     <script>
         function insertEmptyCellToRow(){
@@ -472,12 +352,16 @@
         async function populateChampionsFightTable() {
             await simulateAllChampionFights();
 
+            document.getElementById('button1v1Table').classList.add('selected');
+
+            let tableHeaderHTML = ``;
             // Generate the table header with champion names
-            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"><div id="resizable">______________</div></th>';
-            document.getElementById('fightSimulationTableHeader').innerHTML += `${champions.map(champion => `<th onclick="sortTableColumns(this)">${champion.name}</th>`).join('')}`
-            document.getElementById('fightSimulationTableHeader').innerHTML += `<th onclick="sortTableColumns(this)">Wins</th>`  // wins column
+            tableHeaderHTML = '<th onclick="sortTableColumns(this)"><div id="resizable">______________</div></th>';
+            tableHeaderHTML += `${champions.map(champion => `<th onclick="sortTableColumns(this)">${champion.name}</th>`).join('')}`
+            tableHeaderHTML += `<th onclick="sortTableColumns(this)">Wins</th>`  // wins column
             // new ResizeObserver(resizeTableColumns).observe(document.getElementById('resizable'))    //make a dragable resizable column
-            
+            document.getElementById('fightSimulationTableHeader').innerHTML = tableHeaderHTML;
+
             let tableBodyHTML = ``;
             // Simulate fights and fill in the table
             for (let x=0; x < champions.length; x++) {
@@ -520,55 +404,6 @@
             }
         }
 
-        function populateChampionsStatsTable(){
-            // Generate the table header with champion stats based on first champion
-            // console.log(champions[0].stats.map(stat => stat.join('')));
-            // let tableHeadHTML = `${Object.keys(champions[0].stats).map(stat => `<th><div>${stat}</div></th>`).join('')}`;
-            // document.getElementById('fightSimulationTableHeader').innerHTML = '<th><div></div></th>'+tableHeadHTML;
-            
-            const stats = ['hp', 'hp/lv', 'mp', 'mp/lv', 'mvm', 'armor', 'ar/lv', 'mr', 'mr/lv', 'range', 'hp+', 'hp+/lv', 'mp+', 'mp+/lv', 'crit', 'crit/lv', 'ad', 'ad/lv', 'as/lv', 'as'];
-            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"><div id="resizable">______________</div></th>';
-            //TODO: add dps stat?
-            document.getElementById('fightSimulationTableHeader').innerHTML += stats.map(stat => `<th onclick="sortTableColumns(this)">${stat}</th>`).join('')
-            // new ResizeObserver(resizeTableColumns).observe(document.getElementById('resizable'))    //make a dragable resizable column
-            // document.getElementById('resizable').addEventListener('resize', function(event) {resizeTableColumns();});    //resize event only works on window
-
-            const tableBody = document.getElementById('fightSimulationTableBody');
-            tableBody.innerHTML = '';
-            champions.forEach(champion => {
-                let row = `<tr><th>${champion.name}</th>`;
-                Object.keys(champion.stats).map(stat => {
-                    row += `<td>${champion.stats[stat]}</td>`;
-                });
-                row += '</tr>';
-                tableBody.innerHTML += row;
-            });
-        }
-
-        function populateChampionsSpellsTable(){
-            // Generate the table header with champion stats based on first champion
-            // console.log(champions[0].stats.map(stat => stat.join('')));
-            // let tableHeadHTML = `${Object.keys(champions[0].stats).map(stat => `<th><div>${stat}</div></th>`).join('')}`;
-            // document.getElementById('fightSimulationTableHeader').innerHTML = '<th><div></div></th>'+tableHeadHTML;
-
-            const stats = ['maxrank'];
-            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"><div id="resizable">______________</div></th>';
-            document.getElementById('fightSimulationTableHeader').innerHTML += stats.map(stat => `<th onclick="sortTableColumns(this)">${stat}</th>`).join('')
-            // new ResizeObserver(resizeTableColumns).observe(document.getElementById('resizable'))    //make a dragable resizable column
-            // document.getElementById('resizable').addEventListener('resize', function(event) {resizeTableColumns();});    //resize event only works on window
-
-            const tableBody = document.getElementById('fightSimulationTableBody');
-            tableBody.innerHTML = '';
-            champions.forEach(champion => {
-                let row = `<tr><th>${champion.name}</th>`;
-                // Object.keys(champion.spells).map(stat => {
-                //     row += `<td>${champion.stats[stat]}</td>`;
-                // });
-                row += '</tr>';
-                tableBody.innerHTML += row;
-            });
-        }
-
         function resizeTableColumns() {
             var newWidth = parseInt(document.getElementById('resizable').clientWidth);  //clientWidth is closer to css width since offsetWidth includes padding
             const newWidthStr = newWidth + 'px';
@@ -576,38 +411,6 @@
             tableHeaders.forEach(tableHeader => {
                 tableHeader.style.width = newWidthStr;
             });
-        }
-
-        const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
-
-        const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
-            v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
-            )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
-
-        function sortTableColumns(header) {
-            const table = header.closest('table');
-            const tableBody = table.querySelector('tbody'); //selects first match
-            // const tableBody = table.getElementsByTagName('tbody')[0];
-            // const parentNode = header.parentNode;
-            // const children = header.parentNode.children;
-            // const data = Array.from(tableBody.querySelectorAll('tr'));
-
-            if (header == table.querySelector('th')){    // if sorting on first header
-                var sort = window.asc = !window.asc && window.header != header;     //sort asc first then alternate. window.asc assignment works as intended here although confusing
-            } else{
-                var sort = window.asc = !window.asc && window.header == header;     //sort desc first then alternate. window.asc assignment works as intended here although confusing
-            }
-            
-            Array.from(tableBody.querySelectorAll('tr'))
-                .sort(comparer(Array.from(header.parentNode.children).indexOf(header), sort)) //always desc first
-                // .sort(comparer(Array.from(header.parentNode.children).indexOf(header), header.asc = !header.asc))
-                .forEach(tr => tableBody.appendChild(tr) );
-            window.header = header;     //store last sorted header to only invert sorting on consecutive clicks
-            document.getElementById('test').value = window.asc;
-        }
-        
-        //TODO: implement
-        function sortTableRows(row) {
         }
 	
         // Get the list of champions assuming data brought into global variable via script tab
@@ -669,9 +472,7 @@
 
         // KObindings();
         populateChampionSelects();
-        // populateChampionsFightTable();
-        // populateChampionsStatsTable(); 
-        populateChampionsSpellsTable();
+        populateChampionsFightTable();
     </script>
 </body>
 </html>

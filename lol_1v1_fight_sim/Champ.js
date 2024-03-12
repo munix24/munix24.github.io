@@ -3,6 +3,7 @@ class Champ {
         this.name = name;
         this.level = level;
         this.stats = this.getChampStats(name);
+        this.spells = this.getChampSpells(name);
 
         // Initialize current stats based on level
         this.maxhp = this.calculateStatAtLevel(this.stats["hp"], this.stats["hpperlevel"]);
@@ -24,6 +25,19 @@ class Champ {
 			if (window.championsData['data'].hasOwnProperty(name))
 			{
 				return window.championsData['data'][name].stats;
+			} else {
+				throw new Error('Could not find champion name in json data');
+			}
+		}
+    }
+
+    getChampSpells(name) {
+		if (window.championsData === undefined) {	//check if global json data was brought in
+			throw new Error('Could not find champion json data');
+		} else {
+			if (window.championsData['data'].hasOwnProperty(name))
+			{
+				return window.championsData['data'][name].spells;
 			} else {
 				throw new Error('Could not find champion name in json data');
 			}
