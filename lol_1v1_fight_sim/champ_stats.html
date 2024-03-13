@@ -114,8 +114,12 @@
         // const champions = JSON.parse(window.championsData); //Uncaught SyntaxError: "[object Object]", it is already an object, not json string
         // console.log(JSON.stringify(champions));
 
-        // populateChampionsStatsTable(); 
-        populateChampionsSpellsTable();
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (urlParams.has('Spells'))
+            populateChampionsSpellsTable();
+        else
+            populateChampionsStatsTable(); 
     </script>
 </body>
 </html>
