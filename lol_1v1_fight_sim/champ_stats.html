@@ -55,7 +55,7 @@
 
         function populateChampionsStatsTable() {
             removeButtonsSelectedClass();
-            document.getElementById('Stats').classList.add('selected');
+            document.getElementById('buttonStats').classList.add('selected');
 
             // Generate the table header with champion stats based on first champion
             // console.log(champions[0].stats.map(stat => stat.join('')));
@@ -79,7 +79,7 @@
 
         function populateChampionsSpellsTable() {
             removeButtonsSelectedClass();
-            document.getElementById('Spells').classList.add('selected');
+            document.getElementById('buttonSpells').classList.add('selected');
 
             const spellFields = ['Maxrank', 'CD', 'CDmax', 'Cost', 'CostMax', 'CostType', 'MaxAmmo', 'Range', 'RangeMax'];
             document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)">Champion</th><th onclick="sortTableColumns(this)">Spell</th>';
@@ -146,7 +146,7 @@
 
         function populateChampionsSpellsDetailedTable() {
             removeButtonsSelectedClass();
-            document.getElementById('SpellsDetailed').classList.add('selected');
+            document.getElementById('buttonSpellsDetailed').classList.add('selected');
 
             spellFields = ['mCastTime', 'cooldownTime', 'castRange', 'castRadius', 'castRadiusSecondary', 'missileSpeed', 'mana'];
             spellFields = ['cooldownTime', 'mMaxAmmo'];
