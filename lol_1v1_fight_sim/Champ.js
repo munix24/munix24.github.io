@@ -19,12 +19,12 @@ class Champ {
     }
 
     getChampStats(name) {
-		if (window.championsData === undefined) {	//check if global json data was brought in
+		if (window.champions === undefined) {	//check if global json data was brought in
 			throw new Error('Could not find champion json data');
 		} else {
-			if (window.championsData['data'].hasOwnProperty(name))
+			if (window.champions['data'].hasOwnProperty(name))
 			{
-				return window.championsData['data'][name].stats;
+				return window.champions['data'][name].stats;
 			} else {
 				throw new Error('Could not find champion name in json data');
 			}
@@ -32,12 +32,12 @@ class Champ {
     }
 
     getChampSpells(name) {
-		if (window.championsData === undefined) {	//check if global json data was brought in
+		if (window.champions === undefined) {	//check if global json data was brought in
 			throw new Error('Could not find champion json data');
 		} else {
-			if (window.championsData['data'].hasOwnProperty(name))
+			if (window.champions['data'].hasOwnProperty(name))
 			{
-				return window.championsData['data'][name].spells;
+				return window.champions['data'][name].spells;
 			} else {
 				throw new Error('Could not find champion name in json data');
 			}

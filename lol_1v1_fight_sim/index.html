@@ -150,9 +150,9 @@
 
     <script src = "Champ.js"></script>
     <!-- <script src="champion.js"></script> -->
-    <script src = "championFull.js"></script>
+    <script src = "championsFull.js"></script>
     <script src = "tableSort.js"></script>
-    <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+    <!-- <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script> -->
     <script>
         function insertEmptyCellToRow(){
             // add empty cell in top left of table. Couldn't do this in html without messing up.
@@ -430,13 +430,13 @@
 	
         // Get the list of champions assuming data brought into global variable via script tab
         // Works offline. alternatively use ajax fetch call to webservice (cors error offline)
-        const champs = Object.keys(window.championsData.data);
+        const champs = Object.keys(window.champions.data);
         // const champs = ['Aatrox', 'Ahri'];
         const champions = champs.map(championName => new Champ(championName, 1));
-        // const champions = JSON.parse(window.championsData); //Uncaught SyntaxError: "[object Object]", it is already an object, not json string
+        // const champions = JSON.parse(window.champions); //Uncaught SyntaxError: "[object Object]", it is already an object, not json string
         // console.log(JSON.stringify(champions));
 
-        function KObindings(){
+        /*function KObindings(){
             // https://stackoverflow.com/questions/25571963/how-to-make-object-properties-in-a-knockout-observable-array-be-observable
             // var viewModel = ko.mapping.fromJS(dat);
             var championModel = function() {
@@ -484,6 +484,7 @@
                 }
             );
         }
+        */
 
         // KObindings();
         populateChampionSelects();

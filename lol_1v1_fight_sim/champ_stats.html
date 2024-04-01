@@ -24,6 +24,8 @@
                 <button onclick="document.location='index.html'">1v1Table</button>
                 <button id='Stats' onclick="populateChampionsStatsTable()">Stats</button>
                 <button id='Spells' onclick="populateChampionsSpellsTable()">Spells</button>
+                <button id='SpellsDetailed' style='width: 150px;'
+                    onclick="populateChampionsSpellsDetailedTable()">SpellsDetailed</button>
             </div>
             <div class="fight-top">
                 <table id="fightSimulationTable">
@@ -38,12 +40,21 @@
         </div>
     </div>
 
-    <script src = "Champ.js"></script>
-    <script src = "championFull.js"></script>
-    <script src = "tableSort.js"></script>
-    <script src = "https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+    <script src="Champ.js"></script>
+    <script src="championsFull.js"></script>
+    <script src="championsDetailedBaseDamage.js"></script>
+    <script src="tableSort.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
     <script>
-        function populateChampionsStatsTable(){
+        // Function to remove the 'selected' class from all buttons
+        function removeButtonsSelectedClass() {
+            const buttons = document.querySelectorAll('.fight-header button');
+            buttons.forEach(button => {
+                button.classList.remove('selected');
+            });
+        }
+
+        function populateChampionsStatsTable() {
             removeButtonsSelectedClass();
             document.getElementById('Stats').classList.add('selected');
 
@@ -51,9 +62,9 @@
             // console.log(champions[0].stats.map(stat => stat.join('')));
             // let tableHeadHTML = `${Object.keys(champions[0].stats).map(stat => `<th><div>${stat}</div></th>`).join('')}`;
             // document.getElementById('fightSimulationTableHeader').innerHTML = '<th><div></div></th>'+tableHeadHTML;
-            
+
             const stats = ['hp', 'hp/lv', 'mp', 'mp/lv', 'mvm', 'armor', 'ar/lv', 'mr', 'mr/lv', 'range', 'hp+', 'hp+/lv', 'mp+', 'mp+/lv', 'crit', 'crit/lv', 'ad', 'ad/lv', 'as/lv', 'as'];
-            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"></th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)">Champion</th>';
             //TODO: add dps stat?
             document.getElementById('fightSimulationTableHeader').innerHTML += stats.map(stat => `<th onclick="sortTableColumns(this)">${stat}</th>`).join('')
 
@@ -67,59 +78,125 @@
             document.getElementById('fightSimulationTableBody').innerHTML = tableBodyHTML;
         }
 
-        function populateChampionsSpellsTable(){
+        function populateChampionsSpellsTable() {
             removeButtonsSelectedClass();
             document.getElementById('Spells').classList.add('selected');
 
             const spellFields = ['Maxrank', 'CD', 'CDmax', 'Cost', 'CostMax', 'CostType', 'MaxAmmo', 'Range', 'RangeMax'];
-            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)"></th><th onclick="sortTableColumns(this)">Spell</th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)">Champion</th><th onclick="sortTableColumns(this)">Spell</th>';
             document.getElementById('fightSimulationTableHeader').innerHTML += spellFields.map(spellField => `<th onclick="sortTableColumns(this)">${spellField}</th>`).join('')
 
             let tableBodyHTML = ``;
             //forEach() function lets you iterate over an array, but not over an object
             // champions.forEach(champion => {
-            Object.keys(window.championsData.data).map(champion => {
-                window.championsData.data[champion].spells.forEach(spell => {
-                    tableBodyHTML +=    `<tr>
-                                            <th>${window.championsData.data[champion].name}</th>
-                                            <th>${spell['id']}</th>
-                                            <td>${spell['maxrank']}</td>
-                                            <td>${spell['cooldown'][0]}</td>
-                                            <td>${spell['cooldown'][spell['cooldown'].length - 1]}</td>
-                                            <td>${spell['cost'][0]}</td>
-                                            <td>${spell['cost'][spell['cost'].length - 1]}</td>
-                                            <td>${spell['costType']}</td>
-                                            <td>${spell['maxammo']}</td>
-                                            <td>${spell['range'][0]}</td>
-                                            <td>${spell['range'][spell['range'].length - 1]}</td>
-                                        </tr>`;
-                }); 
+            Object.keys(window.champions.data).map(champion => {
+                window.champions.data[champion].spells.forEach(spell => {
+                    tableBodyHTML += `<tr>
+                                    <th>${window.champions.data[champion].name}</th>
+                                    <th>${spell['id']}</th>
+                                    <td>${spell['maxrank']}</td>
+                                    <td>${spell['cooldown'][0]}</td>
+                                    <td>${spell['cooldown'][spell['cooldown'].length - 1]}</td>
+                                    <td>${spell['cost'][0]}</td>
+                                    <td>${spell['cost'][spell['cost'].length - 1]}</td>
+                                    <td>${spell['costType']}</td>
+                                    <td>${spell['maxammo']}</td>
+                                    <td>${spell['range'][0]}</td>
+                                    <td>${spell['range'][spell['range'].length - 1]}</td>
+                                </tr>`;
+                });
             });
             document.getElementById('fightSimulationTableBody').innerHTML = tableBodyHTML;
         }
 
-        // Function to remove the 'selected' class from all buttons
-        function removeButtonsSelectedClass() {
-            const buttons = document.querySelectorAll('.fight-header button');
-            buttons.forEach(button => {
-                button.classList.remove('selected');
-            });
+        function getSpellBaseDamageMax(mSpell){
+            array = [];   //array of BaseDamage if spell has multiple
+            if(mSpell.hasOwnProperty('mDataValues')){    //not all mSpell has mDataValues? BlindMonkQOneAbility
+                mSpell['mDataValues'].forEach(mData => {
+                    if(mData['mName'].includes('BaseDamage') && !mData['mName'].includes('Ratio')){
+                        if(mData['mValues'] && mData['mValues'].length){
+                            array.push(Number(mData['mValues'][0]));
+                        } 
+                    }
+                });
+            }
+
+            if(array && array.length){
+                return Math.round(Math.max(...array), 2);
+            } else
+                return 0;      //set to 0 for sorting
         }
-	
+        
+        function getSpellRatioMax(mSpell){
+            array = [];   //array of BaseDamage if spell has multiple
+            if(mSpell.hasOwnProperty('mDataValues')){    //not all mSpell has mDataValues? BlindMonkQOneAbility
+                mSpell['mDataValues'].forEach(mData => {
+                    if((mData['mName'].includes('ADRatio') || mData['mName'].includes('APRatio')) && !mData['mName'].includes('Crit')){
+                        if(mData['mValues'] && mData['mValues'].length){
+                            array.push(Number(mData['mValues'][0]));
+                        } 
+                    }
+                });
+            }
+
+            if(array && array.length){
+                return Math.max(...array).toFixed(2);
+            } else
+                return 0;      //set to 0 for sorting
+        }
+
+        function populateChampionsSpellsDetailedTable() {
+            removeButtonsSelectedClass();
+            document.getElementById('SpellsDetailed').classList.add('selected');
+
+            spellFields = ['mCastTime', 'cooldownTime', 'castRange', 'castRadius', 'castRadiusSecondary', 'missileSpeed', 'mana'];
+            spellFields = ['cooldownTime', 'mMaxAmmo'];
+            // spellFields = [];
+            document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)">Champion</th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML += '<th onclick="sortTableColumns(this)">Spell</th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML += spellFields.map(spellField => `<th onclick="sortTableColumns(this)">${spellField}</th>`).join('')
+            document.getElementById('fightSimulationTableHeader').innerHTML += '<th onclick="sortTableColumns(this)">Damage</th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML += '<th onclick="sortTableColumns(this)">Ratio</th>';
+
+            let tableBodyHTML = ``;
+            Object.keys(window.championsDetailed).map(champion => {
+                Object.keys(window.championsDetailed[champion]).map(spell => {
+                    tableBodyHTML += `<tr>
+                                        <th>${champion}</th>
+                                        <th>${window.championsDetailed[champion][spell]['mScriptName']}</th>`
+                    // ${spellFields.map(spellField => `<td>${spellField}</td>`).join('')}
+
+                    mSpell = window.championsDetailed[champion][spell]['mSpell'];
+
+                    spellFields.forEach(spellField => {
+                        tableBodyHTML += mSpell.hasOwnProperty(spellField) ? `<td>${mSpell[spellField][0] != null ? mSpell[spellField][0] : mSpell[spellField]}</td>` : `<td></td>`;
+                    });
+                    
+                    tableBodyHTML += `<td>${getSpellBaseDamageMax(mSpell)}</td>`;
+                    tableBodyHTML += `<td>${getSpellRatioMax(mSpell)}</td>`;
+                    tableBodyHTML += `</tr>`;
+                });
+            });
+            document.getElementById('fightSimulationTableBody').innerHTML = tableBodyHTML;
+        }
+
         // Get the list of champions assuming data brought into global variable via script tab
         // Works offline. alternatively use ajax fetch call to webservice (cors error offline)
-        const champs = Object.keys(window.championsData.data);
+        const champs = Object.keys(window.champions.data);
         // const champs = ['Aatrox', 'Ahri'];
         const champions = champs.map(championName => new Champ(championName, 1));
-        // const champions = JSON.parse(window.championsData); //Uncaught SyntaxError: "[object Object]", it is already an object, not json string
+        // const champions = JSON.parse(window.champions); //Uncaught SyntaxError: "[object Object]", it is already an object, not json string
         // console.log(JSON.stringify(champions));
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         if (urlParams.has('Spells'))
             populateChampionsSpellsTable();
+        else if (urlParams.has('SpellsDetailed'))
+            populateChampionsSpellsDetailedTable();
         else
             populateChampionsStatsTable(); 
     </script>
 </body>
+
 </html>
