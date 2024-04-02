@@ -18,24 +18,40 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Player object
-    const player = {
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-        width: 20,
-        height: 20,
+    const player = {   // Player object
+        x: canvas.width / 2,     //start in middle of canvas
+        y: canvas.height / 2,    //start in middle of canvas
+        width: 9,
+        height: 9,
         speed: 100
     };
 
-    // Other sprites
-    const sprites = [];
-    const spriteCount = 10;
-    for (let i = 0; i < spriteCount; i++) {
-        sprites.push({
+    const enemies = [];
+    const enemiesCount = 10;
+    for (let i = 0; i < enemiesCount; i++) {
+        enemies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            width: 20,
-            height: 20
+            width: 9,
+            height: 9
+        });
+    }
+
+    function drawPlayer() {
+        ctx.beginPath();
+        ctx.rect(player.x, player.y, player.width, player.height);
+        ctx.fillStyle = 'blue';
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawSprites() {
+        enemies.forEach(sprite => {
+            ctx.beginPath();
+            ctx.rect(sprite.x, sprite.y, sprite.width, sprite.height);
+            ctx.fillStyle = 'red';
+            ctx.fill();
+            ctx.closePath();
         });
     }
 
@@ -51,28 +67,7 @@
         keys[e.key] = false;
     });
 
-    // Function to draw the player
-    function drawPlayer() {
-        ctx.beginPath();
-        ctx.rect(player.x, player.y, player.width, player.height);
-        ctx.fillStyle = 'blue';
-        ctx.fill();
-        ctx.closePath();
-    }
-
-    // Function to draw other sprites
-    function drawSprites() {
-        sprites.forEach(sprite => {
-            ctx.beginPath();
-            ctx.rect(sprite.x, sprite.y, sprite.width, sprite.height);
-            ctx.fillStyle = 'red';
-            ctx.fill();
-            ctx.closePath();
-        });
-    }
-
-    // Variable to store the last time update was called
-    let lastUpdateTime = Date.now();
+    let lastUpdateTime = Date.now();        // Variable to store the last time update was called
 
     // Function to update the game state
     function update() {
@@ -98,14 +93,11 @@
             player.y += player.speed * deltaTime;
         }
 
-        // Draw player
         drawPlayer();
-
-        // Draw other sprites
         drawSprites();
 
         // Collision detection
-        sprites.forEach(sprite => {
+        enemies.forEach(sprite => {
             if (
                 player.x < sprite.x + sprite.width &&
                 player.x + player.width > sprite.x &&
@@ -117,18 +109,15 @@
             }
         });
 
-        // Request the next animation frame
-        requestAnimationFrame(update);
+        requestAnimationFrame(update);      // Request the next animation frame
     }
 
-    // Game loop
-    function gameLoop() {
+    function gameLoop() {       // Game loop
         update();
         requestAnimationFrame(gameLoop);
     }
 
-    // Start the game loop
-    gameLoop();
+    gameLoop();     // Start the game loop
 </script>
 </body>
 </html>
