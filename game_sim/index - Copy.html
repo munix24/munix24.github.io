@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    canvas {
+        border: 1px solid black;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="600" height="400"></canvas>
+<!-- <canvas id="clock" width="150" height="150">
+    <img src="img_pulpit.jpg" width="150" height="150" alt="A clock" />
+</canvas> -->
+
+<img id="myImg" src="img_pulpit.jpg" alt="The Pulpit Rock" width="304" height="228">
+
+<script>
+    const canvas2 = document.getElementById('gameCanvas');
+    const ctx2 = canvas.getContext('2d');
+    ctx2.font = "48px serif";
+    ctx2.fillText("Hello world", 10, 50);
+</script>
+</body>
+</html>

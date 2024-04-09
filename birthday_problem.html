@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Problem Simulator</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    #output {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+    <h1>Birthday Problem Simulator</h1>
+    <p>Enter the number of people in the room:</p>
+    <input type="number" id="peopleCount" min="2" step="1" value="23">
+    <button onclick="simulate()">Simulate</button>
+    <div id="output"></div>
+
+    <script>
+        function simulate() {
+            const peopleCount = parseInt(document.getElementById('peopleCount').value);
+            let birthdays = new Array(365).fill(0);
+            let collision = false;
+
+            for (let i = 0; i < peopleCount; i++) {
+                const birthday = Math.floor(Math.random() * 365);
+                birthdays[birthday]++;
+
+                if (birthdays[birthday] > 1) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            const output = document.getElementById('output');
+            if (collision) {
+                output.textContent = `With ${peopleCount} people in the room, there is a collision (at least two people share the same birthday).`;
+            } else {
+                output.textContent = `With ${peopleCount} people in the room, there is no collision (everyone has a unique birthday).`;
+            }
+        }
+    </script>
+</body>
+</html>
