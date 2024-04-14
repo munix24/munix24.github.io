@@ -7,12 +7,30 @@
     <title>LoL Champion Fight Simulation</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* .container {
+            width: 100%;
+        } */
         table {
             table-layout: auto;
         }
 
         td {
             min-width: 50px;
+        }
+
+        .fight {
+            /* display: flex; */
+        }
+
+        .fight-header {
+            display: flex;
+            padding: 0 10px;    
+            justify-content: center;
+        }
+
+        .fight-top {
+            overflow-y: scroll;
+            height: 92%; /* set height to make the table scrollable */
         }
     </style>
 </head>
@@ -21,10 +39,10 @@
     <div class="container">
         <div class="fight">
             <div class="fight-header">
-                <button onclick="document.location='index.html'">1v1Table</button>
-                <button id='buttonStats' onclick="populateChampionsStatsTable()">Stats</button>
-                <button id='buttonSpells' onclick="populateChampionsSpellsTable()">Spells</button>
-                <button id='buttonSpellsDetailed' style='width: 150px;' onclick="populateChampionsSpellsDetailedTable()">SpellsDetailed</button>
+                <p><button onclick="document.location='index.html'">1v1Table</button></p>
+                <p><button id='buttonStats' onclick="populateChampionsStatsTable()">Stats</button></p>
+                <p><button id='buttonSpells' onclick="populateChampionsSpellsTable()">Spells</button></p>
+                <p><button id='buttonSpellsDetailed' style='width: 150px;' onclick="populateChampionsSpellsDetailedTable()">SpellsDetailed</button></p>
             </div>
             <div class="fight-top">
                 <table id="fightSimulationTable">
