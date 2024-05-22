@@ -3,23 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multiplication Simulator</title>
+<title>Factorization</title>
 <link rel="stylesheet" href="../style.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>Multiplication Simulator</h1>
-    <div class="input-group">
-      <label for="number1">Enter first number:</label>
-      <input type="text" id="number1" placeholder="Enter a number">
+    <h1>Factorization</h1>
+    <div class="number-group">
+      <div class="digit-inputs" id="number1-inputs"></div>
+      <button class="randomize-btn" onclick="randomizeInputs('number1-inputs')"><img src="Randomize.png" alt="Randomize"></button>
+      <button onclick="clearInputs('number1-inputs')"><img src="Clear.png" alt="Clear"></button>
+      <button onclick="copyToClipboard('number1-inputs')"><img src="Copy.png" alt="Copy"></button>
     </div>
-    <div class="input-group">
-      <label for="number2">Enter second number:</label>
-      <input type="text" id="number2" placeholder="Enter a number">
+    <div class="number-group">
+      <div class="digit-inputs" id="number2-inputs"></div>
+      <button class="randomize-btn" onclick="randomizeInputs('number2-inputs')"><img src="Randomize.png" alt="Randomize"></button>
+      <button onclick="clearInputs('number2-inputs')"><img src="Clear.png" alt="Clear"></button>
+      <button onclick="copyToClipboard('number2-inputs')"><img src="Copy.png" alt="Copy"></button>
     </div>
-    <button onclick="multiplyNumbers()">Multiply</button>
-    <div id="result"></div>
+    <div class="number-group">
+      <div class="digit-inputs" id="product-inputs"></div>
+      <button class="randomize-btn" onclick="randomizeInputs('product-inputs')"><img src="Randomize.png" alt="Randomize"></button>
+      <button onclick="clearInputs('product-inputs')"><img src="Clear.png" alt="Clear"></button>
+      <button onclick="copyToClipboard('product-inputs')"><img src="Copy.png" alt="Copy"></button>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>

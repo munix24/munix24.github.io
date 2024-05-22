@@ -29,13 +29,14 @@
         }
 
         .fight-top {
-            overflow-y: scroll;
-            height: 92%; /* set height to make the table scrollable */
+            /* overflow-y: scroll; */
+            /* height: 92%; set height to make the table scrollable */
         }
     </style>
 </head>
 
 <body>
+    <script src="../nav_menu_hamburger.js"></script>
     <div class="container">
         <div class="fight">
             <div class="fight-header">
@@ -168,12 +169,13 @@
 
             spellFields = ['mCastTime', 'cooldownTime', 'castRange', 'castRadius', 'castRadiusSecondary', 'missileSpeed', 'mana'];
             spellFields = ['cooldownTime', 'mMaxAmmo'];
-            // spellFields = [];
+            
             document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)">Champion</th>';
             document.getElementById('fightSimulationTableHeader').innerHTML += '<th onclick="sortTableColumns(this)">Spell</th>';
             document.getElementById('fightSimulationTableHeader').innerHTML += spellFields.map(spellField => `<th onclick="sortTableColumns(this)">${spellField}</th>`).join('')
             document.getElementById('fightSimulationTableHeader').innerHTML += '<th onclick="sortTableColumns(this)">Damage</th>';
             document.getElementById('fightSimulationTableHeader').innerHTML += '<th onclick="sortTableColumns(this)">Ratio</th>';
+            document.getElementById('fightSimulationTableHeader').innerHTML += '<th onclick="sortTableColumns(this)">TotalDmg</th>';
 
             let tableBodyHTML = ``;
             Object.keys(window.championsDetailed).map(champion => {
@@ -181,16 +183,19 @@
                     tableBodyHTML += `<tr>
                                         <th>${champion}</th>
                                         <th>${window.championsDetailed[champion][spell]['mScriptName']}</th>`
-                    // ${spellFields.map(spellField => `<td>${spellField}</td>`).join('')}
+                                        // ${spellFields.map(spellField => `<td>${spellField}</td>`).join('')}
 
                     mSpell = window.championsDetailed[champion][spell]['mSpell'];
 
                     spellFields.forEach(spellField => {
-                        tableBodyHTML += mSpell.hasOwnProperty(spellField) ? `<td>${mSpell[spellField][0] != null ? mSpell[spellField][0] : mSpell[spellField]}</td>` : `<td></td>`;
+                        tableBodyHTML += mSpell.hasOwnProperty(spellField) ? `<td>${mSpell[spellField][0] != null ? Math.round(mSpell[spellField][0]) : mSpell[spellField]}</td>` : `<td></td>`;
                     });
                     
-                    tableBodyHTML += `<td>${getSpellBaseDamageMax(mSpell)}</td>`;
-                    tableBodyHTML += `<td>${getSpellRatioMax(mSpell)}</td>`;
+                    const damage = getSpellBaseDamageMax(mSpell);
+                    const ratio = getSpellRatioMax(mSpell);
+                    tableBodyHTML += `<td>${damage ? damage : ''}</td>`;
+                    tableBodyHTML += `<td>${ratio ? ratio : ''}</td>`;
+                    tableBodyHTML += `<td>${damage + ratio * 100 ? Math.round(damage + ratio * 100) : ''}</td>`;
                     tableBodyHTML += `</tr>`;
                 });
             });

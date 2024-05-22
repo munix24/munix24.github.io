@@ -14,5 +14,7 @@ https://munix24.github.io/coin_flip_sim.html
 
 https://munix24.github.io/birthday_problem.html
 
+https://munix24.github.io/factorization/factorization.html
+
 example site:
 http://laurenorsini.github.io/
