@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-  adjustDigitInputs('number1-inputs', 6); // Adjust inputs for number1-inputs
-  adjustDigitInputs('number2-inputs', 6); // Adjust inputs for number2-inputs
-  adjustDigitInputs('product-inputs', 6); // Adjust inputs for product-inputs
+  adjustDigitInputs('number1-inputs', 12); // Adjust inputs for number1-inputs
+  adjustDigitInputs('number2-inputs', 12); // Adjust inputs for number2-inputs
+  adjustDigitInputs('product-inputs', 12); // Adjust inputs for product-inputs
   randomizeInputs('number1-inputs'); // Randomize inputs when the page loads
   randomizeInputs('number2-inputs'); // Randomize inputs when the page loads
 });
@@ -26,7 +26,7 @@ function adjustDigitInputs(containerId, numDigits) {
     if (containerId === 'number1-inputs' || containerId === 'number2-inputs') {
       input.addEventListener('input', multiplyNumbers);
     } else if (containerId === 'product-inputs') {
-      input.addEventListener('input', checkProductFactors);
+      input.addEventListener('input', getProductFactors);
     }
 
     container.prepend(input);
@@ -47,9 +47,11 @@ function getNumberFromInputs(containerId) {
   return parseInt(numberStr, 10);
 }
 
+//TODO: after certain threshhold will use scientific notation, ie: 9.01654581337705e+22, which doesn't show well
 function setNumberToInputs(containerId, number) {
   const numberStr = number.toString(); // Format number with commas
   adjustDigitInputs(containerId, numberStr.length); // Adjust the number of inputs as needed
+  // alert(number, numberStr);
 
   // Update values of inputs starting from the rightmost digit
   const allInputs = document.querySelectorAll(`#${containerId} .digit`);
@@ -79,7 +81,7 @@ function randomizeInputs(containerId) {
   if (containerId === 'number1-inputs' || containerId === 'number2-inputs') {
     multiplyNumbers(); // Recalculate the product after randomizing inputs
   } else if (containerId === 'product-inputs') {
-    checkProductFactors(); // Check product factors after randomizing inputs
+    getProductFactors(); // Check product factors after randomizing inputs
   }
 }
 
@@ -101,7 +103,7 @@ function copyToClipboard(containerId) {
   document.body.removeChild(dummyElement);
 }
 
-function checkProductFactors() {
+function getProductFactors() {
   const product = getNumberFromInputs('product-inputs');
   const sqrtProduct = Math.sqrt(product);
 
