@@ -1,0 +1,117 @@
+<!-- https://www.tutorialspoint.com/how-to-include-another-html-file-in-an-html-file -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hover Navigation Menu</title>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<style>
+</style>
+</head>
+<body>
+  <!-- Standard for embedding html -->
+  iframe
+  <iframe src="menu_hamburger.html"></iframe>
+  <p></p>
+
+  Object
+  <object data="menu_hamburger.html"> 
+    Your browser doesn’t support the object tag. 
+  </object>
+  <p></p>
+
+  embed
+  <embed type="text/html" src="menu_hamburger.html">
+  <p></p>
+
+  json
+  <script>
+    $(document).ready(function(){
+        $.getJSON("test.json", function(data){
+            console.log(data.name); // Prints: Harry
+        }).fail(function(){
+            console.log("An error has occurred.");
+        });
+    });
+    </script> 
+  <p></p>
+
+  <!-- CORS -->
+  xmlHttp
+  <div w3-include-html="menu_hamburger.html"></div>
+  <script>
+    function addHTML() {
+       var el, i, domEl, fileName, xmlHttp;
+       
+       /*Iterate all DOM*/
+       el = document.getElementsByTagName("*");
+       for (i = 0; i < el.length; i++) {
+          domEl = el[i];
+          
+          /*find the element having w3-include-html attribute*/
+          fileName = domEl.getAttribute("w3-include-html");
+          if (fileName) {
+             
+             /*http request with attribute value as file name*/
+             xmlHttp = new XMLHttpRequest();
+             xmlHttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                   if (this.status == 200) {
+                      domEl.innerHTML = this.responseText;
+                   }
+                   if (this.status == 404) {
+                      domEl.innerHTML = "Page not found.";
+                   }
+                   
+                   /* Remove the attribute and invoke the function again*/
+                   domEl.removeAttribute("w3-include-html");
+                   addHTML();
+                }
+             }
+             xmlHttp.open("GET", fileName, true);
+             xmlHttp.send();
+             
+             /*function ends*/
+             return;
+          }
+       }
+    }
+    addHTML();
+ </script>
+  <p></p>
+
+  jquery
+  <div id="nav"></div>
+  <script>
+    $(function(){
+      $("#nav").load("menu_hamburger.html");
+    });
+  </script>
+  <p></p>
+
+  jquery2
+  <div id="nav2"></div>
+  <script>
+    $(function(){
+      $("#nav2").load("menu_hamburger.html");
+    });
+  </script>
+  <p></p>
+
+  jquery3
+  <div id="nav3"></div>
+  <script>
+    fetch('nav.html')
+    .then(res => res.text())
+    .then(text => {
+        let oldelem = document.querySelector("nav3");
+        let newelem = document.createElement("div");
+        newelem.innerHTML = text;
+        oldelem.parentNode.replaceChild(newelem,oldelem);
+    })
+  </script> 
+  <p></p>
+  -
+</body>
+</html>
