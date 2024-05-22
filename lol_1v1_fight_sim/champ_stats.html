@@ -42,6 +42,7 @@
             <div class="fight-header">
                 <p><button onclick="document.location='index.html'">1v1Table</button></p>
                 <p><button id='buttonStats' onclick="populateChampionsStatsTable()">Stats</button></p>
+                <p><button id='buttonStats' onclick="populateChampionsStatsCostTable()">StatsCost</button></p>
                 <p><button id='buttonSpells' onclick="populateChampionsSpellsTable()">Spells</button></p>
                 <p><button id='buttonSpellsDetailed' style='width: 150px;' onclick="populateChampionsSpellsDetailedTable()">SpellsDetailed</button></p>
             </div>
@@ -81,7 +82,7 @@
             // let tableHeadHTML = `${Object.keys(champions[0].stats).map(stat => `<th><div>${stat}</div></th>`).join('')}`;
             // document.getElementById('fightSimulationTableHeader').innerHTML = '<th><div></div></th>'+tableHeadHTML;
 
-            const stats = ['hp', 'hp/lv', 'mp', 'mp/lv', 'mvm', 'armor', 'ar/lv', 'mr', 'mr/lv', 'range', 'hp+', 'hp+/lv', 'mp+', 'mp+/lv', 'crit', 'crit/lv', 'ad', 'ad/lv', 'as/lv', 'as'];
+            const stats = ['hp', 'hp/lv', 'mp', 'mp/lv', 'mvm', 'armor', 'ar/lv', 'mr', 'mr/lv', 'range', 'hp+', 'hp+/lv', 'mp+', 'mp+/lv', 'crit', 'crit/lv', 'ad', 'ad/lv', 'as/lv', 'as', 'statsCost', 'statsCost/lv'];
             document.getElementById('fightSimulationTableHeader').innerHTML = '<th onclick="sortTableColumns(this)">Champion</th>';
             //TODO: add dps stat?
             document.getElementById('fightSimulationTableHeader').innerHTML += stats.map(stat => `<th onclick="sortTableColumns(this)">${stat}</th>`).join('')
@@ -90,6 +91,8 @@
             champions.forEach(champion => {
                 let row = `<tr><th>${champion.name}</th>`
                 row += Object.keys(champion.stats).map(stat => `<td>${champion.stats[stat]}</td>`).join('');
+                row += `<td>${champion.champStatsCost}</td>`
+                row += `<td>${champion.champStatsCostPerLevel}</td>`
                 row += '</tr>';
                 tableBodyHTML += row;
             });
@@ -202,7 +205,7 @@
             document.getElementById('fightSimulationTableBody').innerHTML = tableBodyHTML;
         }
 
-        // Get the list of champions assuming data brought into global variable via script tab
+        // Get the list of champions assuming data brought into global variable via script tag
         // Works offline. alternatively use ajax fetch call to webservice (cors error offline)
         const champs = Object.keys(window.champions.data);
         // const champs = ['Aatrox', 'Ahri'];
