@@ -121,7 +121,7 @@ class Champ {
     }
 
     async fetchChampStats() {	//CORS ERROR
-        const response = await fetch('champion.json');
+        const response = await fetch('championFull.json');
         const data = await response.json();
         // return data[name].stats;
         return data;

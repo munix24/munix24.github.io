@@ -1,0 +1,2552 @@
+{
+    "Aatrox": {
+        "Characters/Aatrox/Spells/AatroxBasicAttack": {
+            "mScriptName": "AatroxBasicAttack",
+            "mSpell": {
+                "mAffectsTypeFlags": 5327,
+                "mAlternateName": "AatroxBasicAttack",
+                "cooldownTime": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "delayCastOffsetPercent": -0.10000000149011612,
+                "mApplyMaterialOnHitSound": true,
+                "bHaveHitEffect": true,
+                "castRange": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                ],
+                "castRadius": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 11.0,
+                "missileSpeed": 347.79998779296875,
+                "mHitEffectOrientType": 2,
+                "mHitEffectKey": "{57532b4b}",
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_BUFFBONE_GLB_CHEST_LOC",
+                "mClientData": {
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxRAbility": {
+            "mRootSpell": "Characters/Aatrox/Spells/AatroxRAbility/AatroxR",
+            "mChildSpells": [
+                "Characters/Aatrox/Spells/AatroxRAbility/AatroxR",
+                "Characters/Aatrox/Spells/AatroxRAbility/AatroxRAttack1",
+                "Characters/Aatrox/Spells/AatroxRAbility/AatroxRAttack2",
+                "Characters/Aatrox/Spells/AatroxRAbility/AatroxRMovementSpeedManager",
+                "Characters/Aatrox/Spells/AatroxRAbility/AatroxRRevive"
+            ],
+            "{86ddaddb}": true,
+            "mName": "AatroxRAbility",
+            "mType": 2,
+            "__type": "AbilityObject"
+        },
+        "Characters/Aatrox/Spells/AatroxRAbility/AatroxR": {
+            "mScriptName": "AatroxR",
+            "mSpell": {
+                "flags": 32,
+                "mAffectsTypeFlags": 9221,
+                "mRequiredUnitTags": {
+                    "{a47810c1}": [
+                        "{ea595ca6}"
+                    ],
+                    "__type": "ObjectTags"
+                },
+                "mSpellTags": [
+                    "Trait_Ultimate"
+                ],
+                "mDataValues": [
+                    {
+                        "mName": "RDuration",
+                        "mValues": [
+                            10.0,
+                            10.0,
+                            10.0,
+                            10.0,
+                            10.0,
+                            10.0,
+                            10.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RERechargeBonus",
+                        "mValues": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RMovementSpeed",
+                        "mValues": [
+                            0.10000000149011612,
+                            0.15000000596046448,
+                            0.20000000298023224,
+                            0.25,
+                            0.30000001192092896,
+                            0.3499999940395355,
+                            0.4000000059604645
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RMovementSpeedBonus",
+                        "mValues": [
+                            0.4000000059604645,
+                            0.6000000238418579,
+                            0.800000011920929,
+                            1.0,
+                            1.2000000476837158,
+                            1.399999976158142,
+                            1.600000023841858
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RTotalADAmp",
+                        "mValues": [
+                            0.07500000298023224,
+                            0.20000000298023224,
+                            0.32499998807907104,
+                            0.44999998807907104,
+                            0.574999988079071,
+                            0.699999988079071,
+                            0.824999988079071
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RBonusADRange",
+                        "mValues": [
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RSpeedMinDuration",
+                        "mValues": [
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RFXExtraDuration",
+                        "mValues": [
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RPercentBloodWellToBoostToMax",
+                        "mValues": [
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RHealingAmp",
+                        "mValues": [
+                            0.15000000596046448,
+                            0.25,
+                            0.3499999940395355,
+                            0.44999998807907104,
+                            0.550000011920929,
+                            0.6499999761581421,
+                            0.75
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RExtension",
+                        "mValues": [
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RFearRadius",
+                        "mValues": [
+                            600.0,
+                            600.0,
+                            600.0,
+                            600.0,
+                            600.0,
+                            600.0,
+                            600.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RMinionFearDuration",
+                        "mValues": [
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "RChampionFearDuration",
+                        "mValues": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "__type": "SpellDataValue"
+                    }
+                ],
+                "{fb56608c}": {
+                    "{497ae878}": {
+                        "SpellDataValues": [
+                            {
+                                "mName": "RHealingAmp",
+                                "mValues": [
+                                    0.15000000596046448,
+                                    0.30000001192092896,
+                                    0.44999998807907104,
+                                    0.6000000238418579,
+                                    0.75,
+                                    0.8999999761581421,
+                                    1.0499999523162842
+                                ],
+                                "__type": "SpellDataValue"
+                            },
+                            {
+                                "mName": "RTotalADAmp",
+                                "mValues": [
+                                    0.17499999701976776,
+                                    0.30000001192092896,
+                                    0.42500001192092896,
+                                    0.550000011920929,
+                                    0.675000011920929,
+                                    0.800000011920929,
+                                    0.925000011920929
+                                ],
+                                "__type": "SpellDataValue"
+                            }
+                        ],
+                        "__type": "SpellDataValueVector"
+                    }
+                },
+                "mCoefficient": 1.0,
+                "mAnimationName": "Spell4",
+                "mImgIconName": [
+                    "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_R.dds"
+                ],
+                "mCastTime": 0.25,
+                "cooldownTime": [
+                    120.0,
+                    120.0,
+                    100.0,
+                    80.0,
+                    80.0,
+                    80.0,
+                    80.0
+                ],
+                "delayCastOffsetPercent": -1.0,
+                "delayTotalTimePercent": -1.0,
+                "mCantCancelWhileWindingUp": true,
+                "mChannelIsInterruptedByDisables": false,
+                "mCanMoveWhileChanneling": true,
+                "useAnimatorFramerate": true,
+                "castRange": [
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0
+                ],
+                "castRadius": [
+                    550.0,
+                    550.0,
+                    550.0,
+                    550.0,
+                    550.0,
+                    550.0,
+                    550.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 7.5,
+                "missileSpeed": 779.9000244140625,
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_BUFFBONE_GLB_CHEST_LOC",
+                "mTargetingTypeData": {
+                    "__type": "SelfAoe"
+                },
+                "mClientData": {
+                    "mTooltipData": {
+                        "mObjectName": "AatroxR",
+                        "mFormat": "{89fef2a8}",
+                        "mLocKeys": {
+                            "keyName": "Spell_AatroxR_Name",
+                            "keyCost": "Spell_Cost_NoCost",
+                            "keyTooltip": "Spell_AatroxR_Tooltip",
+                            "keySummary": "Spell_AatroxR_Summary",
+                            "keyTooltipExtendedBelowLine": "Spell_AatroxR_TooltipExtendedBelowLine"
+                        },
+                        "mLists": {
+                            "LevelUp": {
+                                "levelCount": 3,
+                                "elements": [
+                                    {
+                                        "type": "RTotalADAmp",
+                                        "multiplier": 100.0,
+                                        "nameOverride": "Spell_AatroxR_TotalADLevelup",
+                                        "Style": 1,
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "RHealingAmp",
+                                        "multiplier": 100.0,
+                                        "nameOverride": "Spell_ListType_HealingIncrease",
+                                        "Style": 1,
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "RMovementSpeedBonus",
+                                        "typeIndex": 6,
+                                        "multiplier": 100.0,
+                                        "nameOverride": "Spell_ListType_MovementSpeed",
+                                        "Style": 1,
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "Cooldown",
+                                        "__type": "TooltipInstanceListElement"
+                                    }
+                                ],
+                                "__type": "TooltipInstanceList"
+                            }
+                        },
+                        "__type": "TooltipInstanceSpell"
+                    },
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "overrideBaseRange": {
+                                "mPerLevelValues": [
+                                    600.0,
+                                    600.0,
+                                    600.0,
+                                    600.0,
+                                    600.0,
+                                    600.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "mBuff": {
+                "mDescription": "Buff_AatroxR_Tooltip",
+                "__type": "BuffData"
+            },
+            "{4048c61e}": {
+                "{38382c53}": [
+                    {
+                        "{e38f54f7}": 2,
+                        "__type": "{150d1b92}"
+                    }
+                ],
+                "__type": "{f195e56b}"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxRAbility/AatroxRRevive": {
+            "mScriptName": "AatroxRRevive",
+            "mBuff": {
+                "mDescription": "Buff_AatroxRRevive_Tooltip",
+                "__type": "BuffData"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxRAbility/AatroxRMovementSpeedManager": {
+            "mScriptName": "AatroxRMovementSpeedManager",
+            "mBuff": {
+                "mDescription": "Buff_AatroxPassiveReady_Tooltip",
+                "{87b1d303}": [
+                    {
+                        "{071f3c1d}": [
+                            {
+                                "boneName": "C_Buffbone_Glb_Center_Loc",
+                                "effectKey": "Aatrox_R_SpeedBuff",
+                                "__type": "{00fa43e4}"
+                            }
+                        ],
+                        "__type": "{67ac9672}"
+                    }
+                ],
+                "__type": "BuffData"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxRAbility/AatroxRAttack1": {
+            "mScriptName": "AatroxRAttack1",
+            "mSpell": {
+                "mAffectsTypeFlags": 5327,
+                "mAlternateName": "AatroxBasicAttack",
+                "mAnimationName": "Attack1_ULT",
+                "cooldownTime": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "delayCastOffsetPercent": -0.10000000149011612,
+                "mApplyMaterialOnHitSound": true,
+                "bHaveHitEffect": true,
+                "castRange": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                ],
+                "castRadius": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 12.0,
+                "missileSpeed": 347.79998779296875,
+                "mHitEffectOrientType": 2,
+                "mHitEffectKey": "{58532cde}",
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_BUFFBONE_GLB_CHEST_LOC",
+                "mClientData": {
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxRAbility/AatroxRAttack2": {
+            "mScriptName": "AatroxRAttack2",
+            "mSpell": {
+                "mAffectsTypeFlags": 5327,
+                "mAlternateName": "AatroxBasicAttack",
+                "mAnimationName": "Attack2_ULT",
+                "cooldownTime": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "delayCastOffsetPercent": -0.10000000149011612,
+                "mApplyMaterialOnHitSound": true,
+                "bHaveHitEffect": true,
+                "castRange": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                ],
+                "castRadius": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 12.0,
+                "missileSpeed": 347.79998779296875,
+                "mHitEffectOrientType": 2,
+                "mHitEffectKey": "{57532b4b}",
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_BUFFBONE_GLB_CHEST_LOC",
+                "mClientData": {
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxEAbility": {
+            "mRootSpell": "Characters/Aatrox/Spells/AatroxEAbility/AatroxE",
+            "mChildSpells": [
+                "Characters/Aatrox/Spells/AatroxEAbility/AatroxE",
+                "Characters/Aatrox/Spells/AatroxEAbility/AatroxEPassive"
+            ],
+            "mName": "AatroxEAbility",
+            "__type": "AbilityObject"
+        },
+        "Characters/Aatrox/Spells/AatroxQAbility": {
+            "mRootSpell": "Characters/Aatrox/Spells/AatroxQAbility/AatroxQ",
+            "mChildSpells": [
+                "Characters/Aatrox/Spells/AatroxQAbility/AatroxQ",
+                "Characters/Aatrox/Spells/AatroxQAbility/AatroxQ2",
+                "Characters/Aatrox/Spells/AatroxQAbility/AatroxQ3",
+                "Characters/Aatrox/Spells/AatroxQAbility/AatroxQChannel1",
+                "Characters/Aatrox/Spells/AatroxQAbility/AatroxQWrapperCast"
+            ],
+            "mName": "AatroxQAbility",
+            "AbilityTraits": 2048,
+            "__type": "AbilityObject"
+        },
+        "Characters/Aatrox/Spells/AatroxQAbility/AatroxQ": {
+            "mScriptName": "AatroxQ",
+            "mSpell": {
+                "flags": 4,
+                "mAffectsTypeFlags": 8192,
+                "mSpellTags": [
+                    "Trait_ImmobilizingCCSpell"
+                ],
+                "mDataValues": [
+                    {
+                        "mName": "QBaseDamage",
+                        "mValues": [
+                            -5.0,
+                            10.0,
+                            25.0,
+                            40.0,
+                            55.0,
+                            70.0,
+                            85.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "QTotalADRatio",
+                        "mValues": [
+                            0.5249999761581421,
+                            0.6000000238418579,
+                            0.675000011920929,
+                            0.75,
+                            0.824999988079071,
+                            0.8999999761581421,
+                            0.9750000238418579
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "QSweetSpotBonus",
+                        "mValues": [
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579,
+                            0.6000000238418579
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "QKnockupDuration",
+                        "mValues": [
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "QRampBonus",
+                        "mValues": [
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "QMonsterBonus",
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "QExtensionTime",
+                        "mValues": [
+                            4.0,
+                            4.0,
+                            4.0,
+                            4.0,
+                            4.0,
+                            4.0,
+                            4.0
+                        ],
+                        "__type": "SpellDataValue"
+                    }
+                ],
+                "mSpellCalculations": {
+                    "QDamage": {
+                        "mFormulaParts": [
+                            {
+                                "mDataValue": "QBaseDamage",
+                                "__type": "NamedDataValueCalculationPart"
+                            },
+                            {
+                                "mStat": 2,
+                                "mDataValue": "QTotalADRatio",
+                                "__type": "StatByNamedDataValueCalculationPart"
+                            }
+                        ],
+                        "__type": "GameCalculation"
+                    },
+                    "{46898f30}": {
+                        "mFormulaParts": [
+                            {
+                                "mStat": 2,
+                                "mDataValue": "{e934f2f5}",
+                                "__type": "StatByNamedDataValueCalculationPart"
+                            }
+                        ],
+                        "__type": "GameCalculation"
+                    },
+                    "QMinionDamage": {
+                        "{37070a8d}": 5,
+                        "mFormulaParts": [
+                            {
+                                "mLevel1Value": 0.550000011920929,
+                                "mBreakpoints": [
+                                    {
+                                        "mLevel": 6,
+                                        "{d5fd07ed}": 0.05000000074505806,
+                                        "__type": "Breakpoint"
+                                    },
+                                    {
+                                        "mLevel": 11,
+                                        "{d5fd07ed}": 0.05000000074505806,
+                                        "__type": "Breakpoint"
+                                    },
+                                    {
+                                        "mLevel": 16,
+                                        "{d5fd07ed}": 0.05000000074505806,
+                                        "__type": "Breakpoint"
+                                    }
+                                ],
+                                "__type": "ByCharLevelBreakpointsCalculationPart"
+                            }
+                        ],
+                        "mDisplayAsPercent": true,
+                        "__type": "GameCalculation"
+                    },
+                    "QEdgeDamage": {
+                        "mMultiplier": {
+                            "mSubparts": [
+                                {
+                                    "mNumber": 1.0,
+                                    "__type": "NumberCalculationPart"
+                                },
+                                {
+                                    "mDataValue": "QSweetSpotBonus",
+                                    "__type": "NamedDataValueCalculationPart"
+                                }
+                            ],
+                            "__type": "SumOfSubPartsCalculationPart"
+                        },
+                        "{cbcac618}": 6,
+                        "tooltipOnly": true,
+                        "mModifiedGameCalculation": "QDamage",
+                        "__type": "GameCalculationModified"
+                    }
+                },
+                "mAnimationName": "None",
+                "mImgIconName": [
+                    "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_Q.dds"
+                ],
+                "cooldownTime": [
+                    14.0,
+                    14.0,
+                    12.0,
+                    10.0,
+                    8.0,
+                    6.0,
+                    4.0
+                ],
+                "delayTotalTimePercent": -1.0,
+                "mChannelIsInterruptedByDisables": false,
+                "mChannelIsInterruptedByAttacking": false,
+                "mSpellRevealsChampion": false,
+                "castRange": [
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0
+                ],
+                "mFloatVarsDecimals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mTargetingTypeData": {
+                    "__type": "Direction"
+                },
+                "{00f7e5bc}": true,
+                "mClientData": {
+                    "mTooltipData": {
+                        "mObjectName": "AatroxQ",
+                        "mFormat": "{89fef2a8}",
+                        "mLocKeys": {
+                            "keyTooltip": "Spell_AatroxQ_Tooltip",
+                            "keyName": "Spell_AatroxQ_Name",
+                            "keyCost": "Spell_Cost_NoCost",
+                            "keyTooltipExtendedBelowLine": "Spell_AatroxQ_TooltipExtendedBelowLine",
+                            "keySummary": "Spell_AatroxQ_Summary"
+                        },
+                        "mLists": {
+                            "LevelUp": {
+                                "levelCount": 5,
+                                "elements": [
+                                    {
+                                        "type": "Cooldown",
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "QBaseDamage",
+                                        "typeIndex": 1,
+                                        "nameOverride": "Spell_ListType_Damage",
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "QTotalADRatio",
+                                        "typeIndex": 2,
+                                        "multiplier": 100.0,
+                                        "nameOverride": "Spell_ListType_TotalADScalar",
+                                        "Style": 1,
+                                        "__type": "TooltipInstanceListElement"
+                                    }
+                                ],
+                                "__type": "TooltipInstanceList"
+                            }
+                        },
+                        "__type": "TooltipInstanceSpell"
+                    },
+                    "mTargeterDefinitions": [
+                        {
+                            "endLocator": {
+                                "basePosition": 3,
+                                "orientationType": 3,
+                                "__type": "DrawablePositionLocator"
+                            },
+                            "alwaysDraw": true,
+                            "minimumDisplayedRange": 0.0,
+                            "lineWidth": {
+                                "mPerLevelValues": [
+                                    400.0,
+                                    400.0,
+                                    400.0,
+                                    400.0,
+                                    400.0,
+                                    400.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "overrideBaseRange": {
+                                "mPerLevelValues": [
+                                    850.0,
+                                    850.0,
+                                    850.0,
+                                    850.0,
+                                    850.0,
+                                    850.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "textureBaseOverrideName": "ASSETS/Characters/Aatrox/Spells/Aatrox_Q1_Indicator.dds",
+                            "textureTargetOverrideName": "ASSETS/Characters/Aatrox/HUD/Textures/Blank_Indicator.dds",
+                            "__type": "TargeterDefinitionLine"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "mBuff": {
+                "__type": "BuffData"
+            },
+            "{4048c61e}": {
+                "{38382c53}": [
+                    {
+                        "{e38f54f7}": 2,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 8,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 128,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 4096,
+                        "__type": "{150d1b92}"
+                    }
+                ],
+                "__type": "{f195e56b}"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxQAbility/AatroxQChannel1": {
+            "mScriptName": "AatroxQChannel1",
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxQAbility/AatroxQ3": {
+            "mScriptName": "AatroxQ3",
+            "mSpell": {
+                "flags": 4,
+                "mAffectsTypeFlags": 8192,
+                "mSpellTags": [
+                    "Trait_ImmobilizingCCSpell"
+                ],
+                "mEffectAmount": [
+                    {
+                        "value": [
+                            5.0,
+                            5.0,
+                            10.0,
+                            15.0,
+                            20.0,
+                            25.0,
+                            0.0
+                        ],
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "value": [
+                            0.8500000238418579,
+                            0.8500000238418579,
+                            0.9750000238418579,
+                            1.100000023841858,
+                            1.125,
+                            1.350000023841858,
+                            0.0
+                        ],
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    }
+                ],
+                "mAnimationName": "None",
+                "mImgIconName": [
+                    "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_Q3.dds"
+                ],
+                "cooldownTime": [
+                    16.0,
+                    16.0,
+                    15.0,
+                    14.0,
+                    13.0,
+                    12.0,
+                    12.0
+                ],
+                "delayTotalTimePercent": -1.0,
+                "mChannelIsInterruptedByDisables": false,
+                "mChannelIsInterruptedByAttacking": false,
+                "mSpellRevealsChampion": false,
+                "castRange": [
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0
+                ],
+                "mFloatVarsDecimals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mTargetingTypeData": {
+                    "__type": "Direction"
+                },
+                "{00f7e5bc}": true,
+                "mClientData": {
+                    "{375656dd}": "{27f999fb}",
+                    "mTargeterDefinitions": [
+                        {
+                            "centerLocator": {
+                                "distanceOffset": 200.0,
+                                "orientationType": 3,
+                                "__type": "DrawablePositionLocator"
+                            },
+                            "overrideRadius": {
+                                "mPerLevelValues": [
+                                    180.0,
+                                    180.0,
+                                    180.0,
+                                    180.0,
+                                    180.0,
+                                    180.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "__type": "TargeterDefinitionAoe"
+                        },
+                        {
+                            "centerLocator": {
+                                "distanceOffset": 200.0,
+                                "orientationType": 3,
+                                "__type": "DrawablePositionLocator"
+                            },
+                            "overrideBaseRange": {
+                                "mPerLevelValues": [
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "{4048c61e}": {
+                "{38382c53}": [
+                    {
+                        "{e38f54f7}": 2,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 8,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 4096,
+                        "__type": "{150d1b92}"
+                    }
+                ],
+                "__type": "{f195e56b}"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxQAbility/AatroxQ2": {
+            "mScriptName": "AatroxQ2",
+            "mSpell": {
+                "flags": 4,
+                "mAffectsTypeFlags": 8192,
+                "mSpellTags": [
+                    "Trait_ImmobilizingCCSpell"
+                ],
+                "mEffectAmount": [
+                    {
+                        "value": [
+                            5.0,
+                            5.0,
+                            10.0,
+                            15.0,
+                            20.0,
+                            25.0,
+                            0.0
+                        ],
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "value": [
+                            0.8500000238418579,
+                            0.8500000238418579,
+                            0.9750000238418579,
+                            1.100000023841858,
+                            1.125,
+                            1.350000023841858,
+                            0.0
+                        ],
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    },
+                    {
+                        "__type": "SpellEffectAmount"
+                    }
+                ],
+                "mAnimationName": "None",
+                "mImgIconName": [
+                    "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_Q2.dds"
+                ],
+                "cooldownTime": [
+                    16.0,
+                    16.0,
+                    15.0,
+                    14.0,
+                    13.0,
+                    12.0,
+                    12.0
+                ],
+                "delayTotalTimePercent": -1.0,
+                "mChannelIsInterruptedByDisables": false,
+                "mChannelIsInterruptedByAttacking": false,
+                "mSpellRevealsChampion": false,
+                "castRange": [
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0
+                ],
+                "mFloatVarsDecimals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mTargetingTypeData": {
+                    "__type": "Direction"
+                },
+                "{00f7e5bc}": true,
+                "mClientData": {
+                    "{375656dd}": "{27f999fb}",
+                    "mTargeterDefinitions": [
+                        {
+                            "endLocator": {
+                                "basePosition": 3,
+                                "orientationType": 3,
+                                "__type": "DrawablePositionLocator"
+                            },
+                            "coneAngleDegrees": 35.0,
+                            "coneRange": 550.0,
+                            "textureConeOverrideName": "ASSETS/Characters/Aatrox/Spells/Aatrox_Q2_Indicator.dds",
+                            "__type": "TargeterDefinitionCone"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "{4048c61e}": {
+                "{38382c53}": [
+                    {
+                        "{e38f54f7}": 2,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 8,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 2048,
+                        "__type": "{150d1b92}"
+                    },
+                    {
+                        "{e38f54f7}": 4096,
+                        "__type": "{150d1b92}"
+                    }
+                ],
+                "__type": "{f195e56b}"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxQAbility/AatroxQWrapperCast": {
+            "mScriptName": "AatroxQWrapperCast",
+            "mSpell": {
+                "mAffectsTypeFlags": 8192,
+                "mAnimationName": "None",
+                "mCastTime": 0.6000000238418579,
+                "delayTotalTimePercent": -1.0,
+                "mCantCancelWhileWindingUp": true,
+                "mChannelIsInterruptedByDisables": false,
+                "mChannelIsInterruptedByAttacking": false,
+                "mSpellRevealsChampion": false,
+                "mShowChannelBar": false,
+                "mTargetingTypeData": {
+                    "__type": "Self"
+                },
+                "mClientData": {
+                    "{375656dd}": "{27f999fb}",
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxPassiveAbility": {
+            "mRootSpell": "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassive",
+            "mChildSpells": [
+                "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassive",
+                "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveAttack",
+                "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveCooldown",
+                "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveDebuff",
+                "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveReady"
+            ],
+            "mName": "AatroxPassiveAbility",
+            "mType": 3,
+            "__type": "AbilityObject"
+        },
+        "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassive": {
+            "mScriptName": "AatroxPassive",
+            "mSpell": {
+                "mDataValues": [
+                    {
+                        "mName": "PBonusAARange",
+                        "mValues": [
+                            50.0,
+                            50.0,
+                            50.0,
+                            50.0,
+                            50.0,
+                            50.0,
+                            50.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PChargeRate",
+                        "mValues": [
+                            2.0,
+                            2.0,
+                            2.0,
+                            2.0,
+                            2.0,
+                            2.0,
+                            2.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PDamageTADBonusLevel1",
+                        "mValues": [
+                            0.15000000596046448,
+                            0.15000000596046448,
+                            0.15000000596046448,
+                            0.15000000596046448,
+                            0.15000000596046448,
+                            0.15000000596046448,
+                            0.15000000596046448
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PDamageTADBonusLevel18",
+                        "mValues": [
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PMonsterCap",
+                        "mValues": [
+                            100.0,
+                            100.0,
+                            100.0,
+                            100.0,
+                            100.0,
+                            100.0,
+                            100.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PHealShieldReduction",
+                        "mValues": [
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PDebuffDuration",
+                        "mValues": [
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PHealingMinionMod",
+                        "mValues": [
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25,
+                            0.25
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "PHealingRatio",
+                        "mValues": [
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929,
+                            0.800000011920929
+                        ],
+                        "__type": "SpellDataValue"
+                    }
+                ],
+                "mSpellCalculations": {
+                    "PDamage": {
+                        "mFormulaParts": [
+                            {
+                                "mStartValue": 0.03999999910593033,
+                                "mEndValue": 0.11999999731779099,
+                                "__type": "ByCharLevelInterpolationCalculationPart"
+                            }
+                        ],
+                        "mDisplayAsPercent": true,
+                        "__type": "GameCalculation"
+                    },
+                    "PCooldown": {
+                        "{cbcac618}": 6,
+                        "mFormulaParts": [
+                            {
+                                "mStartValue": 22.0,
+                                "mEndValue": 10.0,
+                                "__type": "ByCharLevelInterpolationCalculationPart"
+                            }
+                        ],
+                        "__type": "GameCalculation"
+                    }
+                },
+                "mImgIconName": [
+                    "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_Passive.dds"
+                ],
+                "castRange": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "mClientData": {
+                    "mTooltipData": {
+                        "mObjectName": "AatroxPassive",
+                        "mFormat": "{0b8004bb}",
+                        "mLocKeys": {
+                            "keyTooltip": "Passive_AatroxPassive_Tooltip",
+                            "keyName": "Passive_AatroxPassive_Name",
+                            "keyTooltipExtended": "Passive_AatroxPassive_TooltipExtended",
+                            "keySummary": "Spell_AatroxPassive_Summary",
+                            "keyCooldown": "Passive_AatroxPassive_Cooldown"
+                        },
+                        "__type": "TooltipInstanceSpell"
+                    },
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "mBuff": {
+                "mDescription": "Passive_AatroxPassive_Description",
+                "__type": "BuffData"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveDebuff": {
+            "mScriptName": "AatroxPassiveDebuff",
+            "mBuff": {
+                "mDescription": "Buff_AatroxPassiveDebuff_Tooltip",
+                "__type": "BuffData"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveAttack": {
+            "mScriptName": "AatroxPassiveAttack",
+            "mSpell": {
+                "mAffectsTypeFlags": 5327,
+                "mAnimationName": "Passive_Attack",
+                "cooldownTime": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "delayCastOffsetPercent": -0.10000000149011612,
+                "canCastWhileDisabled": true,
+                "mApplyMaterialOnHitSound": true,
+                "bHaveHitEffect": true,
+                "castRange": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                ],
+                "castRadius": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 12.0,
+                "missileSpeed": 347.79998779296875,
+                "mMissileEffectName": "rampage.troy",
+                "mHitEffectOrientType": 2,
+                "mHitEffectKey": "Aatrox_P_Hit_Tar",
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_BUFFBONE_GLB_CHEST_LOC",
+                "mClientData": {
+                    "{375656dd}": "{599f9367}",
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveReady": {
+            "mScriptName": "AatroxPassiveReady",
+            "mBuff": {
+                "mDescription": "Buff_AatroxPassiveReady_Tooltip",
+                "__type": "BuffData"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveCooldown": {
+            "mScriptName": "AatroxPassiveCooldown",
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxWAbility": {
+            "mRootSpell": "Characters/Aatrox/Spells/AatroxWAbility/AatroxW",
+            "mChildSpells": [
+                "Characters/Aatrox/Spells/AatroxWAbility/AatroxW",
+                "Characters/Aatrox/Spells/AatroxWAbility/AatroxWSlow"
+            ],
+            "mName": "AatroxWAbility",
+            "AbilityTraits": 2048,
+            "__type": "AbilityObject"
+        },
+        "Characters/Aatrox/Spells/AatroxWAbility/AatroxWSlow": {
+            "mScriptName": "AatroxWSlow",
+            "mBuff": {
+                "mDescription": "Buff_AatroxWSlow_Tooltip",
+                "__type": "BuffData"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxWAbility/AatroxW": {
+            "mScriptName": "AatroxW",
+            "mSpell": {
+                "flags": 4194304,
+                "mAffectsTypeFlags": 6154,
+                "mSpellTags": [
+                    "Trait_ImmobilizingCCSpell"
+                ],
+                "mDataValues": [
+                    {
+                        "mName": "WBaseDamage",
+                        "mValues": [
+                            20.0,
+                            30.0,
+                            40.0,
+                            50.0,
+                            60.0,
+                            70.0,
+                            80.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "WBonusADRatio",
+                        "mValues": [
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "WSlowPercentage",
+                        "mValues": [
+                            -0.25,
+                            -0.25,
+                            -0.2750000059604645,
+                            -0.30000001192092896,
+                            -0.32499998807907104,
+                            -0.3499999940395355,
+                            -0.3499999940395355
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "WSlowDuration",
+                        "mValues": [
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "WTotalADRatio",
+                        "mValues": [
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645,
+                            0.4000000059604645
+                        ],
+                        "__type": "SpellDataValue"
+                    }
+                ],
+                "mSpellCalculations": {
+                    "WDamage": {
+                        "mFormulaParts": [
+                            {
+                                "mDataValue": "WBaseDamage",
+                                "__type": "NamedDataValueCalculationPart"
+                            },
+                            {
+                                "mStat": 2,
+                                "mDataValue": "WTotalADRatio",
+                                "__type": "StatByNamedDataValueCalculationPart"
+                            }
+                        ],
+                        "__type": "GameCalculation"
+                    }
+                },
+                "mAnimationName": "none",
+                "mImgIconName": [
+                    "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_W.dds"
+                ],
+                "mCastTime": 0.25,
+                "cooldownTime": [
+                    20.0,
+                    20.0,
+                    18.0,
+                    16.0,
+                    14.0,
+                    12.0,
+                    12.0
+                ],
+                "delayCastOffsetPercent": -1.0,
+                "delayTotalTimePercent": -1.0,
+                "{3d746f1f}": 2,
+                "mCantCancelWhileWindingUp": true,
+                "mSpellRevealsChampion": false,
+                "alwaysSnapFacing": true,
+                "useAnimatorFramerate": true,
+                "castRange": [
+                    825.0,
+                    825.0,
+                    825.0,
+                    825.0,
+                    825.0,
+                    825.0,
+                    825.0
+                ],
+                "luaOnMissileUpdateDistanceInterval": 51.0,
+                "mMissileSpec": {
+                    "mMissileWidth": 80.0,
+                    "movementComponent": {
+                        "mTracksTarget": false,
+                        "mStartBoneName": "C_Buffbone_Glb_Layout_Loc",
+                        "mProjectTargetToCastRange": true,
+                        "mSpeed": 1800.0,
+                        "__type": "FixedSpeedMovement"
+                    },
+                    "heightSolver": {
+                        "__type": "BlendedLinearHeightSolver"
+                    },
+                    "verticalFacing": {
+                        "__type": "VerticalFacingFaceTarget"
+                    },
+                    "behaviors": [
+                        {
+                            "__type": "CastOnHit"
+                        },
+                        {
+                            "__type": "DestroyOnMovementComplete"
+                        }
+                    ],
+                    "__type": "MissileSpecification"
+                },
+                "mCastType": 3,
+                "mMissileEffectKey": "Aatrox_W_mis",
+                "mLineWidth": 80.0,
+                "mFloatVarsDecimals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "selectionPriority": 1,
+                "mTargetingTypeData": {
+                    "__type": "LocationClamped"
+                },
+                "{00f7e5bc}": true,
+                "mClientData": {
+                    "mTooltipData": {
+                        "mObjectName": "AatroxW",
+                        "mFormat": "{89fef2a8}",
+                        "mLocKeys": {
+                            "keyName": "Spell_AatroxW_Name",
+                            "keyCost": "Spell_Cost_NoCost",
+                            "keyTooltip": "Spell_AatroxW_Tooltip",
+                            "keyTooltipExtendedBelowLine": "Spell_AatroxW_TooltipExtendedBelowLine",
+                            "keySummary": "Spell_AatroxW_Summary"
+                        },
+                        "mLists": {
+                            "LevelUp": {
+                                "levelCount": 5,
+                                "elements": [
+                                    {
+                                        "type": "Cooldown",
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "WBaseDamage",
+                                        "typeIndex": 1,
+                                        "nameOverride": "Spell_ListType_Damage",
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "WSlowPercentage",
+                                        "multiplier": -100.0,
+                                        "nameOverride": "Spell_ListType_Slow",
+                                        "Style": 1,
+                                        "__type": "TooltipInstanceListElement"
+                                    }
+                                ],
+                                "__type": "TooltipInstanceList"
+                            }
+                        },
+                        "__type": "TooltipInstanceSpell"
+                    },
+                    "mTargeterDefinitions": [
+                        {
+                            "hideWithLineIndicator": true,
+                            "__type": "TargeterDefinitionRange"
+                        },
+                        {
+                            "endLocator": {
+                                "basePosition": 3,
+                                "__type": "DrawablePositionLocator"
+                            },
+                            "lineStopsAtEndPosition": false,
+                            "lineWidth": {
+                                "mPerLevelValues": [
+                                    80.0,
+                                    80.0,
+                                    80.0,
+                                    80.0,
+                                    80.0,
+                                    80.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "__type": "TargeterDefinitionLine"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "mBuff": {
+                "mDescription": "Buff_AatroxW_Tooltip",
+                "__type": "BuffData"
+            },
+            "{4048c61e}": {
+                "{450d68a0}": 1,
+                "{6d548702}": {
+                    "mFormulaParts": [
+                        {
+                            "{88536426}": "WDamage",
+                            "__type": "{f3cbe7b2}"
+                        }
+                    ],
+                    "__type": "GameCalculation"
+                },
+                "{ec17e271}": [
+                    {
+                        "{77e5e41c}": 1,
+                        "{725bd4d5}": {
+                            "mFormulaParts": [
+                                {
+                                    "mDataValue": "WSlowDuration",
+                                    "__type": "NamedDataValueCalculationPart"
+                                }
+                            ],
+                            "__type": "GameCalculation"
+                        },
+                        "__type": "{b09016f6}"
+                    }
+                ],
+                "__type": "{f195e56b}"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxBasicAttack3": {
+            "mScriptName": "AatroxBasicAttack3",
+            "mSpell": {
+                "mAffectsTypeFlags": 5327,
+                "mAlternateName": "AatroxBasicAttack2",
+                "mAnimationName": "Attack3",
+                "cooldownTime": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "delayCastOffsetPercent": -0.10000000149011612,
+                "mApplyMaterialOnHitSound": true,
+                "bHaveHitEffect": true,
+                "castRange": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                ],
+                "castRadius": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 7.5,
+                "missileSpeed": 347.79998779296875,
+                "mHitEffectOrientType": 2,
+                "mHitEffectKey": "{57532b4b}",
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_BUFFBONE_GLB_CHEST_LOC",
+                "mClientData": {
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxBasicAttack2": {
+            "mScriptName": "AatroxBasicAttack2",
+            "mSpell": {
+                "mAffectsTypeFlags": 5327,
+                "mAlternateName": "AatroxBasicAttack2",
+                "mAnimationName": "Attack2",
+                "cooldownTime": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "delayCastOffsetPercent": -0.10000000149011612,
+                "mApplyMaterialOnHitSound": true,
+                "bHaveHitEffect": true,
+                "castRange": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                ],
+                "castRadius": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 9.0,
+                "missileSpeed": 347.79998779296875,
+                "mHitEffectOrientType": 2,
+                "mHitEffectKey": "{58532cde}",
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_BUFFBONE_GLB_CHEST_LOC",
+                "mClientData": {
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxAttackAnimationCycle": {
+            "mScriptName": "AatroxAttackAnimationCycle",
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxCritAttack": {
+            "mScriptName": "AatroxCritAttack",
+            "mSpell": {
+                "mAffectsTypeFlags": 5327,
+                "mAlternateName": "AatroxBasicAttack2",
+                "mAnimationName": "Crit",
+                "cooldownTime": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "delayCastOffsetPercent": -0.10000000149011612,
+                "mApplyMaterialOnHitSound": true,
+                "bHaveHitEffect": true,
+                "castRange": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                ],
+                "castRadius": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0,
+                    100.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 14.0,
+                "missileSpeed": 347.79998779296875,
+                "mHitEffectKey": "Aatrox_AA_Crit_Hit_Tar",
+                "bHaveHitBone": true,
+                "mHitBoneName": "C_Buffbone_Glb_Layout_Loc",
+                "mClientData": {
+                    "mTargeterDefinitions": [
+                        {
+                            "useCasterBoundingBox": false,
+                            "__type": "TargeterDefinitionRange"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxEAbility/AatroxEPassive": {
+            "mScriptName": "AatroxEPassive",
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxEAbility/AatroxE": {
+            "mScriptName": "AatroxE",
+            "mSpell": {
+                "flags": 4,
+                "mSpellTags": [
+                    "PositiveEffect_MoveBlock",
+                    "Trait_AttackReset"
+                ],
+                "mDataValues": [
+                    {
+                        "mName": "ESpellVamp",
+                        "mValues": [
+                            16.5,
+                            18.0,
+                            19.5,
+                            21.0,
+                            22.5,
+                            24.0,
+                            25.5
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "EBonusAD",
+                        "mValues": [
+                            5.0,
+                            15.0,
+                            25.0,
+                            35.0,
+                            45.0,
+                            55.0,
+                            65.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "EResistancePerAD",
+                        "mValues": [
+                            5.0,
+                            10.0,
+                            15.0,
+                            20.0,
+                            25.0,
+                            30.0,
+                            35.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "EDashSpeed",
+                        "mValues": [
+                            800.0,
+                            800.0,
+                            800.0,
+                            800.0,
+                            800.0,
+                            800.0,
+                            800.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "EMaxRange",
+                        "mValues": [
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "EDuration",
+                        "mValues": [
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5,
+                            1.5
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "EBaseRechargeTime",
+                        "mValues": [
+                            30.0,
+                            26.0,
+                            22.0,
+                            18.0,
+                            14.0,
+                            10.0,
+                            6.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "EMinRange",
+                        "mValues": [
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0,
+                            75.0
+                        ],
+                        "__type": "SpellDataValue"
+                    },
+                    {
+                        "mName": "ESpellVampEmpowered",
+                        "mValues": [
+                            16.0,
+                            20.0,
+                            24.0,
+                            28.0,
+                            32.0,
+                            36.0,
+                            40.0
+                        ],
+                        "__type": "SpellDataValue"
+                    }
+                ],
+                "{fb56608c}": {
+                    "{497ae878}": {
+                        "SpellDataValues": [
+                            {
+                                "mName": "EBaseRechargeTime",
+                                "mValues": [
+                                    25.0,
+                                    22.0,
+                                    19.0,
+                                    16.0,
+                                    13.0,
+                                    10.0,
+                                    7.0
+                                ],
+                                "__type": "SpellDataValue"
+                            },
+                            {
+                                "mName": "ESpellVamp",
+                                "mValues": [
+                                    17.0,
+                                    20.0,
+                                    23.0,
+                                    26.0,
+                                    29.0,
+                                    32.0,
+                                    35.0
+                                ],
+                                "__type": "SpellDataValue"
+                            },
+                            {
+                                "mName": "ESpellVampEmpowered",
+                                "mValues": [
+                                    19.0,
+                                    24.0,
+                                    29.0,
+                                    34.0,
+                                    39.0,
+                                    44.0,
+                                    49.0
+                                ],
+                                "__type": "SpellDataValue"
+                            }
+                        ],
+                        "__type": "SpellDataValueVector"
+                    }
+                },
+                "mAnimationName": "Spell3",
+                "mImgIconName": [
+                    "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_E.dds"
+                ],
+                "mCastTime": 0.25,
+                "cooldownTime": [
+                    9.0,
+                    9.0,
+                    8.0,
+                    7.0,
+                    6.0,
+                    5.0,
+                    4.0
+                ],
+                "delayCastOffsetPercent": -0.5,
+                "delayTotalTimePercent": -0.5,
+                "mMaxAmmo": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "canCastOrQueueWhileCasting": true,
+                "mCantCancelWhileWindingUp": true,
+                "cantCastWhileRooted": true,
+                "mDoesntBreakChannels": true,
+                "mProjectTargetToCastRange": true,
+                "mCanMoveWhileChanneling": true,
+                "useAnimatorFramerate": true,
+                "castRange": [
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0,
+                    25000.0
+                ],
+                "castRadius": [
+                    285.0,
+                    285.0,
+                    285.0,
+                    285.0,
+                    285.0,
+                    285.0,
+                    285.0
+                ],
+                "castConeDistance": 100.0,
+                "castFrame": 7.5,
+                "missileSpeed": 20.0,
+                "mHitEffectName": "GlobalHit_Yellow_tar.troy",
+                "mFloatVarsDecimals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2
+                ],
+                "mTargetingTypeData": {
+                    "__type": "Location"
+                },
+                "{00f7e5bc}": true,
+                "mClientData": {
+                    "mTooltipData": {
+                        "mObjectName": "AatroxE",
+                        "mFormat": "{89fef2a8}",
+                        "mLocKeys": {
+                            "keyName": "Spell_AatroxE_Name",
+                            "keyCost": "Spell_Cost_NoCost",
+                            "keyTooltip": "Spell_AatroxE_Tooltip",
+                            "keySummary": "Spell_AatroxE_Summary"
+                        },
+                        "mLists": {
+                            "LevelUp": {
+                                "levelCount": 5,
+                                "elements": [
+                                    {
+                                        "type": "Cooldown",
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "ESpellVamp",
+                                        "nameOverride": "Spell_AatroxW_LevelupESpellVamp",
+                                        "Style": 1,
+                                        "__type": "TooltipInstanceListElement"
+                                    },
+                                    {
+                                        "type": "ESpellVampEmpowered",
+                                        "nameOverride": "Spell_AatroxE_LevelUpESpellVampEmpowered",
+                                        "Style": 1,
+                                        "__type": "TooltipInstanceListElement"
+                                    }
+                                ],
+                                "__type": "TooltipInstanceList"
+                            }
+                        },
+                        "__type": "TooltipInstanceSpell"
+                    },
+                    "mTargeterDefinitions": [
+                        {
+                            "hideWithLineIndicator": true,
+                            "overrideBaseRange": {
+                                "mPerLevelValues": [
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "__type": "TargeterDefinitionRange"
+                        },
+                        {
+                            "endLocator": {
+                                "basePosition": 3,
+                                "__type": "DrawablePositionLocator"
+                            },
+                            "lineWidth": {
+                                "mPerLevelValues": [
+                                    50.0,
+                                    50.0,
+                                    50.0,
+                                    50.0,
+                                    50.0,
+                                    50.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "overrideBaseRange": {
+                                "mPerLevelValues": [
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0,
+                                    300.0
+                                ],
+                                "mValueType": 1,
+                                "__type": "FloatPerSpellLevel"
+                            },
+                            "__type": "TargeterDefinitionLine"
+                        }
+                    ],
+                    "__type": "SpellDataResourceClient"
+                },
+                "__type": "SpellDataResource"
+            },
+            "mBuff": {
+                "mDescription": "Buff_AatroxE_Tooltip",
+                "__type": "BuffData"
+            },
+            "{4048c61e}": {
+                "{6d548702}": {
+                    "__type": "GameCalculation"
+                },
+                "{ec17e271}": [
+                    {
+                        "{77e5e41c}": 128,
+                        "{725bd4d5}": {
+                            "__type": "GameCalculation"
+                        },
+                        "__type": "{b09016f6}"
+                    }
+                ],
+                "__type": "{f195e56b}"
+            },
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/Spells/AatroxBannerWings": {
+            "mScriptName": "AatroxBannerWings",
+            "__type": "SpellObject"
+        },
+        "Characters/Aatrox/CharacterRecords/Root": {
+            "mCharacterName": "Aatrox",
+            "baseHP": 650.0,
+            "hpPerLevel": 114.0,
+            "baseStaticHPRegen": 0.6000000238418579,
+            "hpRegenPerLevel": 0.20000000298023224,
+            "healthBarHeight": 140.0,
+            "primaryAbilityResource": {
+                "arType": 10,
+                "arBase": 0.0,
+                "arBaseStaticRegen": 0.0,
+                "arIncrements": 100.0,
+                "arHasRegenText": false,
+                "arAllowMaxValueToBeOverridden": true,
+                "__type": "AbilityResourceSlotInfo"
+            },
+            "secondaryAbilityResource": {
+                "arBase": 0.0,
+                "arBaseStaticRegen": 0.0,
+                "arIncrements": 1.0,
+                "arHasRegenText": false,
+                "arAllowMaxValueToBeOverridden": true,
+                "arIsShown": false,
+                "__type": "AbilityResourceSlotInfo"
+            },
+            "baseDamage": 60.0,
+            "damagePerLevel": 5.0,
+            "baseArmor": 38.0,
+            "armorPerLevel": 4.449999809265137,
+            "baseSpellBlock": 32.0,
+            "spellBlockPerLevel": 2.049999952316284,
+            "baseMoveSpeed": 345.0,
+            "attackRange": 175.0,
+            "attackSpeed": 0.6510000228881836,
+            "attackSpeedRatio": 0.6510000228881836,
+            "attackSpeedPerLevel": 2.5,
+            "acquisitionRange": 475.0,
+            "basicAttack": {
+                "mAttackTotalTime": 1.5199999809265137,
+                "mAttackCastTime": 0.30000001192092896,
+                "__type": "AttackSlotData"
+            },
+            "extraAttacks": [
+                {
+                    "mAttackName": "AatroxBasicAttack2",
+                    "__type": "AttackSlotData"
+                },
+                {
+                    "mAttackName": "AatroxBasicAttack3",
+                    "__type": "AttackSlotData"
+                },
+                {
+                    "mAttackName": "AatroxRAttack1",
+                    "__type": "AttackSlotData"
+                },
+                {
+                    "mAttackName": "AatroxRAttack2",
+                    "__type": "AttackSlotData"
+                },
+                {
+                    "mAttackCastTime": 0.0,
+                    "mAttackName": "AatroxPassiveAttack",
+                    "__type": "AttackSlotData"
+                }
+            ],
+            "critAttacks": [
+                {
+                    "mAttackName": "AatroxCritAttack",
+                    "__type": "AttackSlotData"
+                }
+            ],
+            "spellNames": [
+                "AatroxQAbility/AatroxQ",
+                "AatroxWAbility/AatroxW",
+                "AatroxEAbility/AatroxE",
+                "AatroxRAbility/AatroxR"
+            ],
+            "mAbilities": [
+                "Characters/Aatrox/Spells/AatroxRAbility",
+                "Characters/Aatrox/Spells/AatroxQAbility",
+                "Characters/Aatrox/Spells/AatroxWAbility",
+                "Characters/Aatrox/Spells/AatroxEAbility",
+                "Characters/Aatrox/Spells/AatroxPassiveAbility"
+            ],
+            "passiveName": "",
+            "passiveToolTip": "",
+            "passiveSpell": "AatroxPassive",
+            "passive1IconName": "ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_Passive.dds",
+            "name": "Character_Aatrox_Name",
+            "selectionHeight": 180.0,
+            "selectionRadius": 135.0,
+            "pathfindingCollisionRadius": 35.0,
+            "unitTagsString": "Champion",
+            "mEducationToolData": {
+                "firstItem": 1055,
+                "skillOrder": 1,
+                "__type": "ToolEducationData"
+            },
+            "mAbilitySlotCC": [
+                8,
+                0,
+                14,
+                0
+            ],
+            "characterToolData": {
+                "mapAIPresence": {
+                    "0": {
+                        "__type": "ToolAiPresence"
+                    },
+                    "1": {
+                        "__type": "ToolAiPresence"
+                    },
+                    "2": {
+                        "__type": "ToolAiPresence"
+                    }
+                },
+                "passiveData": [
+                    {
+                        "name": "Passive_AatroxPassive_Name",
+                        "level": [
+                            1,
+                            4,
+                            7
+                        ],
+                        "__type": "ToolPassiveData"
+                    }
+                ],
+                "searchTags": "fighter",
+                "searchTagsSecondary": "tank",
+                "championId": 266,
+                "roles": "BRAWLER",
+                "PARFadeColor": "55 55 55",
+                "magicRank": 3,
+                "LevelSpellEffectiveness": 2.0,
+                "difficultyRank": 4,
+                "description": "Character_Aatrox_Description",
+                "defenseRank": 4,
+                "classification": "Strong",
+                "ChasingAttackRangePercent": 0.5,
+                "botEnabledMM": true,
+                "attackRank": 8,
+                "__type": "CharacterToolData"
+            },
+            "platformEnabled": true,
+            "flags": 8398092,
+            "purchaseIdentities": [
+                "Melee"
+            ],
+            "mPreferredPerkStyle": "Perks/Styles/Precision",
+            "mPerkReplacements": {
+                "mReplacements": [
+                    {
+                        "mReplaceTarget": "Perks/Styles/Sorcery/ManaflowBand",
+                        "mReplaceWith": "Perks/Styles/Sorcery/NullifyingOrb",
+                        "__type": "PerkReplacement"
+                    },
+                    {
+                        "mReplaceTarget": "Perks/Styles/Precision/PresenceOfMind",
+                        "mReplaceWith": "Perks/Styles/Precision/Triumph",
+                        "__type": "PerkReplacement"
+                    }
+                ],
+                "__type": "PerkReplacementList"
+            },
+            "mCharacterPassiveSpell": "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassive",
+            "mCharacterPassiveBuffs": [
+                {
+                    "{bd3c31e4}": "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassive",
+                    "mComponentBuffs": [
+                        "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveReady",
+                        "Characters/Aatrox/Spells/AatroxPassiveAbility/AatroxPassiveCooldown"
+                    ],
+                    "__type": "CharacterPassiveData"
+                },
+                {
+                    "{bd3c31e4}": "Characters/Aatrox/Spells/AatroxAttackAnimationCycle",
+                    "__type": "CharacterPassiveData"
+                }
+            ],
+            "__type": "CharacterRecord"
+        },
+        "Characters/Aatrox/Skins/Meta": {
+            "__type": "SkinCharacterMetaDataProperties"
+        }
+    }
+}
