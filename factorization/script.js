@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-  adjustDigitInputs('number1-inputs', 12); // Adjust inputs for number1-inputs
-  adjustDigitInputs('number2-inputs', 12); // Adjust inputs for number2-inputs
-  adjustDigitInputs('product-inputs', 12); // Adjust inputs for product-inputs
+  adjustDigitInputs('number1-inputs', 6); // Adjust inputs for number1-inputs
+  adjustDigitInputs('number2-inputs', 6); // Adjust inputs for number2-inputs
+  adjustDigitInputs('product-inputs', 6); // Adjust inputs for product-inputs
   randomizeInputs('number1-inputs'); // Randomize inputs when the page loads
   randomizeInputs('number2-inputs'); // Randomize inputs when the page loads
 });
