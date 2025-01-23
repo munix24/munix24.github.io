@@ -1,3 +1,11 @@
+<!--
+TODO:
+add explanation at top
+move history to a window tab on left/right allow for variable history
+move results table to side
+highlight last flip so it stands out
+highlight current streak
+--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +39,7 @@
     line-height: 30px;
     font-size: 14px;
     margin: 2px;
-    display: inline-block; /* Display results horizontally */
+    display: inline-block;
   }
   table {
     margin: 20px auto;
@@ -100,7 +108,7 @@
           <p>Number of flips:</p>
           <input type="number" id="numFlips" value="1" min="1">
         </div>
-        <div id="coin" class="result" onclick="flipCoin(document.getElementById('numFlips').value, true)">?</div> <!-- Make coin clickable -->
+        <div id="coin" class="result" onclick="flipCoin(document.getElementById('numFlips').value, true)">Flip</div> <!-- Make coin clickable -->
       </td>
       <td>
         <button id="ResetButton" onclick="reset()">Reset</button>
@@ -127,7 +135,7 @@
         <th>Exact Count</th>
         <th>Flip Until Streak</th>
         <th>Odds 1 in</th>
-        <th>Expected Flips</th>
+        <th>Avg. Flips Needed</th>
         <th>Expected Streaks</th>
       </tr>
     </thead>
@@ -144,7 +152,7 @@
       streakCounter = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0, '8': 0};     // Populated with 0 for first 1-8 counts
       cumStreakCounter = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0, '8': 0};  // Populated with 0 for first 1-8 counts
       lastResult = undefined;
-      document.getElementById('results').innerHTML = '';
+      document.getElementById('results').innerHTML = '';	//reset history results
       updateTable('resultsTableBody', flipCounter);
       updateTable('streaksTableBody', cumStreakCounter);
     }
@@ -165,7 +173,7 @@
     function flipCoin(numFlips, updateTables) {
       for (let i = 0; i < numFlips; i++) {
         const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
-        document.getElementById('coin').textContent = result;
+        //document.getElementById('coin').textContent = result;		//show result on top of coin
         displayResult(result);
         updateFlipCounter(result);
         updateStreaks(result);
