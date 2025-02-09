@@ -1,5 +1,8 @@
 <!--
 TODO:
+make flip button bigger - should be instantly clear what to do at a glance
+make quick flipping animation (& sound?) while loading
+
 add explanation at top
 move history to a window tab on left/right allow for variable history
 move results table to side
@@ -9,10 +12,10 @@ highlight current streak
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coin Flip Simulator</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coin Flip Simulator</title>
+  <link rel="stylesheet" href="style.css">
 <style>
   #buttonsTable td {
     vertical-align: bottom;
@@ -131,12 +134,11 @@ highlight current streak
     <thead>
       <tr>
         <th>Streak</th>
-        <th>Cumulative Count</th>
+        <th>Total Count</th>
         <th>Exact Count</th>
         <th>Flip Until Streak</th>
         <th>Odds 1 in</th>
         <th>Avg. Flips Needed</th>
-        <th>Flips Needed</th>
         <th>Expected Streaks</th>
       </tr>
     </thead>
