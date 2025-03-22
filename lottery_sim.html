@@ -1,3 +1,11 @@
+<!--
+TODO:
+order winning numbers
+order printed tickets
+tabularize printed tickets
+make matching numbers bold
+add option to print all tickets
+--->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,20 +50,11 @@
       border: 1px solid #fff;
     }
 
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      text-align: center;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 4px;
-      margin-bottom: 10px;
+    #reset-button {
+        background-color: #D32F2F;
     }
-
-    button:hover {
-      background-color: #45a049;
+    #reset-button:hover {
+        background-color: #B71C1C;
     }
 
     .explanation {
@@ -83,17 +82,15 @@
 <body>
   <h1>Lottery Ticket Simulator</h1>
   <div class="explanation">
-    <p>This tool allows you to simulate lottery tickets and counts how many matches there are with the winning lottery
+    <p>This tool allows you to simulate buying lottery tickets and shows how many matches there are with the randomly generated winning lottery
       numbers. Here's how it works:</p>
     <ol>
-      <li>A set of "winning" numbers is chosen at random automatically</li>
-      <li>Enter the number of tickets you want to simulate in the input field and click the "Simulate" button to run the
-        simulation for a fixed number of tickets.
+      <li>A random set of "winning" numbers are generated</li>
+      <li>Enter the number of tickets you want to simulate and click the "Simulate" to simulate that many tickets.
         <br>
-        OR Click the "Simulate Until Win" button to continuously simulate tickets until a ticket with all 6 matches is
-        created.
+        OR Click the "Simulate Until Jackpot" button to continuously simulate tickets until a winning ticket is created.
       </li>
-      <li>The table below will display the counts of tickets and the number of matches with the winning lottery numbers.</li>
+      <li>The table below will display the counts of tickets with the number of matches they had.</li>
       <li>You can click the "Reset" button to reset all tickets, generate new winning numbers, and start fresh.</li>
     </ol>
     <p>Each ticket contains 6 numbers, each ranging from 1 to 49. A winning ticket is one that matches all 6 winning
@@ -110,13 +107,13 @@
         <button onclick="simulateLottery(false)">Simulate</button>
         <br>
         <input type="checkbox" id="printLastTicket">
-        <label for="printLastTicket">Print Last Ticket</label>
+        <label for="printLastTicket" value="true">Print Only Last Ticket</label>
       </td>
       <td>
-        <button onclick="simulateLottery(true)">Simulate Until Win</button>
+        <button onclick="simulateLottery(true)">Simulate Until Jackpot</button>
       </td>
       <td>
-        <button onclick="resetSimulation()">Reset</button>
+        <button id="reset-button" onclick="resetSimulation()">Reset</button>
       </td>
     </tr>
   </table>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometric Distribution</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            text-align: center;
+            color: white;
+        }
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 60%;
+            background-color: #444;
+        }
+        th {
+            background-color: #666;
+            color: white;
+        }
+        td {
+            background-color: #333;
+            color: white;
+            padding: 5px;
+        }
+        th, td {
+            border: 1px solid black;
+        }
+        th:first-child, td:first-child {
+            width: 15%;
+        }
+        .explanation {
+            text-align: left;
+            width: 60%;
+            margin: auto;
+        }
+        .stats {
+            margin-top: 20px;
+            width: 50%;
+            margin: 0 auto;
+        }
+        .statistics-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .statistics-table td:last-child {
+            width: 10%;
+        }
+        .statistics-table th, .statistics-table td {
+            border: none;
+        }
+        #simulate-button {
+            width: 100px;
+        }
+        #reset-button {
+            background-color: #D32F2F;
+        }
+        #reset-button:hover {
+            background-color: #B71C1C;
+        }
+        .highlight-green {
+            background-color: #4CAF50;
+        }
+        .highlight-blue {
+            background-color: #2196F3;
+        }
+        .highlight-cyan {
+            background-color: #008080;
+        }
+        #results-table {
+            margin-bottom: 60px; /* Adds bottom margin to the results table */
+        }
+    </style>
+</head>
+<body>
+    <h2>Geometric Distribution</h2>
+    <div class="explanation">
+        <p>
+            This tool models a <strong>Geometric Distribution</strong> which when given a probability, p, 
+            simulates how many tries (trials) it takes for the first success to occur. 
+            
+        </p>
+        <p>
+            For Example:
+            <br></br>&emsp;How many flips of a coin does it take to get the first heads on average? 2 flips?
+            <br></br>&emsp;How many rolls of a die does it take to get the first "6"" on average? 6 rolls?
+        </p>
+        <p>
+            Steps:
+            <ol>
+                <li>Enter a probability (p) of success</li>
+                <li>Enter Number of runs (r) to simulate</li>
+                <li>Press "Simulate"</li>
+            </ol>
+        </p>
+        <p>
+            A table below will show results of which trial # the first success occurs 
+            along with the count of runs that first succeeded on that trial 
+            and compares them with theoretical expectations.
+        </p>
+        <br>
+        <p>
+            <strong>Simulation:</strong> The execution of r number of "run"(s).
+        </p>
+        <p>
+            <strong>Run:</strong> Continuous execution of "trials" until a success is achieved 
+            (small chance a run could take a long / infinite time to complete)
+        </p>
+        <p>
+            <strong>Trial:</strong> An independent Bernoulli trial: A random experiment with exactly two possible outcomes, 
+            "success" and "failure", in which the probability of success is the same every time the experiment is conducted.
+            More specifically, a trial generates a random decimal value (0-1) and checks if it is less than entered 
+            probability of success, p
+        </p>
+        <br>
+    </div>
+
+    <label for="probability">Enter Probability, p, (0-1):</label>
+    <input type="number" id="probability" step="0.01" min="0" max="1" value="0.5"> OR 
+    <input type="number" id="numerator" min="0" max="1000"  value="1"> /
+    <input type="number" id="denominator" min="0" max="1000"  value="6">
+    <br><br>
+    <label for="runs">Enter Number of Runs, r:</label>
+    <input type="number" id="runs" min="1" value="6">
+    <br><br>
+    <button id="simulate-button">Simulate</button>
+    <button id="reset-button">Reset</button>
+    <br><br>
+
+    <p></p>
+    <div class="stats">
+        <table class="statistics-table">
+            <tr>
+                <th></th>
+                <th colspan="3">Formula</th>
+                <th></th>
+                <th>Theoretical</th>
+                <th>Actual</th>
+            </tr>
+            <tr>
+                <td class="highlight-blue"><strong>Median Trials Needed for First Success</strong></td>
+                <td class="highlight-blue">(1 - p)^x=.5</td>
+                <td class="highlight-blue">=</td>
+                <td class="highlight-blue">x=log(0.5)/log(1 - p)
+                </td>
+                <td class="highlight-blue">=</td>
+                <td class="highlight-blue"><span id="median-value">N/A</span></td>
+                <td class="highlight-blue"><span id="median-trial-success">N/A</span></td>
+            </tr>
+            <tr>
+                <td class="highlight-green"><strong>Mean Trials Needed for First Success</strong></td>
+                <td class="highlight-green" colspan="2"></td>
+                <td class="highlight-green">1/p</td>
+                <td class="highlight-green">=</td>
+                <td class="highlight-green"><span id="mean-value">N/A</span></td>
+                <td class="highlight-green"><span id="mean-trial-success">N/A</span></td>
+            </tr>
+            <tr>
+                <td><strong>Total Run Count</strong></td>
+                <td colspan="3"></td>
+                <td>=</td>
+                <td></td>
+                <td><span id="total-run-count">0</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <table id="results-table">
+        <thead>
+            <tr>
+                <th>1st Success on Trial #, k</th>
+                <th>Run Count</th>
+                <th>Expected Run Count</th>
+                <th>Likelihood Exactly k-th Trial is the First Success, PMF</th>
+                <th>Cumulative Likelihood, CDF</th>
+            </tr>
+        </thead>
+        <tbody id="results-body">
+        </tbody>
+    </table>
+
+    <script>
+        let trialCounts = {}; // Global variable to persist across runs
+        let totalRunCount = 0;
+
+        // Function to update probability based on numerator and denominator
+        function updateProbability() {
+            const numerator = parseFloat(document.getElementById('numerator').value);
+            const denominator = parseFloat(document.getElementById('denominator').value);
+
+            if (denominator !== 0) {
+                const probability = numerator / denominator;
+                document.getElementById('probability').value = probability;
+                displayTheoreticalStatsBasedOnP();
+                resetSimulation();
+            } else {
+                alert("Denominator cannot be zero.");
+            }
+        }
+
+        function displayTheoreticalStatsBasedOnP() {
+            const probability = parseFloat(document.getElementById('probability').value);
+            
+            if (probability <= 0 || probability > 1 || isNaN(probability)) {
+                document.getElementById('mean-value').textContent = "N/A";
+                document.getElementById('median-value').textContent = "N/A";
+                return;
+            }
+
+            const mean = 1 / probability;
+            // const median = Math.ceil(Math.log(0.5) / Math.log(1 - probability));
+            const median = Math.log(0.5) / Math.log(1 - probability);
+
+            // Display formatted mean
+            document.getElementById('mean-value').textContent = mean % 1 === 0 ? mean : mean.toFixed(2);
+            document.getElementById('median-value').textContent = median % 1 === 0 ? median : median.toFixed(2);
+        }
+
+        function displayActualStats(sortedTrials, weightedSum) {
+            // Calculate Median Trial Success
+            let medianTrialSuccess = "N/A";
+            if (sortedTrials.length > 0) {
+                const middle = Math.floor(sortedTrials.length / 2);
+
+                //if even trials take the average of 2 middle values
+                if (sortedTrials.length % 2 === 0) {
+                    medianTrialSuccess = ((sortedTrials[middle - 1] + sortedTrials[middle]) / 2);
+                } else {
+                    medianTrialSuccess = sortedTrials[middle];
+                }
+            }
+
+            const averageTrialSuccess = totalRunCount > 0 ? (weightedSum / totalRunCount).toFixed(2) : "N/A";
+
+            document.getElementById('median-trial-success').textContent = medianTrialSuccess;
+            document.getElementById('mean-trial-success').textContent = averageTrialSuccess;
+            document.getElementById('total-run-count').textContent = totalRunCount;
+        }
+
+        function runSimulation() {
+            const probability = parseFloat(document.getElementById('probability').value);
+            const runs = parseInt(document.getElementById('runs').value);
+
+            if (probability <= 0 || probability > 1 || isNaN(probability)) {
+                alert("Please enter a valid probability between 0 and 1.");
+                return;
+            }
+            if (runs <= 0 || isNaN(runs)) {
+                alert("Please enter a valid number of runs.");
+                return;
+            }
+
+            // Run simulation and update trialCounts
+            for (let i = 0; i < runs; i++) {
+                let trial = 0;
+                while (Math.random() > probability) {
+                    trial++;
+                }
+                trial++;
+                trialCounts[trial] = (trialCounts[trial] || 0) + 1;
+            }
+
+            totalRunCount += runs;
+            displayResults(trialCounts, probability, runs);
+        }
+
+        function resetSimulation() {
+            const probability = parseFloat(document.getElementById('probability').value);
+            const mean = 1 / probability;
+
+            trialCounts = {}; // Clear trialCounts
+            totalRunCount = 0;
+            for (let i = 1; i <= Math.ceil(mean); i++) {
+                trialCounts[i] = 0;
+            }
+            displayResults(trialCounts, probability, 0);
+        }
+
+        function displayResults(trialCounts, probability, runs) {
+            const tbody = document.getElementById('results-body');
+            tbody.innerHTML = '';
+            let cumulativeLikelihood = 0;
+            let sortedTrials = [];
+            let weightedSum = 0;
+
+            // Calculate mean and median (if not already calculated)
+            const mean = 1 / probability;
+            const median = (Math.log(0.5) / Math.log(1 - probability));
+            
+            for (let trial in trialCounts) {
+                const likelihood = Math.pow(1 - probability, trial - 1) * probability;
+                cumulativeLikelihood += likelihood;
+                const expectedRunCount = Math.round(totalRunCount * likelihood);
+                const trialCount = trialCounts[trial] || 0;
+                
+                weightedSum += trial * trialCount;
+
+                for (let i = 0; i < trialCount; i++) {
+                    sortedTrials.push(parseInt(trial));
+                }
+
+                let row = tbody.insertRow();
+                let th = document.createElement("th");
+                th.textContent = trial;
+                row.appendChild(th);
+                row.insertCell(1).textContent = trialCount;
+                row.insertCell(2).textContent = expectedRunCount;
+                row.insertCell(3).textContent = likelihood.toFixed(4);
+                row.insertCell(4).textContent = cumulativeLikelihood.toFixed(4);
+
+                if (trial == Math.round(mean)) {
+                    for (let cell of row.cells) {
+                        cell.classList.add("highlight-green");
+                    }
+                }
+                if (trial == Math.ceil(median)) {
+                    for (let cell of row.cells) {
+                        cell.classList.add("highlight-blue");
+                    }
+                }
+                //if trial is both mean and median
+                if (trial == Math.round(mean) && trial == Math.ceil(median)) {
+                    for (let cell of row.cells) {
+                        cell.classList.add("highlight-cyan");
+                    }
+                }
+            }
+
+            displayActualStats(sortedTrials, weightedSum);
+        }
+
+        // calculate mean and median  on page load
+        document.addEventListener("DOMContentLoaded", displayTheoreticalStatsBasedOnP);
+        document.addEventListener("DOMContentLoaded", resetSimulation);
+
+        // Update mean and median when probability changes
+        document.getElementById('probability').addEventListener("input", displayTheoreticalStatsBasedOnP);
+        document.getElementById('probability').addEventListener("input", resetSimulation);
+
+        document.getElementById('numerator').addEventListener('input', updateProbability);
+        document.getElementById('denominator').addEventListener('input', updateProbability);
+
+        // Button event listeners
+        document.getElementById('simulate-button').addEventListener("click", runSimulation);
+        document.getElementById('reset-button').addEventListener("click", resetSimulation);
+    </script>
+</body>
+</html>

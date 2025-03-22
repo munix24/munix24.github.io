@@ -6,8 +6,7 @@ make quick flipping animation (& sound?) while loading
 add explanation at top
 move history to a window tab on left/right allow for variable history
 move results table to side
-highlight last flip so it stands out
-highlight current streak
+highlight flips - heads blue tails red
 --->
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +16,10 @@ highlight current streak
   <title>Coin Flip Simulator</title>
   <link rel="stylesheet" href="style.css">
 <style>
+  h1 {
+    margin-top: 20px; /* Adjusted margin */
+    margin-bottom: 0px; /* Adjusted margin */
+  }
   #buttonsTable td {
     vertical-align: bottom;
   }
@@ -25,7 +28,7 @@ highlight current streak
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 20px; /* Adjusted margin */
+    margin-top: 0px; /* Adjusted margin */
     margin-bottom: 20px; /* Adjusted margin */
   }
   .results-container {
@@ -67,11 +70,12 @@ highlight current streak
     width: 100px;
     height: 100px;
     margin: 25px auto; /* Adjusted margin */
-    border: 2px solid #fff;
+    border: 2px solid #ffff;
     border-radius: 50%;
     line-height: 100px;
     font-size: 24px;
     background-color: #333;
+    background: linear-gradient(145deg, #b0b0b0, #8a8a8a); /* Darker metallic gradient */
     cursor: pointer; /* Add cursor pointer */
     user-select: none; /* Disable text selection */
     -webkit-user-select: none; /* For Safari */
@@ -80,45 +84,37 @@ highlight current streak
   }
   #coin:hover {
     background-color: #555; /* Change background color on hover */
+    box-shadow: inset 4px 4px 8px #666, inset -4px -4px 8px #ccc; /* More depth on click */
   }
-  button {
-    background-color: #444;
-    color: #fff;
-    border: none;
-    padding: 5px 10px; /* Adjusted padding */
-    font-size: 12px; /* Adjusted font size */
-    cursor: pointer;
-    border-radius: 3px;
+  #coin:active {
+      box-shadow: inset 4px 4px 8px #555, inset -4px -4px 8px #aaa; /* More depth on click */
   }
-  #ResetButton {
-    padding: 10px 20px; /* Adjusted padding */
-    font-size: 16px; /* Adjusted font size */
-    border-radius: 5px;
+  #reset-button {
+      background-color: #D32F2F;
   }
-  button:hover {
-    background-color: #555;
+  #reset-button:hover {
+      background-color: #B71C1C;
   }
 </style>
 </head>
 <body>
   <h1>Coin Flip Simulator</h1>
   <div class="container">
-    
-  <table id="buttonsTable">
-    <tr>
-      <td>
-        <div>
-          <p>Number of flips:</p>
-          <input type="number" id="numFlips" value="1" min="1">
-        </div>
-        <div id="coin" class="result" onclick="flipCoin(document.getElementById('numFlips').value, true)">Flip</div> <!-- Make coin clickable -->
-      </td>
-      <td>
-        <button id="ResetButton" onclick="reset()">Reset</button>
-      </td>
-    </tr>
-  </table>
-  <div id="results" class="results-container"></div>
+    <table id="buttonsTable">
+      <tr>
+        <td>
+          <div>
+            <p>Number of flips:</p>
+            <input type="number" id="numFlips" value="1" min="1">
+          </div>
+          <div id="coin" class="result" onclick="flipCoin(document.getElementById('numFlips').value, true)">Flip</div> <!-- Make coin clickable -->
+        </td>
+        <td>
+          <button id="reset-button" onclick="reset()">Reset</button>
+        </td>
+      </tr>
+    </table>
+    <div id="results" class="results-container"></div>
   </div>
   <table id="resultsTable">
     <thead>

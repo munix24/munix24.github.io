@@ -4,3 +4,19 @@ body {
     color: #fff;
     text-align: center;
   }
+
+  /* Button Styling */
+  button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+  }
+
+  button:hover {
+      background-color: #45a049;
+  }
