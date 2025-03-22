@@ -16,5 +16,7 @@ https://munix24.github.io/birthday_problem.html
 
 https://munix24.github.io/factorization/factorization.html
 
+https://munix24.github.io/Geometric%20Distribution.html
+
 example site:
 http://laurenorsini.github.io/
