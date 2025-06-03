@@ -80,8 +80,21 @@ add option to print all tickets
 </head>
 
 <body>
-  <h1>Lottery Ticket Simulator</h1>
-  <div class="explanation">
+  <h1 style="display: inline;">Lottery Ticket Simulator</h1>
+  <!-- blue i icon to toggle explanation visibility -->
+  <!-- <img
+	class="icon-hover"
+	src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDA4OGZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIvPjx0ZXh0IHg9IjE2IiB5PSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMHB4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+aTwvdGV4dD48L3N2Zz4="
+	alt="Info"
+	width="25"
+	height="25"
+	title="Click for more info"
+	onclick="toggleVisibility('explanation')"
+  /> -->
+  <span style="margin-left: 20px;">
+    <img class="icon-hover" src="info.png" alt="info" width="25" height="25" title="Click for more info" onclick="toggleVisibility('explanation')">
+  </span>
+  <div id="explanation" class="explanation" style="display: none;">
     <p>This tool allows you to simulate buying lottery tickets and shows how many matches there are with the randomly generated winning lottery
       numbers. Here's how it works:</p>
     <ol>
@@ -117,7 +130,7 @@ add option to print all tickets
       </td>
     </tr>
   </table>
-  <p>Total Tickets Simulated: <span id="totalTickets">0</span></p>
+  <p>Total Tickets: <span id="totalTickets">0</span></p>
   <table id="matchCounts">
     <thead>
       <tr>
@@ -149,6 +162,13 @@ add option to print all tickets
   <div id="progress" style="display: none;">Simulating...</div>
 
   <script>
+    function toggleVisibility(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+        }
+    }
+
     // Initialize match counts
     var matchCounts = [0, 0, 0, 0, 0, 0, 0];
     var totalTickets = 0;
