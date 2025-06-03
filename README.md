@@ -1,6 +1,8 @@
 # munix24.github.io
 
-URL:
+<img src="images/info.png" alt="info" width="32"/>
+
+sites:
 
 https://munix24.github.io/
 

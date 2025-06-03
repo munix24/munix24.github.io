@@ -2,14 +2,37 @@
 	<head>
 		<title>Homepage</title>
 		<link rel="stylesheet" href="style.css">
+		<style>
+			a {
+			  color: #00ffff;
+			  font-weight: bold;
+			  text-decoration: none;
+			  animation: colorCycle 10s infinite linear;
+			  text-shadow: 0 0 1px currentColor, 0 0 5px currentColor;
+			}
+			
+			@keyframes colorCycle {
+			  0%   { color: #00ffff; }
+			  25%  { color: #ff00ff; }
+			  50%  { color: #ffff00; }
+			  75%  { color: #00ff00; }
+			  100% { color: #00ffff; }
+			}
+			
+			a:hover {
+			  color: #ffffff;
+			  text-shadow: 0 0 8px #ffffff, 0 0 15px #00ffff;
+			}
+		</style>
 	</head>
 	<body>
-		<p><a href="https://munix24.github.io/Countdown/">Countdown</a></p>
-		<p><a href="https://munix24.github.io/lol_1v1_fight_sim/">lol_1v1_fight_sim</a></p>
-		<p><a href="https://munix24.github.io/lottery_sim.html">lottery_sim</a></p>
-		<p><a href="https://munix24.github.io/coin_flip_sim.html">coin_flip_sim</a></p>
-		<p><a href="https://munix24.github.io/birthday_problem.html">birthday_problem</a></p>
-		<p><a href="https://munix24.github.io/factorization/factorization.html">factorization</a></p>
+		<img src="images/info.png" alt="info" width="32"/>
+		<p><a href="https://munix24.github.io/Countdown/">Event Countdown</a></p>
+		<p><a href="https://munix24.github.io/lol_1v1_fight_sim/">LoL 1v1 Fight Sim</a></p>
+		<p><a href="https://munix24.github.io/lottery_sim.html">Lottery Sim</a></p>
+		<p><a href="https://munix24.github.io/coin_flip_sim.html">Coin Flip Sim</a></p>
+		<p><a href="https://munix24.github.io/birthday_problem.html">Birthday Problem</a></p>
+		<p><a href="https://munix24.github.io/factorization/factorization.html">Factorization</a></p>
 		<p><a href="https://munix24.github.io/Geometric%20Distribution.html">Geometric Distribution</a></p>
 	</body>
 </html>

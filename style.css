@@ -30,3 +30,12 @@ body {
     filter: brightness(1.2) drop-shadow(0 0 4px rgba(0, 136, 255, 0.6));
     cursor: pointer;
   }
+  
+  a {
+    color: #0004ff;
+    font-weight: bold;
+  }
+			
+  a:hover {
+    color: #ffffff;
+  }
