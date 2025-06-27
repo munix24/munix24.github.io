@@ -13,6 +13,7 @@ add option to print all tickets
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lottery Ticket Simulator</title>
+  <script src="../scripts/script.js"></script> 
   <link rel="stylesheet" href="../styles/style.css">
   <style>
     #buttonsTable {
@@ -92,7 +93,7 @@ add option to print all tickets
 	onclick="toggleVisibility('explanation')"
   /> -->
   <span style="margin-left: 20px;">
-    <img class="icon-hover" src="images/info.png" alt="info" width="25" height="25" title="Click for more info" onclick="toggleVisibility('explanation')">
+    <img class="icon-hover" src="../images/info.png" alt="info" width="25" height="25" title="Click for more info" onclick="toggleVisibility('explanation')">
   </span>
   <div id="explanation" class="explanation" style="display: none;">
     <p>This tool allows you to simulate buying lottery tickets and shows how many matches there are with the randomly generated winning lottery
@@ -162,13 +163,6 @@ add option to print all tickets
   <div id="progress" style="display: none;">Simulating...</div>
 
   <script>
-    function toggleVisibility(id) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
-        }
-    }
-
     // Initialize match counts
     var matchCounts = [0, 0, 0, 0, 0, 0, 0];
     var totalTickets = 0;
