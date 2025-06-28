@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geometric Distribution</title>
+    <script src="../scripts/script.js"></script> 
     <link rel="stylesheet" href="../styles/style.css">
     <style>
         body {
@@ -77,8 +78,11 @@
     </style>
 </head>
 <body>
-    <h2>Geometric Distribution</h2>
-    <div class="explanation">
+    <h1>
+        Geometric Distribution
+        &nbsp<img class="icon-hover" src="../images/info.png" alt="info" width="25" height="25" title="Click for more info" onclick="toggleVisibility('explanation')">
+    </h1>
+    <div id="explanation" class="explanation" style="display: none;">
         <p>
             This tool models a <strong>Geometric Distribution</strong> which when given a probability, p, 
             simulates how many tries (trials) it takes for the first success to occur. 
@@ -120,15 +124,15 @@
     </div>
 
     <label for="probability">Enter Probability, p, (0-1):</label>
-    <input type="number" id="probability" step="0.01" min="0" max="1" value="0.5"> OR 
-    <input type="number" id="numerator" min="0" max="1000"  value="1"> /
-    <input type="number" id="denominator" min="0" max="1000"  value="6">
+    <input type="number" id="probability" step="0.01" min="0" max="1" value="0.5" oninput="displayTheoreticalStatsBasedOnP(); resetSimulation();"> OR 
+    <input type="number" id="numerator" min="0" max="1000"  value="1" oninput="updateProbability()"> /
+    <input type="number" id="denominator" min="0" max="1000"  value="6" oninput="updateProbability()">
     <br><br>
     <label for="runs">Enter Number of Runs, r:</label>
-    <input type="number" id="runs" min="1" value="6">
+    <input type="number" id="runs" min="1" value="6" oninput="resetSimulation(); runSimulation();">
     <br><br>
-    <button id="simulate-button">Simulate</button>
-    <button id="reset-button">Reset</button>
+    <button id="simulate-button" onclick="runSimulation()">Simulate</button>
+    <button id="reset-button" onclick="resetSimulation()">Reset</button>
     <br><br>
 
     <p></p>
@@ -336,17 +340,6 @@
         // calculate mean and median  on page load
         document.addEventListener("DOMContentLoaded", displayTheoreticalStatsBasedOnP);
         document.addEventListener("DOMContentLoaded", resetSimulation);
-
-        // Update mean and median when probability changes
-        document.getElementById('probability').addEventListener("input", displayTheoreticalStatsBasedOnP);
-        document.getElementById('probability').addEventListener("input", resetSimulation);
-
-        document.getElementById('numerator').addEventListener('input', updateProbability);
-        document.getElementById('denominator').addEventListener('input', updateProbability);
-
-        // Button event listeners
-        document.getElementById('simulate-button').addEventListener("click", runSimulation);
-        document.getElementById('reset-button').addEventListener("click", resetSimulation);
     </script>
 </body>
 </html>
