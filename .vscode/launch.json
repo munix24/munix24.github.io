@@ -10,7 +10,8 @@
             "type": "msedge",
             "webRoot": "${workspaceFolder}",
             // "url": "http://localhost/${fileBasename}"
-            "file": "${workspaceFolder}\\${fileBasename}"
+            // "file": "${workspaceFolder}\\${fileBasename}"
+            "file": "${file}"
         }
     ]
 }

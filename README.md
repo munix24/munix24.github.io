@@ -16,7 +16,7 @@ https://munix24.github.io/website_showcase/coin_flip_sim.html
 
 https://munix24.github.io/website_showcase/birthday_problem.html
 
-https://munix24.github.io/website_showcase/factorization/factorization.html
+https://munix24.github.io/website_showcase/factorization/factorization.html
 
 https://munix24.github.io/website_showcase/Geometric%20Distribution.html
 

@@ -30,98 +30,147 @@
 </head>
 <body>
     <h2>SHA-256 Hash Generator</h2>
+
     <input type="text" id="inputText" placeholder="Enter text here" value="a">
-    <button id="resetInputButton">Reset</button>
+    <button id="inputIncrement">+</button>
+    <button id="inputDecrement">-</button>
+    <button id="inputBitShiftLeft"><</button>
+    <button id="inputBitShiftRight">></button>
+    <button id="resetInputButton" onclick="inputTextReset()">Reset</button>
+    <br></br>
 
-    <p><strong>Message Length:</strong> <span id="lengthDisplay">0</span></p>
-    <p><strong>Message Bit Length:</strong> <span id="bitLengthDisplay">0</span></p>
+    <table id="textOutput" cellpadding="11" cellspacing="0" style="margin: auto; text-align: center; color: white;">
+        <tr>
+            <td>
+                <strong>Input Length:</strong> <span id="lengthDisplay">0</span>
+            </td>
+            <td>
+                <strong>Input Bit Length:</strong> <span id="bitLengthDisplay">0</span>
+            </td>
+        </tr>
+    </table>
+    
+    <p><table id="messageOutput" border="1" cellpadding="4" cellspacing="0" style="margin: auto; text-align: center; color: white; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>preprocess</th>
+                <th>messageBinary</th>
+                <th>process</th>
+                <th>W (longs of 4 bytes)</th>
+                <th></th>
+                <th>W full</th>
+                <th>messageBinary full</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Input text preprocessed into message:
+                    <p></p>
+                    <label><input type="checkbox" id="append1Bit" onchange="generateHash()" checked>append a single '1' bit</label>
+                    <p></p>
+                    <label><input type="checkbox" id="fill0Bit" onchange="generateHash()" checked>fill with '0' bits</label>
+                    <p></p>
+                    <label><input type="checkbox" id="appendLength" onchange="generateHash()" checked>append message length L bits</label>
+                </td>
+                <td>
+                    <textarea id="messageBinary" rows="20" cols="35" placeholder="Binary message"></textarea>
+                </td>
+                <td>
+                    convert to 16 
+                    <p></p>
+                    4-byte longs
+                </td>
+                <td>
+                    <textarea id="messageW" rows="20" cols="12" placeholder="W"></textarea>
+                </td>
+                <td>
+                    fill in 
+                    <p></p>
+                    rest of longs (17:64) 
+                    <p></p>
+                    based on first 16
+                </td>
+                <td>
+                    <textarea id="messageWFull" rows="20" cols="12" placeholder="W"></textarea>
+                </td>
+                <td>
+                    <textarea id="messageBinaryFull" rows="20" cols="35" placeholder="Binary message full"></textarea>
+                </td>
+            </tr>
+        </tbody>
+    </table></p>
+    
+    <table id="textOutput" cellpadding="11" cellspacing="0" style="margin: auto; text-align: center; color: white;">
+        <thead>
+            <tr>
+                <td>
+                    <strong>SHA-256 Hash (Manual):</strong>
+                    <br></br>
+                    <span id="hashOutput"></span>&nbsp<button onclick="copyHash('hashOutput', 'manualStatus')">Copy</button><span id="manualStatus" style="margin-left: 10px;"></span>
+                </td>
+                <td>
+                    <!-- span used to show/hide based on showCrypto checkBox -->
+                    <span id="cryptoContainer" style="display: none;">
+                        <strong>SHA-256 Hash (Web Crypto API):</strong>
+                        <br></br>
+                        <span id="hashOutput2"></span>&nbsp<button onclick="copyHash('hashOutput2', 'cryptoStatus')">Copy</button><span id="cryptoStatus" style="margin-left: 10px;"></span>
+                    </span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2">
+                    <label><input type="checkbox" id="showCrypto" onchange="toggleVisibility('cryptoContainer')">Show Web Crypto API</label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br></br>
+    
+    <table id="roundsOutput" cellpadding="11" cellspacing="0" style="margin: auto; text-align: center; color: white;">
+        <thead>
+            <tr>
+                <td>
+                    <label><input type="checkbox" id="showWorkingVariables" onchange="toggleVisibility('roundsContainer')">Show 64 Rounds Working Variables</label>
+                </td>
+                <td>
+                    <label><input type="checkbox" id="showIncrement" onchange="toggleVisibility('roundsContainer')">Show Increment</label>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <span id="roundsContainer" style="display: none;">
+                        <p><strong>64 Rounds Working Variables:</strong></p>
+                        <table id="roundsLogTable" border="1" cellpadding="4" cellspacing="0" style="margin: auto; text-align: left; color: white; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                <th>Round</th>
+                                <th>a</th>
+                                <th>b</th>
+                                <th>c</th>
+                                <th>d</th>
+                                <th>e</th>
+                                <th>f</th>
+                                <th>g</th>
+                                <th>h</th>
+                                <th>e - d</th>
+                                <th>a - h</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </span>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-    <p>
-        <table id="messageOutput" border="1" cellpadding="4" cellspacing="0" style="margin: auto; text-align: center; color: white; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th>preprocess</th>
-                    <th>messageBinary</th>
-                    <th>process</th>
-                    <th>W (longs of 4 bytes)</th>
-                    <th></th>
-                    <th>W full</th>
-                    <th>messageBinary full</th>
-                </tr>
-              </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Input text preprocessed into message:
-                        <p></p>&nbsp
-                        1. append a single '1' bit
-                        <p></p>&nbsp
-                        2. append K '0' bits
-                        <p></p>&nbsp
-                        3. append message of length L bits
-                    </td>
-                    <td>
-                        <textarea id="messageBinary" rows="20" cols="35" placeholder="Binary message"></textarea>
-                    </td>
-                    <td>
-                        convert to 16 
-                        <p></p>
-                        4-byte longs
-                    </td>
-                    <td>
-                        <textarea id="messageW" rows="20" cols="12" placeholder="W"></textarea>
-                    </td>
-                    <td>
-                        fill in 
-                        <p></p>
-                        rest of longs (17:64) 
-                        <p></p>
-                        based on first 16
-                    </td>
-                    <td>
-                        <textarea id="messageWFull" rows="20" cols="12" placeholder="W"></textarea>
-                    </td>
-                    <td>
-                        <textarea id="messageBinaryFull" rows="20" cols="35" placeholder="Binary message full"></textarea>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </p>
-    
-    <p><strong>SHA-256 Hash (Manual):</strong></p>
-    <span id="hashOutput"></span>&nbsp<button onclick="copyHash('hashOutput', 'manualStatus')">Copy</button><span id="manualStatus" style="margin-left: 10px;"></span>
-    
-    <p><label><input type="checkbox" id="showCrypto" onchange="toggleVisibility('cryptoContainer')">Show Web Crypto API</label></p>
-    <!-- span used to show/hide based on showCrypto checkBox -->
-    <span id="cryptoContainer" style="display: none;">
-        <p><strong>SHA-256 Hash (Web Crypto API):</strong></p>
-        <span id="hashOutput2"></span>&nbsp<button onclick="copyHash('hashOutput2', 'cryptoStatus')">Copy</button><span id="cryptoStatus" style="margin-left: 10px;"></span>
-    </span>
-    <br>
-    
-    <p><label><input type="checkbox" id="showWorkingVariables" onchange="toggleVisibility('roundsContainer')">Show 64 Rounds Working Variables</label></p>
-    <span id="roundsContainer" style="display: none;">
-        <p><strong>64 Rounds Working Variables:</strong></p>
-        <table id="roundsLogTable" border="1" cellpadding="4" cellspacing="0" style="margin: auto; text-align: left; color: white; border-collapse: collapse;">
-            <thead>
-                <tr>
-                <th>Round</th>
-                <th>a</th>
-                <th>b</th>
-                <th>c</th>
-                <th>d</th>
-                <th>e</th>
-                <th>f</th>
-                <th>g</th>
-                <th>h</th>
-                <th>e - d</th>
-                <th>a - h</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </span>
 </body>
 
     <script>
@@ -139,6 +188,11 @@
 
         //(first 32 bits of the fractional parts of the square roots of the first 8 primes 2..19):
         const initialHash = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]
+
+        function inputTextReset(){
+            document.getElementById('inputText').value = '';
+            generateHash();
+        }
 
         function copyHash(id, statusId) {
             const text = document.getElementById(id).innerText;
@@ -181,23 +235,31 @@
             let messageLength = message.length;
             let bitLength = message.length * 8;
 
-            message.push(0x80);
-            while ((message.length * 8 + 64) % 512 !== 0) {
-                message.push(0);
-            }
-
-            //!!!bug warning!!! You might expect (bitLength >>> 32) & 0xff === 0 but the result is 8. In js, the shift operator >>> only works on the lower 32 bits of a number — the result is always a 32-bit unsigned integer.
-            let high = Math.floor(bitLength / 2**32);
-            let low = bitLength >>> 0;
-            for (let i = 3; i >= 0; i--) {
-                message.push((high >>> (i * 8)) & 0xff);
-            }
-            for (let i = 3; i >= 0; i--) {
-                message.push((low >>> (i * 8)) & 0xff);
-            }
-
             document.getElementById('lengthDisplay').innerText = messageLength;
             document.getElementById('bitLengthDisplay').innerText = bitLength;
+            
+            if (document.getElementById('append1Bit') && document.getElementById('append1Bit').checked) {
+                message.push(0x80);
+            }
+
+            if (document.getElementById('fill0Bit') && document.getElementById('fill0Bit').checked) {
+                while ((message.length * 8 + 64) % 512 !== 0) {
+                    message.push(0);
+                }
+            }
+
+            if (document.getElementById('appendLength') && document.getElementById('appendLength').checked) {
+                //!!!bug warning!!! You might expect (bitLength >>> 32) & 0xff === 0 but the result is 8. In js, the shift operator >>> only works on the lower 32 bits of a number — the result is always a 32-bit unsigned integer.
+                let high = Math.floor(bitLength / 2**32);
+                let low = bitLength >>> 0;
+                for (let i = 3; i >= 0; i--) {
+                    message.push((high >>> (i * 8)) & 0xff);
+                }
+                for (let i = 3; i >= 0; i--) {
+                    message.push((low >>> (i * 8)) & 0xff);
+                }
+            }
+
             document.getElementById('messageBinary').value = bytesArrayToBinary(message);
             return message;
         }
@@ -327,11 +389,6 @@
             const cryptoHash = await sha256(text);
             document.getElementById("hashOutput2").innerText = cryptoHash;
         }
-
-        document.getElementById('resetInputButton').addEventListener('click', () => {
-            document.getElementById('inputText').value = '';
-            generateHash();
-        });
 
         document.getElementById('inputText').addEventListener('input', generateHash);
         window.addEventListener('load', generateHash);

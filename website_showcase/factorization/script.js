@@ -1,11 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-  adjustDigitInputs('number1-inputs', 6); // Adjust inputs for number1-inputs
-  adjustDigitInputs('number2-inputs', 6); // Adjust inputs for number2-inputs
-  adjustDigitInputs('product-inputs', 6); // Adjust inputs for product-inputs
-  randomizeInputs('number1-inputs'); // Randomize inputs when the page loads
-  randomizeInputs('number2-inputs'); // Randomize inputs when the page loads
-});
-
 function adjustDigitInputs(containerId, numDigits) {
   const container = document.getElementById(containerId);
   container.innerHTML = ''; // Clear any existing inputs
@@ -25,8 +17,26 @@ function adjustDigitInputs(containerId, numDigits) {
 
     if (containerId === 'number1-inputs' || containerId === 'number2-inputs') {
       input.addEventListener('input', multiplyNumbers);
+      // input.addEventListener('change', multiplyNumbers);
+      input.addEventListener('mouseenter', () => hoveredInput = input);
+      input.addEventListener('mouseleave', () => hoveredInput = null);
+      // Add mouse wheel behavior
+      input.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        adjustInputValue(input, event.deltaY < 0 ? 1 : -1);
+      });
     } else if (containerId === 'product-inputs') {
+      //manual input change
       input.addEventListener('input', getProductFactors);
+      // input.addEventListener('change', getProductFactors);
+
+      // Add mouse wheel step behavior
+      input.addEventListener('mouseenter', () => hoveredInput = input);
+      input.addEventListener('mouseleave', () => hoveredInput = null);
+      input.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        adjustInputValue(input, event.deltaY < 0 ? 1 : -1);
+      });
     }
 
     container.prepend(input);
@@ -117,3 +127,44 @@ function getProductFactors() {
     }
   }
 }
+
+function adjustInputValue(input, direction) {
+  const step = parseFloat(input.step) || 1;
+  const min = parseFloat(input.min);
+  const max = parseFloat(input.max);
+  let value = parseFloat(input.value) || 0;
+
+  value += direction * step;
+
+  if (!isNaN(min)) value = Math.max(min, value);
+  if (!isNaN(max)) value = Math.min(max, value);
+
+  input.value = value;
+
+  // Manually dispatch 'input' event
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+//global var to keep track of input being hovered for mouse wheel step functionality
+let hoveredInput = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+  adjustDigitInputs('number1-inputs', 6); // Adjust inputs for number1-inputs
+  adjustDigitInputs('number2-inputs', 6); // Adjust inputs for number2-inputs
+  adjustDigitInputs('product-inputs', 6); // Adjust inputs for product-inputs
+  randomizeInputs('number1-inputs'); // Randomize inputs when the page loads
+  randomizeInputs('number2-inputs'); // Randomize inputs when the page loads
+});
+
+// Handle arrow keys on hovered input
+window.addEventListener('keydown', (event) => {
+  if (!hoveredInput) return;
+
+  if (event.key === "ArrowUp") {
+    adjustInputValue(hoveredInput, 1);
+    event.preventDefault();
+  } else if (event.key === "ArrowDown") {
+    adjustInputValue(hoveredInput, -1);
+    event.preventDefault();
+  }
+});

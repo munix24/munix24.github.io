@@ -31,7 +31,7 @@ body {
 }
 
 input[type="number"] {
-  width: 25px;
+  width: 45;
   border-radius: 3px;
   border: 1px solid #ccc;
   text-align: center;
