@@ -6,19 +6,15 @@ sites:
 
 https://munix24.github.io/
 
-https://munix24.github.io/website_showcase/Countdown/
-
-https://munix24.github.io/website_showcase/lol_1v1_fight_sim/
+https://munix24.github.io/website_showcase/coin_flip_sim.html
 
 https://munix24.github.io/website_showcase/lottery_sim.html
-
-https://munix24.github.io/website_showcase/coin_flip_sim.html
 
 https://munix24.github.io/website_showcase/birthday_problem.html
 
 https://munix24.github.io/website_showcase/factorization/factorization.html
 
-https://munix24.github.io/website_showcase/Geometric%20Distribution.html
+https://munix24.github.io/website_showcase/geometric_distribution.html
 
 
 
