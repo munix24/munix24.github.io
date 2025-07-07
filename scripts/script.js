@@ -3,12 +3,12 @@ function toggleDisplayByID(id, show = null) {
 	if (!element) return;
 
     if (show === true) {
-        element.style.display = 'block';
+        element.style.display = '';
     } else if (show === false) {
         element.style.display = 'none';
     } else {
         // Toggle if no explicit boolean is passed
-        element.style.display = (element.style.display === 'none') ? 'block' : 'none';
+        element.style.display = (element.style.display === 'none') ? '' : 'none';
     }
 }
 
@@ -26,3 +26,19 @@ function toggleVisibilityByID(id, show = null) {
         element.style.visibility = (element.style.visibility === 'hidden') ? 'visible' : 'hidden';
     }
 }
+
+function toggleDisplayTableIDCol(tableID, colIndex, show = null) {
+    const selector = `#${tableID} td:nth-child(${colIndex}), #${tableID} th:nth-child(${colIndex})`;
+    const cells = document.querySelectorAll(selector);
+    if (cells.length === 0) return;
+
+    // Toggle if show is null
+    if (show === null) {
+        show = cells[0].style.display === 'none';  // If currently hidden, show it
+    }
+
+    cells.forEach(cell => {
+        cell.style.display = show ? '' : 'none';
+    });
+}
+
