@@ -18,21 +18,23 @@ function adjustDigitInputs(containerId, numDigits) {
     if (containerId === 'number1-inputs' || containerId === 'number2-inputs') {
       input.addEventListener('input', multiplyNumbers);
       // input.addEventListener('change', multiplyNumbers);
+	  
       input.addEventListener('mouseenter', () => hoveredInput = input);
       input.addEventListener('mouseleave', () => hoveredInput = null);
+	  
       // Add mouse wheel behavior
       input.addEventListener('wheel', (event) => {
         event.preventDefault();
         adjustInputValue(input, event.deltaY < 0 ? 1 : -1);
       });
     } else if (containerId === 'product-inputs') {
-      //manual input change
       input.addEventListener('input', getProductFactors);
       // input.addEventListener('change', getProductFactors);
 
       // Add mouse wheel step behavior
       input.addEventListener('mouseenter', () => hoveredInput = input);
       input.addEventListener('mouseleave', () => hoveredInput = null);
+	  
       input.addEventListener('wheel', (event) => {
         event.preventDefault();
         adjustInputValue(input, event.deltaY < 0 ? 1 : -1);
@@ -145,9 +147,6 @@ function adjustInputValue(input, direction) {
   input.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-//global var to keep track of input being hovered for mouse wheel step functionality
-let hoveredInput = null;
-
 document.addEventListener('DOMContentLoaded', function() {
   adjustDigitInputs('number1-inputs', 6); // Adjust inputs for number1-inputs
   adjustDigitInputs('number2-inputs', 6); // Adjust inputs for number2-inputs
@@ -155,6 +154,9 @@ document.addEventListener('DOMContentLoaded', function() {
   randomizeInputs('number1-inputs'); // Randomize inputs when the page loads
   randomizeInputs('number2-inputs'); // Randomize inputs when the page loads
 });
+
+//global var to keep track of input being hovered for mouse wheel step functionality
+let hoveredInput = null;
 
 // Handle arrow keys on hovered input
 window.addEventListener('keydown', (event) => {
