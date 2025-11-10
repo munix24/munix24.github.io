@@ -36,13 +36,17 @@
 </head>
 
 <body>
+    <script src="Champ.js"></script>
+    <script src="championFull.js"></script>
+    <script src="championsDetailedBaseDamage.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
+    <script src="tableSort.js"></script>
     <script src="../../scripts/nav_menu_hamburger.js"></script>
     <div class="container">
         <div class="fight">
             <div class="fight-header">
                 <p><button onclick="document.location='index.html'">1v1Table</button></p>
                 <p><button id='buttonStats' onclick="populateChampionsStatsTable()">Stats</button></p>
-                <p><button id='buttonStats' onclick="populateChampionsStatsCostTable()">StatsCost</button></p>
                 <p><button id='buttonSpells' onclick="populateChampionsSpellsTable()">Spells</button></p>
                 <p><button id='buttonSpellsDetailed' style='width: 150px;' onclick="populateChampionsSpellsDetailedTable()">SpellsDetailed</button></p>
             </div>
@@ -59,11 +63,6 @@
         </div>
     </div>
 
-    <script src="Champ.js"></script>
-    <script src="championFull.js"></script>
-    <script src="championsDetailedBaseDamage.js"></script>
-    <script src="tableSort.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js"></script>
     <script>
         // Function to remove the 'selected' class from all buttons
         function removeButtonsSelectedClass() {

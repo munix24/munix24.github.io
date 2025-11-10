@@ -42,3 +42,21 @@ function toggleDisplayTableIDCol(tableID, colIndex, show = null) {
     });
 }
 
+function toggleDisplayTableIDRows(id, rowStart, rowEnd, show = null) {
+    const table = document.getElementById(id);
+    const rows = table.getElementsByTagName("tr");
+    if (!rows) return;
+
+    for (let i = rowStart; i <= rowEnd; i++) {
+        const element = rows[i];
+        if (show === true) {
+            element.style.display = '';
+        } else if (show === false) {
+            element.style.display = 'none';
+        } else {
+            // Toggle if no explicit boolean is passed
+            element.style.display = (element.style.display === 'none') ? '' : 'none';
+        }
+    }
+}
+

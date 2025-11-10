@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geometric Distribution</title>
     <script src="../scripts/script.js"></script> 
+    <script src="../scripts/chart.js"></script> 
     <link rel="stylesheet" href="../styles/style.css">
     <style>
         body {
@@ -75,6 +76,10 @@
         #results-table {
             margin-bottom: 60px; /* Adds bottom margin to the results table */
         }
+        canvas {
+            max-width: 90%;
+            margin: auto;
+        }
     </style>
 </head>
 <body>
@@ -84,9 +89,8 @@
     </h1>
     <div id="explanation" class="explanation" style="display: none;">
         <p>
-            This tool models a <strong>Geometric Distribution</strong> which when given a probability, p, 
-            simulates how many tries (trials) it takes for the first success to occur. 
-            
+            This tool models a <strong>Geometric Distribution</strong> which when given a probability, p, and runs, r, 
+            simulates how many trials, k, it takes for the first success to occur. 
         </p>
         <p>
             For Example:
@@ -108,7 +112,7 @@
         </p>
         <br>
         <p>
-            <strong>Simulation:</strong> The execution of r number of "run"(s).
+            <strong>Simulation:</strong> Execution of r number of runs.
         </p>
         <p>
             <strong>Run:</strong> Continuous execution of "trials" until a success is achieved 
@@ -117,26 +121,27 @@
         <p>
             <strong>Trial:</strong> An independent Bernoulli trial: A random experiment with exactly two possible outcomes, 
             "success" and "failure", in which the probability of success is the same every time the experiment is conducted.
-            More specifically, a trial generates a random decimal value (0-1) and checks if it is less than entered 
-            probability of success, p
+            More specifically, a trial generates a random decimal value (0-1) and is successful if it is less than the entered 
+            probability of success, p, otherwise continue generating decimals until successful.
         </p>
         <br>
     </div>
 
     <label for="probability">Enter Probability, p, (0-1):</label>
-    <input type="number" id="probability" step="0.01" min="0" max="1" value="0.5" oninput="displayTheoreticalStatsBasedOnP(); resetSimulation();"> OR 
+    <input type="number" id="probability" step="0.01" min="0" max="1" value="0.1667" oninput="displayTheoreticalStatsBasedOnP(); resetSimulation();"> OR 
     <input type="number" id="numerator" min="0" max="1000"  value="1" oninput="updateProbability()"> /
     <input type="number" id="denominator" min="0" max="1000"  value="6" oninput="updateProbability()">
     <br><br>
     <label for="runs">Enter Number of Runs, r:</label>
     <input type="number" id="runs" min="1" value="6" oninput="resetSimulation(); runSimulation();">
     <br><br>
-    <button id="simulate-button" onclick="runSimulation()">Simulate</button>
+    <button id="simulate-button" onclick="resetSimulation(); runSimulation();">Simulate</button>
     <button id="reset-button" onclick="resetSimulation()">Reset</button>
     <br><br>
 
     <p></p>
     <div class="stats">
+        <canvas id="myLineChart" width="400" height="200"></canvas>
         <table class="statistics-table">
             <tr>
                 <th></th>
@@ -147,9 +152,9 @@
             </tr>
             <tr>
                 <td class="highlight-blue"><strong>Median Trials Needed for First Success</strong></td>
-                <td class="highlight-blue">(1 - p)^x=.5</td>
+                <td class="highlight-blue">(1 - p)<sup>x</sup> = 0.5</td>
                 <td class="highlight-blue">=</td>
-                <td class="highlight-blue">x=log(0.5)/log(1 - p)
+                <td class="highlight-blue">x = <sup>log(0.5)</sup>/<sub>log(1 - p)</sub>
                 </td>
                 <td class="highlight-blue">=</td>
                 <td class="highlight-blue"><span id="median-value">N/A</span></td>
@@ -157,8 +162,9 @@
             </tr>
             <tr>
                 <td class="highlight-green"><strong>Mean Trials Needed for First Success</strong></td>
-                <td class="highlight-green" colspan="2"></td>
-                <td class="highlight-green">1/p</td>
+                <td class="highlight-green">x</td>
+                <td class="highlight-green">=</td>
+                <td class="highlight-green"><sup>1</sup>&frasl;<sub>p</sub></td>
                 <td class="highlight-green">=</td>
                 <td class="highlight-green"><span id="mean-value">N/A</span></td>
                 <td class="highlight-green"><span id="mean-trial-success">N/A</span></td>
@@ -269,7 +275,7 @@
             }
 
             totalRunCount += runs;
-            displayResults(trialCounts, probability, runs);
+            populateResultsTableBody(trialCounts, probability, runs);
         }
 
         function resetSimulation() {
@@ -281,10 +287,10 @@
             for (let i = 1; i <= Math.ceil(mean); i++) {
                 trialCounts[i] = 0;
             }
-            displayResults(trialCounts, probability, 0);
+            populateResultsTableBody(trialCounts, probability, 0);
         }
 
-        function displayResults(trialCounts, probability, runs) {
+        function populateResultsTableBody(trialCounts, probability, runs) {
             const tbody = document.getElementById('results-body');
             tbody.innerHTML = '';
             let cumulativeLikelihood = 0;

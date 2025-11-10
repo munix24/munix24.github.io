@@ -4,7 +4,7 @@
     <!-- <meta charset="ASCII"> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHA-256 Hash Generator</title>
+    <title>SHA-256 Hash Breakdown</title>
     <script src="../scripts/script.js"></script> 
     <link rel="stylesheet" href="../styles/style.css">
     <style>
@@ -31,15 +31,44 @@
             color: #ff1100;
             font-weight: bold;
         }
+
+        .truncate-cell {
+            max-width: 570px;      /* 256Unt is max 256/3.3 ~= 78 characters * 10 px per char */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .monospace-cell {
+            font-family: monospace;
+            font-size: 16px;
+            white-space: pre;
+            vertical-align: middle; /* or top / bottom */
+            text-align: left;       /* or center / right */
+        }
+
+        .cell-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .top, .bottom {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <h2>SHA-256 Hash Generator</h2>
 
-    <input type="text" id="input" placeholder="Enter text here" oninput="generateHash()" value="a">
+    <input type="text" id="input" placeholder="Enter text here" oninput="generateHash()" value="" size="64">
+    <button id="add0ToInputButton" onclick="add0ToInput()">+0</button>
+    <button id="hashInputButton" onclick="inputHash()">Hash Input</button>
     <button id="resetInputButton" onclick="inputReset()">Reset</button>
-    <strong>&nbsp Length:</strong> <span id="lengthDisplay">0</span>
-    <strong>&nbsp Bits:</strong> <span id="bitLengthDisplay">0</span>
+    <strong style="margin-left: 0.5em;">Input Bytes:</strong> <span id="lengthDisplay" style="display:inline-block; min-width:3ch; text-align:right;">0</span>
+    <strong style="margin-left: 0.5em;">Input Bits:</strong> <span id="bitLengthDisplay" style="display:inline-block; min-width:3ch; text-align:right;">0</span>
     <br></br>
 
     <table id="messageTable" border="1" cellpadding="4" cellspacing="0" style="margin: auto; text-align: center; color: white; border-collapse: collapse;">
@@ -50,9 +79,7 @@
                 <th>message</th>
                 <th>process</th>
                 <th>W (4-byte longs)</th>
-                <th></th>
-                <th>W full</th>
-                <th>W full Binary</th>
+                <th>W formula</th>
             </tr>
         </thead>
         <tbody>
@@ -62,8 +89,8 @@
                     <br></br>
                     <button id="inputIncrement" onclick="bitFunctions.incrementInput()">+</button>
                     <button id="inputDecrement" onclick="bitFunctions.decrementInput()">-</button>
-                    <button id="inputBitShiftLeft" onclick="bitFunctions.shiftInputLeft1()"><</button>
-                    <button id="inputBitShiftRight" onclick="bitFunctions.shiftInputRight1()">></button>
+                    <button id="inputBitShiftLeft" onclick="bitFunctions.shiftInputLeft1()"><<<+1</button>
+                    <button id="inputBitShiftRight" onclick="bitFunctions.shiftInputRight1()">>>></button>
                 </td>
                 <td>
                     preprocess input into message:
@@ -73,30 +100,29 @@
                     <label><input type="checkbox" id="fill0Bit" oninput="generateHash()" checked>fill with '0' bits</label>
                     <p></p>
                     <label><input type="checkbox" id="appendLength" oninput="generateHash()" checked>append message length L bits</label>
-                </td>
-                <td>
-                    <textarea id="messageBinaryPreprocessed" rows="20" cols="35" placeholder="message Preprocessed"></textarea>
-                </td>
-                <td>
-                    convert to 16 
                     <p></p>
-                    4-byte longs
+                    <label><input type="checkbox" id="initWorkingVars" oninput="generateHash()" checked>init working variables</label>
                 </td>
                 <td>
-                    <textarea id="messageW" rows="20" cols="12" placeholder="W"></textarea>
+                    <textarea id="messageBinaryPreprocessed" rows="21" cols="35" placeholder="message Preprocessed"></textarea>
+                </td>
+                <td style="width: 100px;height: 300px;padding: 0;">
+                    <div class="cell-content">
+                        <span class="top">
+                            message in 16 
+                            4-byte longs
+                        </span>
+                        <span class="bottom">
+                            17:64
+                            based on first 16
+                        </span>
+                    </div>
                 </td>
                 <td>
-                    fill in 
-                    <p></p>
-                    longs 17:64
-                    <p></p>
-                    based on first 16
+                    <textarea id="messageW" rows="21" cols="12" placeholder="W" style="text-align:right;"></textarea>
                 </td>
                 <td>
-                    <textarea id="messageWFull" rows="20" cols="12" placeholder="W"></textarea>
-                </td>
-                <td>
-                    <textarea id="messageWFullBinary" rows="20" cols="35" placeholder="Binary message full"></textarea>
+                    <textarea id="messageWFormula" rows="21" cols="12" placeholder="W" style="text-align:right;"></textarea>
                 </td>
             </tr>
         </tbody>
@@ -128,10 +154,26 @@
         </tbody>
     </table>
     -->
-    <br></br>
-    <label><input id="incrementCheckbox" type="checkbox" oninput="toggleDisplayByID('incrementContainer', this.checked)">Show Increment</label>
-    <label><input id="APICheckbox" type="checkbox" oninput="toggleDisplayTableIDCol('incrementTable', 3)">Show API Hash</label>
-    <label><input id="roundsCheckbox" type="checkbox" oninput="toggleDisplayByID('roundsContainer', this.checked)">Show 64 Rounds Working Variables</label>
+
+    <table id="checkboxesTable" cellpadding="11" cellspacing="0" style="width: 100%; margin: 10px auto 0 auto; table-layout: fixed; color: white;">
+        <tbody>
+            <tr>
+                <td style="vertical-align: top;">
+                    <label><input id="incrementCheckbox" type="checkbox" oninput="toggleDisplayByID('incrementContainer', this.checked)" checked>Show Increments in </label>
+                    <select id="displayFormat" oninput="generateHash()">
+                        <option value="hex">Hex</option>
+                        <option value="binary" selected>Binary</option>
+                        <option value="256UInt">256UInt</option>
+                    </select> 
+                    <label><input id="APICheckbox" type="checkbox" oninput="toggleDisplayTableIDCol('incrementTable', 4, this.checked)">Show API Hash</label>
+                </td>
+                <td style="vertical-align: top;">
+                    <label><input id="roundsShowCheckbox" type="checkbox" oninput="toggleDisplayByID('roundsContainer', this.checked)">Show 64 Rounds Working Variables</label>
+                    <label><input id="roundsCollapseCheckbox" type="checkbox" oninput="generateHash()" checked>Collapse Rounds 5-60</label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <table id="outputsTable" cellpadding="11" cellspacing="0" style="margin: auto; text-align: center; color: white;">
         <tbody>
@@ -143,6 +185,7 @@
                             <thead>
                                 <tr>
                                     <th>Input</th>
+                                    <th>Diffs</th>
                                     <th>Manual Hash</th>
                                     <span id="cryptoSHAContainer" style="visibility: hidden;">
                                     <th>API Hash</th>
@@ -187,8 +230,13 @@
 </body>
 
 <script>
+    // checkbox that is always checked that checks all checkboxes
+    // TODO: calculate api hash to hidden element even if unchecked?
+    // TODO: implement W formula to show which values its based on
+    // TODO: show that main avalanche and irreversible-ness comes from initial processing of message schedule array, W 
+
     "use strict";
-    //first 32 bits of the fractional parts of the cube roots of the first 64 primes 2..311
+    // first 32 bits of the fractional parts of the cube roots of the first 64 primes 2..311
     const k = [
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
         0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -200,11 +248,37 @@
         0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
     ];
 
-    //(first 32 bits of the fractional parts of the square roots of the first 8 primes 2..19):
-    const initialHash = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]
+    // first 32 bits of the fractional parts of the square roots of the first 8 primes 2..19
+    const initialPrimes = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]
+
+    // global random sequence state
+    let randomSequenceIndex = 0;  // stays in memory until page reload
 
     function inputReset(){
         document.getElementById('input').value = '';
+        generateHash();
+    }
+
+    async function inputHash(){
+        let val;
+        val = document.getElementById('input').value;
+
+        // convert index to next hex in sequence
+        // val = randomSequenceIndex === 0 ? "" : randomSequenceIndex - 1;
+        // randomSequenceIndex++; // advance sequence for next click
+
+        const hash = await apiSHA256(val);
+        const hashHexStr = formatByteArray(hash, 'hex');
+
+        document.getElementById('input').value = hashHexStr;
+        generateHash();
+    }
+    
+    function add0ToInput() {
+        const inputElement = document.getElementById('input');
+        inputElement.value += '\0';                           // Option 1: using escape sequence
+        // inputElement.value += String.fromCharCode(0);      // Option 2: using String.fromCharCode
+        
         generateHash();
     }
 
@@ -217,6 +291,46 @@
                 setTimeout(() => status.textContent = "", 2000); // Clear after 2 seconds
             }
         });
+    }
+
+    // Convert hex string to Uint8Array
+    function hexStrToByteArray(hexStr) {
+        const bytes = new Uint8Array(hexStr.length / 2);
+        for (let i = 0; i < bytes.length; i++) {
+            bytes[i] = parseInt(hexStr.substr(i * 2, 2), 16);
+        }
+        return bytes;
+    }
+
+    // Count number of 1 bits in a number (Brian Kernighan’s algorithm)
+    function countBits(n) {
+        let count = 0;
+        while (n) {
+            n &= (n - 1);
+            count++;
+        }
+        return count;
+    }
+
+    // Compute bit difference count and bit string between two byte arrays
+    function bitDifference(arr1, arr2) {
+        if (!Array.isArray(arr1) || !Array.isArray(arr2) || arr1.length !== arr2.length) {
+            throw new Error("Both inputs must be arrays of equal length");
+        }
+
+        const diffArray = [];
+        let totalDiffBits = 0;
+
+        for (let i = 0; i < arr1.length; i++) {
+            const diff = arr1[i] ^ arr2[i];
+            diffArray.push(diff);
+            totalDiffBits += countBits(diff);
+        }
+
+        return {
+            diffArray,        // Plain JavaScript array of byte-wise XORs
+            totalDiffBits     // Total number of differing bits
+        };
     }
 
     function printIntArray(intArray) {
@@ -232,11 +346,15 @@
             .join('\n');
     }
 
-    function BytesArrayToBinaryStr(bytesArray, joinStr = ' ') {
+    function intArrayToStringArray(intArray) {
+        return intArray.map(l => l.toString(10).padStart(10, '0'));
+    }
+
+    function byteArrayToBinaryStr(bytesArray, joinStr = ' ') {
         return bytesArray.map(b => b.toString(2).padStart(8, '0')).join(joinStr);
     }
 
-    function BytesArrayToHexStr(bytesArray) {
+    function byteArrayToHexStr(bytesArray) {
         return bytesArray.map(b => b.toString(16).padStart(2, '0')).join('');   
     }
 
@@ -251,17 +369,43 @@
         return bytes;
     }
 
-    function addRoundRow(rowHeader, tdContentArray) {
+    function byteArrayToBigDecimal(bytes) {
+        let result = 0n;
+        for (const byte of bytes) {
+            result = (result << 8n) + BigInt(byte);
+        }
+        return result.toString().padStart(78, '0');  // pad for easier comparison. 256UInt is max 256 / log(10)/log(2) ~= 256 / 3.3 ~= 77.01 round up
+    }
+
+    function formatByteArray(bytes, format = 'hex') {
+        if (!bytes || typeof bytes[Symbol.iterator] !== 'function' || bytes.length === 0) {
+            return '';  // or return some default/error string
+        }
+
+        switch (format) {
+            case 'hex':
+                return byteArrayToHexStr(bytes);
+            case 'binary':
+                return byteArrayToBinaryStr(bytes, ' ');
+            case '256UInt':
+                return byteArrayToBigDecimal(bytes);
+            default:
+                return '';
+        }
+    }
+
+    function createRow(rowHeader, tdContentArray, tdClassName = "") {
         const row = document.createElement("tr");
 
         const headerCell = document.createElement("td");
         headerCell.textContent = rowHeader.toString();
         row.appendChild(headerCell);
 
-        //create working variables cols
+        // output array values
         for (let i = 0; i < tdContentArray.length; i++) {
             let cell = document.createElement("td");
-            cell.textContent = tdContentArray[i].toString(10).padStart(10, '0');
+            cell.textContent = tdContentArray[i];
+            cell.className = "monospace-cell truncate-cell";
 
             row.appendChild(cell);
         }
@@ -279,9 +423,13 @@
     const bitFunctions = {
         modifyLastChar(text, transformFn) {
             const lastCharCode = text.charCodeAt(text.length - 1);
-            const newCharCode = text === "" ? 0 : transformFn(lastCharCode) & 0xFF; // Keep it in 0–255
+            // if (transformFn === bitFunctions.decrementLastChar1Bit && String.fromCharCode(lastCharCode) == 0) return text.slice(0, -1);  
+            const newCharCode = transformFn(lastCharCode) & 0xFF; // & 0xFF to Keep it between 0–255
             const newChar = String.fromCharCode(newCharCode);
             return text.slice(0, -1) + newChar;
+        },
+        removeLastChar(text) {
+            return text.slice(0, -1);
         },
         incrementLastChar1Bit(text, bits = 1) {
             return bitFunctions.modifyLastChar(text, code => (code + bits));
@@ -292,6 +440,9 @@
         shiftLastCharLeft1(text) {
             return bitFunctions.modifyLastChar(text, code => (code << 1));
         },
+        shiftLastCharLeft1Add1(text) {
+            return bitFunctions.modifyLastChar(text, code => ((code << 1) + 1));
+        },
         shiftLastCharRight1(text) {
             return bitFunctions.modifyLastChar(text, code => (code >>> 1));
         },
@@ -300,23 +451,28 @@
             if (!input) return;
 
             const text = input.value;
-            // if (text.length === 0) return;
-            
-            const incrementedText = transformFn(text);
 
-            input.value = incrementedText;
+            // decrement & increment on empty string sets to null character (00000000) so disable decrement
+            if (transformFn === bitFunctions.decrementLastChar1Bit && (text.length === 0)) return;    
+            // decrement on null character (00000000) will delete last character
+            if (transformFn === bitFunctions.decrementLastChar1Bit && (text.charCodeAt(text.length - 1) == 0)){
+                transformFn = bitFunctions.removeLastChar;
+            } 
+
+            const modifiedText = transformFn(text);
+            input.value = modifiedText;
             input.oninput();
         },
-        incrementInput(transformFn) {
+        incrementInput() {
             bitFunctions.modifyInput(bitFunctions.incrementLastChar1Bit);
         },
-        decrementInput(transformFn) {
+        decrementInput() {
             bitFunctions.modifyInput(bitFunctions.decrementLastChar1Bit);
         },
-        shiftInputLeft1(transformFn) {
-            bitFunctions.modifyInput(bitFunctions.shiftLastCharLeft1);
+        shiftInputLeft1() {
+            bitFunctions.modifyInput(bitFunctions.shiftLastCharLeft1Add1);
         },
-        shiftInputRight1(transformFn) {
+        shiftInputRight1() {
             bitFunctions.modifyInput(bitFunctions.shiftLastCharRight1);
         },
         incrementBinary1Bit() {
@@ -366,7 +522,7 @@
         }
     };
 
-    function manual_preprocessMessage(text) {
+    function preprocessMessage(text) {
         const encoder = new TextEncoder();
         let message = Array.from(encoder.encode(text));
         let bitLength = message.length * 8;
@@ -396,8 +552,16 @@
         return message;
     }
 
-    function manual_processMessage(message) {
+    function bitsToUint32(bitsArray){
+        const ret = new Uint32;
+        ret = (message[i * 4] << 24) | (message[i * 4 + 1] << 16) | (message[i * 4 + 2] << 8) | (message[i * 4 + 3]);
+        return ret;
+    }
+
+    function processMessage(message) {
         const w = new Uint32Array(64);
+
+        // convert message array to Uint32Array
         for (let i = 0; i < 16; i++) {
             w[i] = (message[i * 4] << 24) | (message[i * 4 + 1] << 16) | (message[i * 4 + 2] << 8) | (message[i * 4 + 3]);
         }
@@ -412,15 +576,24 @@
         return w;
     }
 
-    function ROUND_00_63(w){
+    function Rounds0to63(w, outputToUI = true){
         const roundsTableBody = document.querySelector("#roundsLogTable tbody");
-        roundsTableBody.innerHTML = ""; // Clear previous
-
+        
+        const roundsCollapse = document.getElementById("roundsCollapseCheckbox").checked;
+        const roundsCollapseStart = 2;
+        const roundsCollapseEnd = 60;
+        
+        const fragment = document.createDocumentFragment();
         let previousHash = null; // global or outer variable to track previous state
+        let initialHash = new Array(8).fill(0);;
+
+        if (document.getElementById('initWorkingVars') && document.getElementById('initWorkingVars').checked) {
+            initialHash = initialPrimes.slice();
+        } 
 
         let hashArray = initialHash.slice();  // copy of initialHash
-        let row = addRoundRow(0, hashArray);
-        roundsTableBody.appendChild(row);
+        let row = createRow(0, intArrayToStringArray(hashArray));
+        fragment.appendChild(row);
 
         for (let i = 0; i < 64; i++) {
             let S1 = rightRotate(hashArray[4], 6) ^ rightRotate(hashArray[4], 11) ^ rightRotate(hashArray[4], 25);
@@ -439,9 +612,7 @@
                 (hashArray[3] + temp1) >>> 0, hashArray[4], hashArray[5], hashArray[6]
             ];
 
-            // roundsLog += `Round ${i + 1}: ${hashArray.join(" ").padStart(10, '0')}\n`;
-            // roundsLog += `Round ${i + 1}: ${hashArray.map(h => h.toString(10).padStart(10, '0')).join(' ')}\n`;
-            row = addRoundRow(i + 1, hashArray);
+            row = createRow(i + 1, intArrayToStringArray(hashArray));
             
             //create differences cols
             if (previousHash !== null){
@@ -454,43 +625,57 @@
                 row.appendChild(cellH);
             }
             
-            roundsTableBody.appendChild(row);
+            // if roundCollapse is checked then don't show rows
+            if (roundsCollapse && i > roundsCollapseStart && i < roundsCollapseEnd) 
+                continue;
+
+            fragment.appendChild(row);
         }
-
-        return hashArray;
-    }
-
-    async function manual_sha256(text, outputMessage = true) {
-        const encoder = new TextEncoder();
-        const message = manual_preprocessMessage(text);
-        const w = manual_processMessage(message);
-
-        if (outputMessage) {   // output values to ui
-            const textMessage = Array.from(encoder.encode(text));
-            document.getElementById('lengthDisplay').innerText = textMessage.length;
-            document.getElementById('bitLengthDisplay').innerText = textMessage.length * 8;
-            document.getElementById('inputBinary').value = BytesArrayToBinaryStr(message.slice(0, textMessage.length));
-            // document.getElementById('inputBinary').value = BytesArrayToBinaryStr(message.slice(0, text.length));
-            document.getElementById('messageBinaryPreprocessed').value = BytesArrayToBinaryStr(message);
-
-            document.getElementById('messageW').value = printIntArray(w.slice(0, 16));
-            document.getElementById('messageWFull').value = printIntArray(w);
-            document.getElementById('messageWFullBinary').value = printIntArrayAsBinaryStr(w);
-        }
-
-        let hashArray = ROUND_00_63(w);  
 
         // Add initialHash values to hashArray before returning
         for (let i = 0; i < 8; i++) {
             hashArray[i] = (hashArray[i] + initialHash[i]) >>> 0;
         }
 
+        row = createRow("", intArrayToStringArray(hashArray));
+        fragment.appendChild(row);
+
+        if (outputToUI) {   // output values to ui
+            roundsTableBody.innerHTML = "";   // clear out old table tbody
+            roundsTableBody.appendChild(fragment);
+        }
+
+        return hashArray;
+    }
+
+    async function manualSHA256(text, outputToUI = true) {
+        const encoder = new TextEncoder();
+        const message = preprocessMessage(text);
+        const w = processMessage(message);
+
+        if (outputToUI) {   // output values to ui
+            const textMessage = Array.from(encoder.encode(text));
+            document.getElementById('lengthDisplay').innerText = textMessage.length;
+            document.getElementById('bitLengthDisplay').innerText = textMessage.length * 8;
+            document.getElementById('inputBinary').value = byteArrayToBinaryStr(message.slice(0, textMessage.length));
+            // document.getElementById('inputBinary').value = byteArrayToBinaryStr(message.slice(0, text.length));
+            document.getElementById('messageBinaryPreprocessed').value = byteArrayToBinaryStr(message);
+            document.getElementById('messageBinaryPreprocessed').value += "\n\n";
+            document.getElementById('messageBinaryPreprocessed').value += printIntArrayAsBinaryStr(w.slice(16, 64));
+
+            document.getElementById('messageW').value = printIntArray(w.slice(0, 16));
+            document.getElementById('messageW').value += "\n\n";
+            document.getElementById('messageW').value += printIntArray(w.slice(16, 64));
+        }
+
+        let hashArray = Rounds0to63(w, outputToUI);  
+
         // const hashHexStr = hashArray.map(h => h.toString(16).padStart(8, '0')).join('');
         const hashBytesArray = int32ArrayToBytesArray(hashArray);
         return hashBytesArray;
     }
 
-    async function sha256(text) {
+    async function apiSHA256(text) {
         const encoder = new TextEncoder();
         const data = encoder.encode(text);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -504,53 +689,83 @@
     async function generateHash() {
         const encoder = new TextEncoder();
         const incrementTableBody = document.querySelector("#incrementTable tbody");
-        incrementTableBody.innerHTML = "";  //clear out old table tbody
+        const showAPI = document.getElementById('APICheckbox').checked;
+        const displayFormat = document.getElementById('displayFormat').value;
+
+        const NUM_INCREMENTS = 4;
+        const fragment = document.createDocumentFragment();
+        let previousManualHashArray = "";
 
         let text = document.getElementById('input').value;
         
-        for (let i = 1; i < 10; i++) {
-            const messageBinary = BytesArrayToBinaryStr(Array.from(encoder.encode(text)));
-            const manualHashArray = await manual_sha256(text, false);
-            const cryptoHashArray = await sha256(text);
+        for (let i = 1; i <= NUM_INCREMENTS; i++) {
+            const manualHashArray = (i == 1) ? await manualSHA256(text, true) : await manualSHA256(text, false);  // don't output after first 
+            const cryptoHashArray = await apiSHA256(text);
 
-            const manualHashHexStr = BytesArrayToHexStr(manualHashArray);
-            const cryptoHashHexStr = BytesArrayToHexStr(cryptoHashArray);
+            const manualHashHexStr = formatByteArray(manualHashArray, displayFormat);
+            const cryptoHashHexStr = formatByteArray(cryptoHashArray, displayFormat);
             
             // document.getElementById('manualSHA').innerText = manualHash;
             // document.getElementById("cryptoSHA").innerText = cryptoHash;
 
-            const row = addRoundRow(messageBinary, [manualHashHexStr, cryptoHashHexStr]);
-            incrementTableBody.appendChild(row);
+            if (previousManualHashArray !== ""){
+                const { diffArray, totalDiffBits } = bitDifference(previousManualHashArray, manualHashArray);
+                const diffArrayHexStr = formatByteArray(diffArray, displayFormat);
+                // const rowDiff = createRow(totalDiffBits, [diffArrayHexStr]);
+                const rowDiff = createRow("", [totalDiffBits.toString(), diffArrayHexStr]);
+                fragment.appendChild(rowDiff);
+            }
 
+            // const row = (showAPI) ? createRow(messageBinary, ["", manualHashHexStr, cryptoHashHexStr]) : createRow(messageBinary, ["", manualHashHexStr]);
+
+            // binary header
+            const header = byteArrayToBinaryStr(Array.from(encoder.encode(text)));
+            // const header = text.charCodeAt(text.length - 1);
+            const row = (showAPI) ? createRow(header, ["", manualHashHexStr, cryptoHashHexStr]) : createRow(header, ["", manualHashHexStr]);
+            fragment.appendChild(row);
+
+            previousManualHashArray = manualHashArray;
             text = bitFunctions.incrementLastChar1Bit(text, 1);
+            // text = bitFunctions.shiftLastCharLeft1Add1(text, 1);
         }
+
+        incrementTableBody.innerHTML = "";  // clear out old table tbody
+        incrementTableBody.appendChild(fragment);
     }
 
     window.addEventListener('load', generateHash);
 
     //show/hide based on checkbox values
     // window.addEventListener("load", () => toggleVisibilityByID('cryptoSHAContainer', document.getElementById("showCrypto").checked));
-    window.addEventListener("load", () => toggleDisplayByID('roundsContainer', document.getElementById("roundsCheckbox").checked));
+    window.addEventListener("load", () => toggleDisplayByID('roundsContainer', document.getElementById("roundsShowCheckbox").checked));
     window.addEventListener("load", () => toggleDisplayByID('incrementContainer', document.getElementById("incrementCheckbox").checked));
+    window.addEventListener("load", () => toggleDisplayTableIDCol('incrementTable', 4, document.getElementById("APICheckbox").checked));
 
     document.addEventListener('wheel', (e) => {
-        e.preventDefault(); // prevent page scroll
+        e.preventDefault();                     // prevent page scroll
 
         if (e.deltaY < 0) {
-            // Scroll wheel UP anywhere on page
-            bitFunctions.incrementInput();
+            bitFunctions.incrementInput();      // Scroll wheel UP anywhere on page
         } else if (e.deltaY > 0) {
-            // Scroll wheel DOWN anywhere on page
-            bitFunctions.decrementInput();
+            bitFunctions.decrementInput();      // Scroll wheel DOWN anywhere on page
         }
-    });
+    }, { passive: false });  // 👈👈 Required to allow preventDefault!
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') {
+            e.preventDefault();
             bitFunctions.shiftInputLeft1();
         } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
             bitFunctions.shiftInputRight1();
-        } else if (e.key === 'h' || e.key === 'H') {
-            appendNullChar();
+        } else if (e.key === 'Backspace') {
+            const input = document.getElementById('input');
+
+            // Only act if input is not focused (optional, if you want to override default)
+            if (document.activeElement !== input) {
+                e.preventDefault(); // Prevent browser navigation
+                input.value = input.value.slice(0, -1); // Remove last character
+                generateHash();
+            }
         }
     });
 </script>
