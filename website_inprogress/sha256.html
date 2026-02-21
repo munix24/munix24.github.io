@@ -119,10 +119,10 @@
                     </div>
                 </td>
                 <td>
-                    <textarea id="messageW" rows="21" cols="12" placeholder="W" style="text-align:right;"></textarea>
+                    <textarea id="messageW" rows="21" cols="12" placeholder="W longs" style="text-align:right;"></textarea>
                 </td>
                 <td>
-                    <textarea id="messageWFormula" rows="21" cols="12" placeholder="W" style="text-align:right;"></textarea>
+                    <textarea id="messageWFormula" rows="21" cols="25" placeholder="W Formula" style="text-align:right;"></textarea>
                 </td>
             </tr>
         </tbody>
@@ -666,6 +666,11 @@
             document.getElementById('messageW').value = printIntArray(w.slice(0, 16));
             document.getElementById('messageW').value += "\n\n";
             document.getElementById('messageW').value += printIntArray(w.slice(16, 64));
+
+            document.getElementById('messageWFormula').value = '\n'.repeat(17);
+            for (let i = 16; i <= 64; i++) {
+                document.getElementById('messageWFormula').value += `W${i - 16}+s0(W${i - 15})+W${i - 7}+s1(W${i - 2})\n`;
+            }
         }
 
         let hashArray = Rounds0to63(w, outputToUI);  
@@ -757,16 +762,17 @@
         } else if (e.key === 'ArrowRight') {
             e.preventDefault();
             bitFunctions.shiftInputRight1();
-        } else if (e.key === 'Backspace') {
-            const input = document.getElementById('input');
+        } 
+        // else if (e.key === 'Backspace') {
+        //     const input = document.getElementById('input');
 
-            // Only act if input is not focused (optional, if you want to override default)
-            if (document.activeElement !== input) {
-                e.preventDefault(); // Prevent browser navigation
-                input.value = input.value.slice(0, -1); // Remove last character
-                generateHash();
-            }
-        }
+        //     // Only act if input is not focused (optional, if you want to override default)
+        //     if (document.activeElement !== input) {
+        //         e.preventDefault(); // Prevent browser navigation
+        //         input.value = input.value.slice(0, -1); // Remove last character
+        //         generateHash();
+        //     }
+        // }
     });
 </script>
 </html>
