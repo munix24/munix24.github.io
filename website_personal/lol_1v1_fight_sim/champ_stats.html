@@ -24,8 +24,25 @@
 
         .fight-header {
             display: flex;
-            padding: 0 10px;    
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fight-header-left {
+            flex: 4;
+            /* width: 150px; match widths so center is truly centered */
+            display: flex;
+            /* justify-content: flex-end; */
             justify-content: center;
+            align-items: center;
+        }
+
+        .fight-header-right {
+            min-width: 200px;
+            justify-content: right;
+            align-items: right;
+            /* margin-left: 20px; */
+            /* padding-left: 20px; */
         }
 
         .fight-top {
@@ -45,10 +62,16 @@
     <div class="container">
         <div class="fight">
             <div class="fight-header">
-                <p><button onclick="document.location='index.html'">1v1Table</button></p>
-                <p><button id='buttonStats' onclick="populateChampionsStatsTable()">Stats</button></p>
-                <p><button id='buttonSpells' onclick="populateChampionsSpellsTable()">Spells</button></p>
-                <p><button id='buttonSpellsDetailed' style='width: 150px;' onclick="populateChampionsSpellsDetailedTable()">SpellsDetailed</button></p>
+                <div class="fight-header-left">
+                    <p><button onclick="document.location='index.html'">1v1Table</button></p>
+                    <p><button id='buttonStats' onclick="populateChampionsStatsTable()">Stats</button></p>
+                    <p><button id='buttonSpells' onclick="populateChampionsSpellsTable()">Spells</button></p>
+                    <p><button id='buttonSpellsDetailed' style='width: 150px;' onclick="populateChampionsSpellsDetailedTable()">SpellsDetailed</button></p>
+                </div>
+                <div class="fight-header-right">
+                    <p>Data Version <div id="Version"></div></p>
+                    <p>Last Updated <div id="Last_Update"></div></p>
+                </div>
             </div>
             <div class="fight-top">
                 <table id="fightSimulationTable">
