@@ -1,0 +1,320 @@
+:root {
+    --gold: #d4af37;
+    --dark-gold: #996515;
+    --vintage-red: #8b0000;
+    --bg-color: #000000;
+    --led-red: #ff3131;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 0;
+}
+
+.machine-container {
+    background: linear-gradient(145deg, #2c2c2c, #000);
+    border: 8px solid var(--gold);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+    width: 450px;
+    text-align: center;
+}
+
+h1 {
+    color: var(--gold);
+    margin: 0;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px #000;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 0.7rem;
+    margin-bottom: 20px;
+}
+
+.credit-main-box {
+    background: #050505;
+    border: 2px solid var(--dark-gold);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 15px rgba(0,0,0,1);
+}
+
+.credit-main-box .label {
+    font-size: 1rem;
+    color: var(--led-red);
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+}
+
+.display-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat-box {
+    color: var(--led-red);
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+#balance {
+    font-size: 2.8rem;
+    text-shadow: 0 0 15px rgba(255, 49, 49, 0.6);
+    font-weight: bold;
+}
+
+.stat-box span {
+    display: block;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.reels-frame {
+    background: var(--vintage-red);
+    padding: 10px 10px 10px 45px;
+    border: 4px solid #444;
+    border-radius: 4px;
+    position: relative;
+}
+
+.reels-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    background: #fff;
+    height: 360px;
+    overflow: hidden;
+    position: relative;
+    border: 4px solid #222;
+}
+
+.payline {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 0, 0, 0.3);
+    z-index: 5;
+}
+.payline.top { top: 16.66%; }
+.payline.middle { top: 50%; }
+.payline.bottom { top: 83.33%; }
+.payline.inactive { opacity: 0.05; }
+
+.line-toggles {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    height: 360px; /* Matches reels-container height */
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.line-toggles input {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    accent-color: var(--gold);
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+
+#line-top { top: 16.66%; }
+#line-middle { top: 50%; }
+#line-bottom { top: 83.33%; }
+
+.reel {
+    width: 85px;
+    height: 100%;
+    position: relative;
+}
+
+.symbol-strip {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.symbol {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #000;
+}
+
+#spin-btn {
+    background: radial-gradient(circle, #ff4d4d, #8b0000);
+    border: 4px solid #ccc;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #400;
+    margin-bottom: 10px;
+}
+
+#spin-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #400;
+}
+
+#spin-btn:disabled {
+    filter: grayscale(1);
+}
+
+#reset-btn {
+    background: transparent;
+    color: #555;
+    border: 1px solid #333;
+    padding: 4px 8px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 0.65rem;
+    border-radius: 3px;
+}
+
+.bet-adjust {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.total-cost-display {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.bet-adjust button {
+    background: #333;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.bet-adjust button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.game-layout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.side-panels {
+    position: relative;
+    flex: 0 0 260px;
+}
+
+.panel {
+    background: #111;
+    border: 1px solid var(--gold);
+    padding: 0;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    width: fit-content;
+    z-index: 100;
+}
+
+#symbol-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#session-panel {
+    position: absolute;
+    top: 420px;
+    left: 0;
+}
+
+#history-section {
+    position: absolute;
+    top: 550px;
+    left: 0;
+    width: fit-content;
+}
+
+#symbol-panel .panel-content,
+#session-panel .panel-content {
+    resize: both;
+    overflow: hidden;
+    width: 260px;
+    box-sizing: border-box;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    padding: 5px 10px;
+    user-select: none;
+}
+
+.panel-header:active { cursor: grabbing; }
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gold);
+}
+
+.panel-content { padding: 10px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+th { text-align: left; color: var(--gold); border-bottom: 1px solid #333; }
+td { padding: 4px 0; }
+
+ .history-container { 
+    z-index: 1000; 
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+ }
+
+.toggle-icon, #history-icon { transition: transform 0.3s; display: inline-block; }
+.minimized .toggle-icon, .minimized #history-icon { transform: rotate(-90deg); }
+.minimized .panel-content, .minimized textarea { display: none; }
+textarea {
+    width: 260px;
+    height: 100px;
+    background: #0a0a0a;
+    color: #0f0;
+    border: 1px solid #333;
+    padding: 10px;
+    font-family: monospace;
+    resize: both;
+    box-sizing: border-box;
+}
