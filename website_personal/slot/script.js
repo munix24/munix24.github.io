@@ -91,6 +91,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     overlay.addEventListener('click', () => toggleSidebar(false));
 
+    // Click on empty space inside the sidebar to close it
+    sidebar.addEventListener('click', (e) => {
+        if (e.target === sidebar) {
+            toggleSidebar(false);
+        }
+    });
+
+    // Swipe left on the sidebar to close it
+    let swipeStartX = 0;
+    sidebar.addEventListener('touchstart', (e) => {
+        swipeStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    sidebar.addEventListener('touchend', (e) => {
+        const swipeEndX = e.changedTouches[0].clientX;
+        // Threshold of 60px for a left swipe gesture
+        if (swipeStartX - swipeEndX > 60) {
+            toggleSidebar(false);
+        }
+    }, { passive: true });
+
     // Sidebar Resizing Logic
     let isResizing = false;
 
