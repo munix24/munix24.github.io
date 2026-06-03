@@ -1,9 +1,15 @@
+* {
+    box-sizing: border-box;
+}
+
 :root {
     --gold: #d4af37;
     --dark-gold: #996515;
     --vintage-red: #8b0000;
     --bg-color: #000000;
     --led-red: #ff3131;
+    --dark-metal: #1a1a1a;
+    --brass: #b8860b;
 }
 
 body {
@@ -18,12 +24,18 @@ body {
 }
 
 .machine-container {
-    background: linear-gradient(145deg, #2c2c2c, #000);
-    border: 8px solid var(--gold);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
-    width: 450px;
+    background: linear-gradient(145deg, #2c2c2c, #111);
+    border: 12px solid #333;
+    border-image: linear-gradient(to bottom, #555, #222, #444) 1;
+    border-radius: 40px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 
+        0 30px 60px rgba(0,0,0,0.9),
+        inset 0 0 40px rgba(0,0,0,0.8);
+    overflow: visible;
+    width: 100%;
+    max-width: 450px;
     text-align: center;
 }
 
@@ -81,12 +93,29 @@ h1 {
     font-weight: bold;
 }
 
+/* The Reel Window "Inside" */
 .reels-frame {
-    background: var(--vintage-red);
-    padding: 10px 10px 10px 45px;
-    border: 4px solid #444;
-    border-radius: 4px;
+    background: #000;
+    border: 6px solid #444;
+    border-radius: 10px;
+    box-shadow: 
+        inset 0 10px 30px rgba(0,0,0,1),
+        0 0 15px rgba(212, 175, 55, 0.2);
     position: relative;
+    padding: 10px;
+}
+
+.reels-frame.luck-boost-active {
+    border-color: #0f0; /* Green border for active luck boost */
+    box-shadow: 
+        inset 0 10px 30px rgba(0,0,0,1),
+        0 0 25px rgba(0,255,0,0.7); /* Green glow */
+    animation: luckGlow 1.5s infinite alternate;
+}
+
+@keyframes luckGlow {
+    from { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 15px rgba(0,255,0,0.3); }
+    to { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 25px rgba(0,255,0,0.7); }
 }
 
 .reels-container {
@@ -230,14 +259,114 @@ h1 {
     justify-content: center;
     gap: 30px;
     width: 100%;
+    max-width: 1200px;
     margin-bottom: 20px;
 }
 
+/* Sidebar Drawer */
 .side-panels {
-    position: relative;
-    flex: 0 0 260px;
+    position: fixed;
+    left: -520px; /* Hide off screen */
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    min-width: 260px;
+    background: rgba(10, 10, 10, 0.95);
+    border-right: 2px solid var(--gold);
+    z-index: 2000;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 60px 20px 20px 20px;
+    overflow-y: auto;
+    box-shadow: 10px 0 30px rgba(0,0,0,0.8);
 }
 
+.side-panels.open {
+    left: 0;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+/* Toggle Buttons */
+.menu-btn {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    z-index: 2100; /* Higher than sidebar z-index (2000) */
+    background: #222;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    border-left: none; /* Makes it look attached to the edge */
+    padding: 15px 8px;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.6);
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, padding-left 0.3s;
+}
+
+/* Sidebar Resizer */
+.resizer-r {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 2001;
+}
+.resizer-r:hover {
+    background: linear-gradient(to right, transparent, var(--gold));
+    opacity: 0.3;
+}
+
+.menu-btn.open {
+    left: 300px; /* Slide out to the edge of the sidebar */
+}
+
+.menu-btn:hover {
+    background: #333;
+    padding-right: 12px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: var(--gold);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* Reset panel positions for sidebar stacking */
+.side-panels .panel {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    margin-bottom: 20px;
+    box-shadow: none;
+}
+
+/* Keeping panel content styles */
 .panel {
     background: #111;
     border: 1px solid var(--gold);
@@ -247,29 +376,10 @@ h1 {
     z-index: 100;
 }
 
-#symbol-panel {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-#session-panel {
-    position: absolute;
-    top: 420px;
-    left: 0;
-}
-
-#history-section {
-    position: absolute;
-    top: 550px;
-    left: 0;
-    width: fit-content;
-}
-
 #symbol-panel .panel-content,
 #session-panel .panel-content {
     resize: both;
-    overflow: hidden;
+    overflow: auto;
     width: 260px;
     box-sizing: border-box;
 }
@@ -317,4 +427,200 @@ textarea {
     font-family: monospace;
     resize: both;
     box-sizing: border-box;
+}
+
+/* Decorative Rivets on machine */
+.rivet {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle at 4px 4px, #777, #222);
+    border-radius: 50%;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    z-index: 10;
+}
+.rivet-tl { top: 15px; left: 15px; }
+.rivet-tr { top: 15px; right: 15px; }
+.rivet-bl { bottom: 15px; left: 15px; }
+.rivet-br { bottom: 15px; right: 15px; }
+
+/* Mechanical Lever Graphic */
+.lever-system {
+    position: absolute;
+    right: -105px;
+    top: 130px;
+    width: 85px;
+    height: 300px;
+    cursor: pointer;
+    z-index: 5;
+}
+.lever-base {
+    position: absolute;
+    width: 55px;
+    height: 90px;
+    background: linear-gradient(to right, #333, #555, #222);
+    border-radius: 10px 0 0 10px;
+    left: 0;
+    bottom: 0;
+}
+.lever-arm {
+    position: absolute;
+    width: 22px;
+    height: 210px;
+    background: linear-gradient(to right, #888, #eee, #666);
+    left: 28px;
+    top: 0px;
+    transform-origin: bottom center;
+    transition: transform 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    border-radius: 10px;
+}
+.lever-knob {
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    background: radial-gradient(circle at 25px 25px, #ff4d4d, #800);
+    border-radius: 50%;
+    top: -65px;
+    left: -26px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.lever-system.pulling .lever-arm {
+    transform: rotateX(60deg) scaleY(0.5);
+}
+
+/* Glass Reflection Effect */
+.glass-reflection {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.1) 0%,
+        rgba(255,255,255,0.05) 25%,
+        transparent 50%
+    );
+    pointer-events: none;
+    z-index: 5;
+}
+
+.powerup-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+}
+.powerup-item:last-child { border-bottom: none; }
+.powerup-item button {
+    background: #444;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.8em;
+    min-width: 70px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 850px) {
+    .game-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .side-panels {
+        flex: none;
+        width: 100%;
+        max-width: 450px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .panel {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: 100% !important;
+    }
+
+    #symbol-panel .panel-content,
+    #session-panel .panel-content,
+    #powerup-panel,
+    textarea {
+        width: 100% !important;
+    }
+
+    .machine-container {
+        margin-right: 40px; /* Room for the lever on narrow screens */
+        transform-origin: center top;
+    }
+
+    .sidebar-overlay.open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+}
+#powerup-panel {
+    position: absolute;
+}
+
+/* Custom Vintage Tooltip Styling */
+th[data-tooltip], td[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 125%; /* Move below the element to avoid clipping at the top of panels */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: 'Courier New', Courier, monospace;
+    width: 200px;
+    text-align: center;
+    line-height: 1.4;
+    z-index: 10000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.4);
+    pointer-events: none;
+    white-space: normal;
+}
+
+/* Tooltip Arrow */
+[data-tooltip]::before {
+    content: "";
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: var(--gold) transparent transparent transparent;
+    z-index: 10000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+[data-tooltip]:hover::after {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+[data-tooltip]:hover::before {
+    visibility: visible;
+    opacity: 1;
 }

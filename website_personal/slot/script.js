@@ -30,6 +30,62 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bet-dec').addEventListener('click', () => changeBet(-1));
     document.getElementById('reset-btn').addEventListener('click', resetGame);
 
+    const sidebar = document.querySelector('.side-panels');
+    const overlay = document.getElementById('sidebar-overlay');
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    const resizer = document.getElementById('sidebar-resizer');
+
+    const toggleSidebar = (isOpen) => {
+        sidebar.classList.toggle('open', isOpen);
+        overlay.classList.toggle('open', isOpen);
+        toggleBtn.classList.toggle('open', isOpen);
+        
+        if (isOpen) {
+            toggleBtn.style.left = sidebar.offsetWidth + 'px';
+            toggleBtn.focus();
+        } else {
+            toggleBtn.style.left = ''; // Reset to CSS default
+        }
+    };
+
+    document.getElementById('sidebar-toggle').addEventListener('click', () => {
+        const isOpen = sidebar.classList.contains('open');
+        toggleSidebar(!isOpen);
+    });
+    overlay.addEventListener('click', () => toggleSidebar(false));
+
+    // Sidebar Resizing Logic
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        document.addEventListener('mousemove', handleResize);
+        document.addEventListener('mouseup', stopResize);
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none'; // Prevent text selection during drag
+        sidebar.style.transition = 'none'; // Instant feedback during drag
+        toggleBtn.style.transition = 'none';
+    });
+
+    function handleResize(e) {
+        if (!isResizing) return;
+        const newWidth = e.clientX;
+        if (newWidth >= 260 && newWidth <= window.innerWidth * 0.8) {
+            sidebar.style.width = newWidth + 'px';
+            toggleBtn.style.left = newWidth + 'px';
+        }
+    }
+
+    function stopResize() {
+        isResizing = false;
+        document.removeEventListener('mousemove', handleResize);
+        document.removeEventListener('mouseup', stopResize);
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = 'auto';
+        sidebar.style.transition = ''; // Restore transitions
+        toggleBtn.style.transition = '';
+    }
+
     document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 5));
     document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 100, 3));
 
@@ -49,47 +105,57 @@ function setupDraggable(container, header) {
     let mouseMoved = false;
     let startX, startY, initialX, initialY;
 
-    header.addEventListener('mousedown', (e) => {
+    const startDrag = (e) => {
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
         isDragging = true;
         mouseMoved = false;
-        startX = e.clientX;
-        startY = e.clientY;
+        startX = clientX;
+        startY = clientY;
         
         const rect = container.getBoundingClientRect();
         initialX = rect.left;
         initialY = rect.top;
 
-        // Transition to fixed position for free movement
-        container.style.position = 'fixed';
-        container.style.left = initialX + 'px';
-        container.style.top = initialY + 'px';
-        container.style.margin = '0';
-        container.style.width = 'fit-content';
-        container.style.bottom = 'auto';
-        container.style.right = 'auto';
-        container.style.zIndex = '1000';
+        // Dragging is disabled inside the Sidebar Drawer to allow scrolling
+    };
 
-        const onMouseMove = (e) => {
-            if (!isDragging) return;
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-        
-            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-                mouseMoved = true;
-                container.style.left = (initialX + dx) + 'px';
-                container.style.top = (initialY + dy) + 'px';
-            }
-        };
+    const onMove = (e) => {
+        if (!isDragging) return;
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
 
-        const onMouseUp = () => {
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+    
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+            mouseMoved = true;
+            // Absolute position movement disabled for Sidebar Drawer
+        }
+    };
+
+    const endDrag = () => {
+        if (isDragging) {
             isDragging = false;
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-        };
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', endDrag);
+        }
+    };
 
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
+    header.addEventListener('mousedown', (e) => {
+        startDrag(e);
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', endDrag);
     });
+
+    header.addEventListener('touchstart', (e) => {
+        startDrag(e);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', endDrag);
+    }, { passive: true });
 
     header.addEventListener('click', () => {
         if (!mouseMoved) {
@@ -111,23 +177,38 @@ function buyPowerUp(type, cost, spins) {
 
 function updatePaytable() {
     const tableBody = document.getElementById('symbol-stats-body');
-    const totalWeight = symbols.reduce((acc, s) => acc + s.weight, 0);
+    const isLuckActive = activeLuck > 0;
+
+    let tempSymbols = symbols.map(s => {
+        if (isLuckActive) {
+            if (s.char === '7️⃣') return { ...s, weight: 15 };
+            if (s.char === '🔔') return { ...s, weight: 20 };
+        }
+        return s;
+    });
+
+    const totalWeight = tempSymbols.reduce((acc, s) => acc + s.weight, 0);
     tableBody.innerHTML = '';
     let theoreticalRTP = 0;
 
-    symbols.forEach(s => {
+    tempSymbols.forEach(s => {
         const p = s.weight / totalWeight;
-        const chance = (p * 100).toFixed(0);
+        const chance = (p * 100).toFixed(1);
         const p3 = Math.pow(p, 3);
         const hit3Chance = (p3 * 100).toFixed(3);
         const rtpContribVal = p3 * s.multiplier;
         theoreticalRTP += rtpContribVal;
         const rtpContrib = (rtpContribVal * 100).toFixed(2);
-        tableBody.innerHTML += `<tr><td>${s.char}</td><td>${chance}%</td><td>${hit3Chance}%</td><td>${s.multiplier}x</td><td>${rtpContrib}%</td></tr>`;
+
+        const rowStyle = (isLuckActive && (s.char === '7️⃣' || s.char === '🔔')) ? 'style="color: #0f0; font-weight: bold;"' : '';
+        tableBody.innerHTML += `<tr ${rowStyle}><td>${s.char}</td><td>${chance}%</td><td>${hit3Chance}%</td><td>${s.multiplier}x</td><td>${rtpContrib}%</td></tr>`;
     });
 
     // Add Total RTP row
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">Total</td><td>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
+
+    const rtpStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">7️⃣ bonus: Tio will go to Phillipines one day</td></tr>`;
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4" ${rtpStyle} data-tooltip="Theoretical Return to Player: The expected percentage of wagers that will be returned to players over time. Sum of all symbol RTP contributions.">Total ${isLuckActive ? '(BOOSTED)' : ''}</td><td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
 }
 
 function changeBet(delta) {
@@ -138,7 +219,6 @@ function changeBet(delta) {
 }
 
 function initUI() {
-    updatePaytable();
     updateStats();
     
     // Initial visual state
@@ -345,6 +425,16 @@ function updateStats() {
     document.getElementById('buy-luck').innerText = activeLuck > 0 ? `Luck: ${activeLuck}` : "50c";
     document.getElementById('buy-double').innerText = activeDouble > 0 ? `Double: ${activeDouble}` : "100c";
 
+    // Visual notification for Luck Boost
+    const reelsFrame = document.getElementById('reels-frame');
+    if (activeLuck > 0) {
+        reelsFrame.classList.add('luck-boost-active');
+    } else {
+        reelsFrame.classList.remove('luck-boost-active');
+    }
+    // Refresh paytable to reflect luck boost if active
+    updatePaytable();
+
     // Calculate Actual RTP
     const actualRTP = totalBet > 0 ? (totalPayout / totalBet * 100).toFixed(2) : "0.00";
     document.getElementById('actual-rtp').innerText = actualRTP + "%";
@@ -379,6 +469,27 @@ function resetGame() {
         activeDouble = 0;
         document.getElementById('history').value = '';
         updateStats();
-        updatePaytable();
     }
+}
+
+function testSymbolDistribution(iterations = 10000, isLuckActive = false) {
+    if (typeof getRandomSymbol !== 'function') {
+        console.error("getRandomSymbol is not defined. Make sure script.js is loaded first.");
+        return;
+    }
+
+    const counts = {};
+    symbols.forEach(s => counts[s.char] = 0);
+
+    for (let i = 0; i < iterations; i++) {
+        const symbol = getRandomSymbol(isLuckActive);
+        counts[symbol.char]++;
+    }
+
+    console.log(`--- Distribution Test (${iterations} spins, Luck: ${isLuckActive}) ---`);
+    symbols.forEach(s => {
+        const count = counts[s.char];
+        const percent = ((count / iterations) * 100).toFixed(2);
+        console.log(`${s.char}: ${count} (${percent}%)`);
+    });
 }
