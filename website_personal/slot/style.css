@@ -675,14 +675,25 @@ textarea {
         pointer-events: auto;
     }
 
+    #spin-btn {
+        width: 80px;
+        height: 80px;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
     #auto-btn {
-        padding: 18px 30px;
-        font-size: 1.2rem;
-        margin: 20px auto;
-        display: block;
-        width: 100%;
-        max-width: 300px;
+        padding: 0 15px;
+        font-size: 0.85rem;
+        margin: 0 0 15px 10px;
+        display: inline-flex;
+        width: auto;
+        height: 80px; /* Match spin-btn height */
+        max-width: 140px;
         box-shadow: 0 6px 0 #000;
+        vertical-align: middle;
+        align-items: center;
+        justify-content: center;
     }
     #auto-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 #000; }
 }
