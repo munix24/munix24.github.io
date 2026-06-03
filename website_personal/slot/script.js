@@ -15,6 +15,8 @@ let isMuted = localStorage.getItem('slot_muted') === 'true';
 
 // Sound Effects
 const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
+const leverSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+const stopSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3');
 
 // Configuration: weight determines frequency
 const symbols = [
@@ -42,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateAudio = () => {
         const activeVol = isMuted ? 0 : currentVolume;
         winSound.volume = activeVol;
+        leverSound.volume = activeVol;
+        stopSound.volume = activeVol;
         volSlider.value = activeVol;
         volToggle.innerText = (isMuted || currentVolume === 0) ? '🔇' : '🔊';
         
@@ -134,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDraggable(document.getElementById('session-panel'), document.getElementById('session-header'));
     setupDraggable(document.getElementById('powerup-panel'), document.getElementById('powerup-header'));
     setupDraggable(document.getElementById('settings-panel'), document.getElementById('settings-header'));
+    loadPanelOrder();
 
     // Global haptic feedback for mobile touch interactions
     document.addEventListener('pointerdown', (e) => {
@@ -145,6 +150,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function savePanelOrder() {
+    const sidebar = document.querySelector('.side-panels');
+    const panels = [...sidebar.querySelectorAll('.panel')];
+    const order = panels.map(p => p.id);
+    localStorage.setItem('slot_panel_order', JSON.stringify(order));
+}
+
+function loadPanelOrder() {
+    const order = JSON.parse(localStorage.getItem('slot_panel_order'));
+    if (!order) return;
+
+    const sidebar = document.querySelector('.side-panels');
+    const resizer = document.getElementById('sidebar-resizer');
+    
+    order.forEach(id => {
+        const panel = document.getElementById(id);
+        if (panel) {
+            sidebar.insertBefore(panel, resizer);
+        }
+    });
+}
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.panel:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
 
 function setupDraggable(container, header) {
     let isDragging = false;
@@ -163,8 +204,6 @@ function setupDraggable(container, header) {
         const rect = container.getBoundingClientRect();
         initialX = rect.left;
         initialY = rect.top;
-
-        // Dragging is disabled inside the Sidebar Drawer to allow scrolling
     };
 
     const onMove = (e) => {
@@ -177,13 +216,26 @@ function setupDraggable(container, header) {
     
         if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
             mouseMoved = true;
-            // Absolute position movement disabled for Sidebar Drawer
+            
+            const sidebar = document.querySelector('.side-panels');
+            if (sidebar.contains(container)) {
+                container.classList.add('dragging');
+                const afterElement = getDragAfterElement(sidebar, clientY);
+                if (afterElement == null) {
+                    sidebar.insertBefore(container, document.getElementById('sidebar-resizer'));
+                } else {
+                    sidebar.insertBefore(container, afterElement);
+                }
+            }
         }
     };
 
     const endDrag = () => {
         if (isDragging) {
             isDragging = false;
+            if (mouseMoved) savePanelOrder();
+            container.classList.remove('dragging');
+            
             document.removeEventListener('mousemove', onMove);
             document.removeEventListener('mouseup', endDrag);
             document.removeEventListener('touchmove', onMove);
@@ -312,6 +364,10 @@ async function handleLeverPull() {
     const lever = document.getElementById('lever-control');
     lever.classList.add('pulling');
     
+    // Play mechanical lever sound
+    leverSound.currentTime = 0;
+    leverSound.play().catch(() => {});
+
     // Brief delay to match the animation before starting spin
     setTimeout(() => lever.classList.remove('pulling'), 500);
     handleSpin();
@@ -487,7 +543,13 @@ function animateReel(index, reelSymbols) {
         const distance = (STRIP_LENGTH - 3) * SYMBOL_HEIGHT;
         strip.style.transform = `translateY(-${distance}px)`;
 
-        setTimeout(resolve, duration * 1000);
+        setTimeout(() => {
+            const s = stopSound.cloneNode();
+            s.volume = stopSound.volume;
+            s.playbackRate = 0.75 + Math.random() * 0.1; // Subtle pitch variation for a natural mechanical thud
+            s.play().catch(() => {});
+            resolve();
+        }, duration * 1000);
     });
 }
 

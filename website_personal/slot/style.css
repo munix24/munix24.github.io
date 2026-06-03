@@ -469,6 +469,11 @@ h1 {
     z-index: 100;
 }
 
+.side-panels .panel.dragging {
+    opacity: 0.5;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
 #symbol-panel .panel-content,
 #session-panel .panel-content,
 #settings-panel .panel-content {
@@ -541,8 +546,8 @@ textarea {
 /* Mechanical Lever Graphic */
 .lever-system {
     position: absolute;
-    right: -105px;
-    top: 130px;
+    right: -95px; /* Adjusted for machine-container anchor */
+    top: 200px;   /* Adjusted for machine-container anchor */
     width: 85px;
     height: 300px;
     cursor: pointer;
