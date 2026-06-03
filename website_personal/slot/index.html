@@ -137,6 +137,29 @@
             pointer-events: none;
             z-index: 5;
         }
+
+        .powerup-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+        .powerup-item:last-child { border-bottom: none; }
+        .powerup-item button {
+            background: #444;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.8em;
+            min-width: 70px;
+        }
+        #powerup-panel {
+            position: absolute;
+            top: 270px;
+            left: 0;
+        }
     </style>
 </head>
 <body>
@@ -161,6 +184,23 @@
                     </thead>
                     <tbody id="symbol-stats-body"></tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="panel" id="powerup-panel">
+            <div class="panel-header" id="powerup-header">
+                <h3>Power Ups</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="panel-content">
+                <div class="powerup-item">
+                    <span>🍀 Luck Boost (5)</span>
+                    <button id="buy-luck">50c</button>
+                </div>
+                <div class="powerup-item">
+                    <span>💰 Double Win (3)</span>
+                    <button id="buy-double">100c</button>
+                </div>
             </div>
         </div>
 
@@ -218,7 +258,7 @@
         </div>
 
         <div class="label">CREDITS</div>
-        <span id="balance">10</span>
+        <span id="balance">100</span>
     </div>
 
     <div class="reels-frame">
@@ -247,6 +287,7 @@
         </div>
         <div class="total-cost-display">TOTAL COST: <span id="total-spin-cost">3</span> CREDITS</div>
         <button id="spin-btn">SPIN</button>
+        <button id="auto-btn">AUTO SPIN</button>
         <div><button id="reset-btn">Reset Game</button></div>
     </div>
 </div>

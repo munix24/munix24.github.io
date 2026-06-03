@@ -1,11 +1,15 @@
 let currentBet = 1;
 const SYMBOL_HEIGHT = 120;
 const STRIP_LENGTH = 30; // Number of symbols in the spin animation
+let isAutoSpinning = false;
 
-let credits = localStorage.getItem('slot_credits') !== null ? parseFloat(localStorage.getItem('slot_credits')) : 10;
+let credits = localStorage.getItem('slot_credits') !== null ? parseFloat(localStorage.getItem('slot_credits')) : 100;
 let totalBet = localStorage.getItem('slot_totalBet') !== null ? parseFloat(localStorage.getItem('slot_totalBet')) : 0;
 let totalPayout = localStorage.getItem('slot_totalPayout') !== null ? parseFloat(localStorage.getItem('slot_totalPayout')) : 0;
 let spinCount = localStorage.getItem('slot_spinCount') !== null ? parseInt(localStorage.getItem('slot_spinCount')) : 0;
+
+let activeLuck = parseInt(localStorage.getItem('slot_activeLuck')) || 0;
+let activeDouble = parseInt(localStorage.getItem('slot_activeDouble')) || 0;
 
 // Configuration: weight determines frequency
 const symbols = [
@@ -21,9 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initUI();
     document.getElementById('spin-btn').addEventListener('click', handleSpin);
     document.getElementById('lever-control').addEventListener('click', handleLeverPull);
+    document.getElementById('auto-btn').addEventListener('click', toggleAutoSpin);
     document.getElementById('bet-inc').addEventListener('click', () => changeBet(1));
     document.getElementById('bet-dec').addEventListener('click', () => changeBet(-1));
     document.getElementById('reset-btn').addEventListener('click', resetGame);
+
+    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 5));
+    document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 100, 3));
 
     // Listen for line toggles to update the Total Cost UI immediately
     ['line-top', 'line-middle', 'line-bottom'].forEach(id => {
@@ -33,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDraggable(document.getElementById('history-section'), document.getElementById('history-toggle'));
     setupDraggable(document.getElementById('symbol-panel'), document.getElementById('stats-header'));
     setupDraggable(document.getElementById('session-panel'), document.getElementById('session-header'));
+    setupDraggable(document.getElementById('powerup-panel'), document.getElementById('powerup-header'));
 });
 
 function setupDraggable(container, header) {
@@ -89,6 +98,17 @@ function setupDraggable(container, header) {
     });
 }
 
+function buyPowerUp(type, cost, spins) {
+    if (credits >= cost) {
+        credits -= cost;
+        if (type === 'luck') activeLuck += spins;
+        if (type === 'double') activeDouble += spins;
+        updateStats();
+    } else {
+        alert("Not enough credits!");
+    }
+}
+
 function updatePaytable() {
     const tableBody = document.getElementById('symbol-stats-body');
     const totalWeight = symbols.reduce((acc, s) => acc + s.weight, 0);
@@ -138,10 +158,20 @@ function fillStrip(index) {
     }
 }
 
-function getRandomSymbol() {
-    const totalWeight = symbols.reduce((acc, s) => acc + s.weight, 0);
+function getRandomSymbol(isLuckActive = false) {
+    let tempSymbols = [...symbols];
+    if (isLuckActive) {
+        // Boost high-paying symbols weights temporarily
+        tempSymbols = symbols.map(s => {
+            if (s.char === '7️⃣') return { ...s, weight: 15 };
+            if (s.char === '🔔') return { ...s, weight: 20 };
+            return s;
+        });
+    }
+
+    const totalWeight = tempSymbols.reduce((acc, s) => acc + s.weight, 0);
     let random = Math.random() * totalWeight;
-    for (const s of symbols) {
+    for (const s of tempSymbols) {
         if (random < s.weight) return s;
         random -= s.weight;
     }
@@ -159,6 +189,33 @@ async function handleLeverPull() {
     handleSpin();
 }
 
+function toggleAutoSpin() {
+    const autoBtn = document.getElementById('auto-btn');
+    const spinBtn = document.getElementById('spin-btn');
+
+    if (isAutoSpinning) {
+        isAutoSpinning = false;
+        autoBtn.innerText = "AUTO SPIN";
+        autoBtn.style.backgroundColor = ""; 
+    } else {
+        // Basic validation before starting auto
+        const activeLines = [
+            document.getElementById('line-top').checked,
+            document.getElementById('line-middle').checked,
+            document.getElementById('line-bottom').checked
+        ];
+        const lineCount = activeLines.filter(Boolean).length;
+        
+        if (lineCount === 0) return alert("Select at least one line!");
+        if (credits < (currentBet * lineCount)) return alert("Insert more credits!");
+
+        isAutoSpinning = true;
+        autoBtn.innerText = "STOP AUTO";
+        autoBtn.style.backgroundColor = "#800"; // Dark red to indicate active state
+        if (!spinBtn.disabled) handleSpin();
+    }
+}
+
 async function handleSpin() {
     // Capture current active lines and calculate total cost
     const activeLines = [
@@ -169,8 +226,14 @@ async function handleSpin() {
     const lineCount = activeLines.filter(Boolean).length;
     const totalCost = currentBet * lineCount;
 
-    if (lineCount === 0) return alert("Select at least one line!");
-    if (credits < totalCost) return alert("Insert more credits!");
+    if (lineCount === 0) {
+        if (isAutoSpinning) toggleAutoSpin();
+        return alert("Select at least one line!");
+    }
+    if (credits < totalCost) {
+        if (isAutoSpinning) toggleAutoSpin();
+        return alert("Insert more credits!");
+    }
     spinCount++;
 
     // Deduct total cost
@@ -185,10 +248,18 @@ async function handleSpin() {
 
     // Logic: Determine winners for 3 lines (top, mid, bot) across 3 reels
     // results[reelIndex] = [topSymbol, midSymbol, botSymbol]
+    const luckActive = activeLuck > 0;
+    const doubleActive = activeDouble > 0;
+
+    // Consume power-ups
+    if (activeLuck > 0) activeLuck--;
+    if (activeDouble > 0) activeDouble--;
+    updateStats();
+
     const results = [
-        [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-        [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-        [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
+        [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)],
+        [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)],
+        [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)]
     ];
 
     // Animation: Visual staggers
@@ -207,6 +278,10 @@ async function handleSpin() {
         }
     }
 
+    if (doubleActive && totalWin > 0) {
+        totalWin *= 2;
+    }
+
     credits += totalWin;
     totalPayout += totalWin;
     
@@ -215,6 +290,10 @@ async function handleSpin() {
     btn.disabled = false;
     document.getElementById('bet-inc').disabled = false;
     document.getElementById('bet-dec').disabled = false;
+
+    if (isAutoSpinning) {
+        setTimeout(handleSpin, 1000); // 1-second delay between automatic spins
+    }
 }
 
 function animateReel(index, reelSymbols) {
@@ -262,6 +341,9 @@ function updateStats() {
     document.getElementById('total-payout').innerText = totalPayout;
     document.getElementById('bet-val').innerText = currentBet;
     document.getElementById('total-spin-cost').innerText = totalCost;
+    
+    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `Luck: ${activeLuck}` : "50c";
+    document.getElementById('buy-double').innerText = activeDouble > 0 ? `Double: ${activeDouble}` : "100c";
 
     // Calculate Actual RTP
     const actualRTP = totalBet > 0 ? (totalPayout / totalBet * 100).toFixed(2) : "0.00";
@@ -272,6 +354,8 @@ function updateStats() {
     localStorage.setItem('slot_totalBet', totalBet);
     localStorage.setItem('slot_totalPayout', totalPayout);
     localStorage.setItem('slot_spinCount', spinCount);
+    localStorage.setItem('slot_activeLuck', activeLuck);
+    localStorage.setItem('slot_activeDouble', activeDouble);
 }
 
 function logHistory(res, win, activeLines, num) {
@@ -286,11 +370,13 @@ function logHistory(res, win, activeLines, num) {
 
 function resetGame() {
     if (confirm("Are you sure you want to reset all progress and credits?")) {
-        credits = 10;
+        credits = 100;
         totalBet = 0;
         totalPayout = 0;
         spinCount = 0;
         currentBet = 1;
+        activeLuck = 0;
+        activeDouble = 0;
         document.getElementById('history').value = '';
         updateStats();
         updatePaytable();
