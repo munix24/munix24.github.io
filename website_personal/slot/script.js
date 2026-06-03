@@ -305,7 +305,7 @@ function updatePaytable() {
     const rtpStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
 
     // Add bonus row for fun
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">7️⃣ bonus: Tio will go to Phillipines</td></tr>`;
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
     
     // Add Total RTP row
     // tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4" ${rtpStyle} data-tooltip="Theoretical Return to Player: The expected percentage of wagers that will be returned to players over time. Sum of all symbol RTP contributions.">Total ${isLuckActive ? '(BOOSTED)' : ''}</td><td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
@@ -396,7 +396,7 @@ function toggleAutoSpin() {
         isAutoSpinning = true;
         autoBtn.innerText = "STOP AUTO";
         autoBtn.classList.add('active-spinning');
-        if (!spinBtn.disabled) handleSpin();
+        if (!spinBtn.disabled) handleLeverPull();
     }
 }
 
@@ -512,7 +512,7 @@ async function handleSpin() {
     document.getElementById('bet-dec').disabled = false;
 
     if (isAutoSpinning) {
-        setTimeout(handleSpin, 1000); // 1-second delay between automatic spins
+        setTimeout(handleLeverPull, 1000); // 1-second delay between automatic spins
     }
 }
 

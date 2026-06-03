@@ -359,10 +359,11 @@ h1 {
 /* Sidebar Drawer */
 .side-panels {
     position: fixed;
-    left: -520px; /* Hide off screen */
+    left: -100%; /* Ensure it's fully hidden regardless of dynamic width */
     top: 0;
     bottom: 0;
-    width: 300px;
+    width: 260px;
+    max-width: 80vw; /* Global safety: never exceed 80% of viewport width */
     min-width: 260px;
     background: rgba(10, 10, 10, 0.95);
     border-right: 2px solid var(--gold);
@@ -635,7 +636,7 @@ textarea {
 
     .side-panels {
         flex: none;
-        width: 100%;
+        width: 80%; /* Only take up 80% of screen on mobile */
         max-width: 450px;
         display: flex;
         flex-direction: column;
