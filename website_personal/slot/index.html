@@ -110,6 +110,19 @@
             </div>
             <textarea id="history" readonly placeholder="Pull the lever to begin..."></textarea>
         </div>
+        <div class="panel" id="settings-panel">
+            <div class="panel-header" id="settings-header">
+                <h3>Settings</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="panel-content">
+                <div class="powerup-item">
+                    <span id="volume-toggle" style="cursor: pointer; user-select: none; font-size: 1.2rem;">🔊</span>
+                    <span>Volume</span>
+                    <input type="range" id="volume-control" min="0" max="1" step="0.05" value="0.5">
+                </div>
+            </div>
+        </div>
         <div id="sidebar-resizer" class="resizer-r"></div>
     </div>
 
@@ -134,6 +147,7 @@
 
             <div class="label">CREDITS</div>
             <span id="balance">100</span>
+            <span id="payout-notification" class="payout-popup"></span>
         </div>
 
         <div class="reels-frame" id="reels-frame">

@@ -10,6 +10,11 @@ let spinCount = localStorage.getItem('slot_spinCount') !== null ? parseInt(local
 
 let activeLuck = parseInt(localStorage.getItem('slot_activeLuck')) || 0;
 let activeDouble = parseInt(localStorage.getItem('slot_activeDouble')) || 0;
+let currentVolume = localStorage.getItem('slot_volume') !== null ? parseFloat(localStorage.getItem('slot_volume')) : 0.5;
+let isMuted = localStorage.getItem('slot_muted') === 'true';
+
+// Sound Effects
+const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
 
 // Configuration: weight determines frequency
 const symbols = [
@@ -29,6 +34,34 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bet-inc').addEventListener('click', () => changeBet(1));
     document.getElementById('bet-dec').addEventListener('click', () => changeBet(-1));
     document.getElementById('reset-btn').addEventListener('click', resetGame);
+
+    // Volume Control Initialization
+    const volSlider = document.getElementById('volume-control');
+    const volToggle = document.getElementById('volume-toggle');
+
+    const updateAudio = () => {
+        const activeVol = isMuted ? 0 : currentVolume;
+        winSound.volume = activeVol;
+        volSlider.value = activeVol;
+        volToggle.innerText = (isMuted || currentVolume === 0) ? '🔇' : '🔊';
+        
+        localStorage.setItem('slot_volume', currentVolume);
+        localStorage.setItem('slot_muted', isMuted);
+    };
+
+    volSlider.addEventListener('input', (e) => {
+        currentVolume = parseFloat(e.target.value);
+        if (currentVolume > 0) isMuted = false;
+        updateAudio();
+    });
+
+    volToggle.addEventListener('click', () => {
+        isMuted = !isMuted;
+        if (!isMuted && currentVolume === 0) currentVolume = 0.5;
+        updateAudio();
+    });
+
+    updateAudio();
 
     const sidebar = document.querySelector('.side-panels');
     const overlay = document.getElementById('sidebar-overlay');
@@ -86,6 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.style.transition = '';
     }
 
+    toggleSidebar(true); // Open sidebar by default on load
+
     document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 5));
     document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 100, 3));
 
@@ -98,6 +133,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDraggable(document.getElementById('symbol-panel'), document.getElementById('stats-header'));
     setupDraggable(document.getElementById('session-panel'), document.getElementById('session-header'));
     setupDraggable(document.getElementById('powerup-panel'), document.getElementById('powerup-header'));
+    setupDraggable(document.getElementById('settings-panel'), document.getElementById('settings-header'));
+
+    // Global haptic feedback for mobile touch interactions
+    document.addEventListener('pointerdown', (e) => {
+        const target = e.target.closest('button, #lever-control, .line-toggles input');
+        if (target && navigator.vibrate) {
+            // Heavier vibration for the mechanical lever pull, lighter for standard buttons
+            const duration = target.id === 'lever-control' ? 30 : 15;
+            navigator.vibrate(duration);
+        }
+    });
 });
 
 function setupDraggable(container, header) {
@@ -204,11 +250,13 @@ function updatePaytable() {
         tableBody.innerHTML += `<tr ${rowStyle}><td>${s.char}</td><td>${chance}%</td><td>${hit3Chance}%</td><td>${s.multiplier}x</td><td>${rtpContrib}%</td></tr>`;
     });
 
-    // Add Total RTP row
-
     const rtpStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">7️⃣ bonus: Tio will go to Phillipines one day</td></tr>`;
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4" ${rtpStyle} data-tooltip="Theoretical Return to Player: The expected percentage of wagers that will be returned to players over time. Sum of all symbol RTP contributions.">Total ${isLuckActive ? '(BOOSTED)' : ''}</td><td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
+
+    // Add bonus row for fun
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">7️⃣ bonus: Tio will go to Phillipines</td></tr>`;
+    
+    // Add Total RTP row
+    // tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4" ${rtpStyle} data-tooltip="Theoretical Return to Player: The expected percentage of wagers that will be returned to players over time. Sum of all symbol RTP contributions.">Total ${isLuckActive ? '(BOOSTED)' : ''}</td><td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
 }
 
 function changeBet(delta) {
@@ -276,7 +324,7 @@ function toggleAutoSpin() {
     if (isAutoSpinning) {
         isAutoSpinning = false;
         autoBtn.innerText = "AUTO SPIN";
-        autoBtn.style.backgroundColor = ""; 
+        autoBtn.classList.remove('active-spinning');
     } else {
         // Basic validation before starting auto
         const activeLines = [
@@ -291,7 +339,7 @@ function toggleAutoSpin() {
 
         isAutoSpinning = true;
         autoBtn.innerText = "STOP AUTO";
-        autoBtn.style.backgroundColor = "#800"; // Dark red to indicate active state
+        autoBtn.classList.add('active-spinning');
         if (!spinBtn.disabled) handleSpin();
     }
 }
@@ -314,6 +362,13 @@ async function handleSpin() {
         if (isAutoSpinning) toggleAutoSpin();
         return alert("Insert more credits!");
     }
+
+    // Clear previous winning glows
+    document.querySelectorAll('.symbol.win-glow').forEach(el => el.classList.remove('win-glow'));
+
+    // Clear previous payout notification
+    document.getElementById('payout-notification').classList.remove('show');
+
     spinCount++;
 
     // Deduct total cost
@@ -342,6 +397,14 @@ async function handleSpin() {
         [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)]
     ];
 
+    // Rigging: If triple 7 is rolled on any row, change the last symbol so the jackpot is impossible
+    for (let row = 0; row < 3; row++) {
+        if (results[0][row].char === '7️⃣' && results[1][row].char === '7️⃣' && results[2][row].char === '7️⃣') {
+            // Swap the third 7 for a Grape 🍇 to ensure the player misses the jackpot
+            results[2][row] = symbols.find(s => s.char === '🍇');
+        }
+    }
+
     // Animation: Visual staggers
     const anims = results.map((reelSymbols, i) => animateReel(i, reelSymbols));
     await Promise.all(anims);
@@ -354,6 +417,14 @@ async function handleSpin() {
             if (results[0][row].char === results[1][row].char && 
                 results[1][row].char === results[2][row].char) {
                 totalWin += results[0][row].multiplier * currentBet;
+
+                // Apply glow effect to the winning symbols
+                for (let i = 0; i < 3; i++) {
+                    const strip = document.getElementById(`strip-${i}`);
+                    // The visible symbols are the last 3 in the strip
+                    const symbolIndex = STRIP_LENGTH - 3 + row;
+                    strip.children[symbolIndex].classList.add('win-glow');
+                }
             }
         }
     }
@@ -365,6 +436,19 @@ async function handleSpin() {
     credits += totalWin;
     totalPayout += totalWin;
     
+    // Show payout notification if a win occurred
+    if (totalWin > 0) {
+        const popup = document.getElementById('payout-notification');
+        popup.innerText = `+${totalWin}`;
+        
+        // Play cha-ching sound
+        winSound.currentTime = 0; // Reset sound if multiple wins occur quickly
+        winSound.play().catch(() => console.warn("Audio playback blocked until user interaction."));
+        
+        popup.classList.add('show');
+        setTimeout(() => popup.classList.remove('show'), 2500);
+    }
+
     updateStats();
     logHistory(results, totalWin, activeLines, spinCount);
     btn.disabled = false;
@@ -392,7 +476,13 @@ function animateReel(index, reelSymbols) {
 
         strip.offsetHeight; // Force reflow
 
-        const duration = 2 + (index * 0.5); // Mechanical stagger
+        let duration = 2 + (index * 0.5); // Mechanical stagger
+
+        // Dramatic slow down if a high-value symbol (Bell or 7) is landing on this reel
+        if (reelSymbols.some(s => s.char === '🔔' || s.char === '7️⃣')) {
+            duration += 1.5;
+        }
+
         strip.style.transition = `transform ${duration}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
         const distance = (STRIP_LENGTH - 3) * SYMBOL_HEIGHT;
         strip.style.transform = `translateY(-${distance}px)`;
@@ -463,15 +553,14 @@ function resetGame() {
         credits = 100;
         totalBet = 0;
         totalPayout = 0;
-        spinCount = 0;
         currentBet = 1;
         activeLuck = 0;
         activeDouble = 0;
-        document.getElementById('history').value = '';
         updateStats();
     }
 }
 
+// testSymbolDistribution(iterations = 10000, isLuckActive = false)
 function testSymbolDistribution(iterations = 10000, isLuckActive = false) {
     if (typeof getRandomSymbol !== 'function') {
         console.error("getRandomSymbol is not defined. Make sure script.js is loaded first.");
