@@ -329,7 +329,7 @@ function updatePaytable() {
     tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
     
     // Add Total RTP row
-    // tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4" ${rtpStyle} data-tooltip="Theoretical Return to Player: The expected percentage of wagers that will be returned to players over time. Sum of all symbol RTP contributions.">Total ${isLuckActive ? '(BOOSTED)' : ''}</td><td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4" ${rtpStyle} data-tooltip="Theoretical Return to Player: The expected percentage of wagers that will be returned to players over time. Sum of all symbol RTP contributions.">Total ${isLuckActive ? '(BOOSTED)' : ''}</td><td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
 }
 
 function changeBet(delta) {

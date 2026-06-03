@@ -86,22 +86,29 @@ h1 {
     font-weight: bold;
 }
 
+.balance-container {
+    position: relative;
+    display: inline-block;
+}
+
 .payout-popup {
+    position: absolute;
+    left: 100%;
+    top: 50%;
     color: #0f0;
     font-size: 1.8rem;
     font-weight: bold;
     margin-left: 15px;
     text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(-50%) translateY(5px);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: inline-block;
-    vertical-align: middle;
+    white-space: nowrap;
 }
 
 .payout-popup.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-50%) translateY(0);
 }
 
 .stat-box span {
