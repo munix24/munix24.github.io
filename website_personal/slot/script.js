@@ -30,7 +30,7 @@ const symbols = [
 
 document.addEventListener('DOMContentLoaded', () => {
     initUI();
-    document.getElementById('spin-btn').addEventListener('click', handleSpin);
+    document.getElementById('spin-btn').addEventListener('click', handleLeverPull);
     document.getElementById('lever-control').addEventListener('click', handleLeverPull);
     document.getElementById('auto-btn').addEventListener('click', toggleAutoSpin);
     document.getElementById('bet-inc').addEventListener('click', () => changeBet(1));
@@ -629,6 +629,8 @@ function logHistory(res, win, activeLines, num) {
     
     const entry = `Spin #${num}\n[${line1}]\n[${line2}] Payout: ${win}\n[${line3}]\n${"-".repeat(20)}\n`;
     history.value = entry + history.value;
+    const lines = (entry + history.value).split('\n');
+    history.value = lines.slice(0, 50).join('\n');
 }
 
 function resetGame() {
