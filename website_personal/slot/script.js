@@ -9,6 +9,7 @@ let spinCount = localStorage.getItem('slot_spinCount') !== null ? parseInt(local
 
 let activeLuck = parseInt(localStorage.getItem('slot_activeLuck')) || 0;
 let activeDouble = parseInt(localStorage.getItem('slot_activeDouble')) || 0;
+let activeSpeed = parseInt(localStorage.getItem('slot_activeSpeed')) || 0;
 let currentVolume = localStorage.getItem('slot_volume') !== null ? parseFloat(localStorage.getItem('slot_volume')) : 0.5;
 let isMuted = localStorage.getItem('slot_muted') === 'true';
 
@@ -16,6 +17,7 @@ let isMuted = localStorage.getItem('slot_muted') === 'true';
 const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
 const leverSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
 const stopSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3');
+const tensionSound = new Audio('https://assets.mixkit.co/active_storage/sfx/154/154-preview.mp3'); // Suspenseful riser
 
 // Configuration: weight determines frequency
 const symbols = [
@@ -45,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         winSound.volume = activeVol;
         leverSound.volume = activeVol;
         stopSound.volume = activeVol;
+        tensionSound.volume = activeVol;
         volSlider.value = activeVol;
         volToggle.innerText = (isMuted || currentVolume === 0) ? '🔇' : '🔊';
         
@@ -143,10 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.style.transition = '';
     }
 
-    toggleSidebar(true); // Open sidebar by default on load
+    // toggleSidebar(true); // Open sidebar by default on load
 
     document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 5));
     document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 100, 3));
+    document.getElementById('buy-speed').addEventListener('click', () => buyPowerUp('speed', 25, 10));
 
     // Listen for line toggles to update the Total Cost UI immediately
     ['line-top', 'line-middle', 'line-bottom'].forEach(id => {
@@ -182,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (strip && strip.style.transform && strip.style.transform !== 'translateY(0px)' && strip.style.transform !== 'translateY(0)') {
                 const firstSymbol = strip.querySelector('.symbol');
                 if (firstSymbol) {
-                    const symbolHeight = firstSymbol.offsetHeight;
+                const symbolHeight = firstSymbol.getBoundingClientRect().height;
                     const distance = (STRIP_LENGTH - 3) * symbolHeight;
                     strip.style.transition = 'none'; // Instant update without animation
                     strip.style.transform = `translateY(-${distance}px)`;
@@ -308,6 +312,7 @@ function buyPowerUp(type, cost, spins) {
         credits -= cost;
         if (type === 'luck') activeLuck += spins;
         if (type === 'double') activeDouble += spins;
+        if (type === 'speed') activeSpeed += spins;
         updateStats();
     } else {
         alert("Not enough credits!");
@@ -365,6 +370,14 @@ function initUI() {
     // Initial visual state
     for (let i = 0; i < 3; i++) {
         fillStrip(i);
+        const strip = document.getElementById(`strip-${i}`);
+        const firstSymbol = strip.querySelector('.symbol');
+        if (firstSymbol) {
+            // Position the reel at the end of the strip immediately
+            const symbolHeight = firstSymbol.getBoundingClientRect().height;
+            const distance = (STRIP_LENGTH - 3) * symbolHeight;
+            strip.style.transform = `translateY(-${distance}px)`;
+        }
     }
 }
 
@@ -482,10 +495,12 @@ async function handleSpin() {
     // results[reelIndex] = [topSymbol, midSymbol, botSymbol]
     const luckActive = activeLuck > 0;
     const doubleActive = activeDouble > 0;
+    const speedActive = activeSpeed > 0;
 
     // Consume power-ups
     if (activeLuck > 0) activeLuck--;
     if (activeDouble > 0) activeDouble--;
+    if (activeSpeed > 0) activeSpeed--;
     updateStats();
 
     const results = [
@@ -503,17 +518,24 @@ async function handleSpin() {
     }
 
     // Animation: Visual staggers
-    const anims = results.map((reelSymbols, i) => animateReel(i, reelSymbols));
+    const anims = results.map((reelSymbols, i) => animateReel(i, reelSymbols, results, activeLines, speedActive));
     await Promise.all(anims);
 
     // Calculate Outcome
     let totalWin = 0;
+    let stopAutoOnBigWin = false;
     // Check each horizontal line (row 0, 1, 2)
     for (let row = 0; row < 3; row++) {
         if (activeLines[row]) { // Only payout if the line is active
             if (results[0][row].char === results[1][row].char && 
                 results[1][row].char === results[2][row].char) {
+                const winChar = results[0][row].char;
                 totalWin += results[0][row].multiplier * currentBet;
+
+                // Pause auto spin if we hit a high-value 3-of-a-kind
+                if (winChar === '🔔' || winChar === '7️⃣') {
+                    stopAutoOnBigWin = true;
+                }
 
                 // Apply glow effect to the winning symbols
                 for (let i = 0; i < 3; i++) {
@@ -552,18 +574,28 @@ async function handleSpin() {
     document.getElementById('bet-inc').disabled = false;
     document.getElementById('bet-dec').disabled = false;
 
+    if (stopAutoOnBigWin && isAutoSpinning) {
+        toggleAutoSpin();
+    }
+
     if (isAutoSpinning) {
         setTimeout(handleLeverPull, 1000); // 1-second delay between automatic spins
     }
 }
 
-function animateReel(index, reelSymbols) {
+function animateReel(index, reelSymbols, allResults, activeLines, speedActive) {
     return new Promise(resolve => {
         const strip = document.getElementById(`strip-${index}`);
         // Dynamically calculate height to support responsive CSS
         const firstSymbol = strip.querySelector('.symbol');
-        const symbolHeight = firstSymbol ? firstSymbol.offsetHeight : 120;
+        const symbolHeight = firstSymbol ? firstSymbol.getBoundingClientRect().height : 120;
         
+        // CONTINUITY: Copy previous results from the bottom of the strip to the top
+        // so they are visible when we instantly reset the transform.
+        strip.children[0].innerText = strip.children[STRIP_LENGTH - 3].innerText;
+        strip.children[1].innerText = strip.children[STRIP_LENGTH - 2].innerText;
+        strip.children[2].innerText = strip.children[STRIP_LENGTH - 1].innerText;
+
         // Reset strip position
         strip.style.transition = 'none';
         strip.style.transform = 'translateY(0)';
@@ -578,16 +610,56 @@ function animateReel(index, reelSymbols) {
 
         let duration = 2 + (index * 0.5); // Mechanical stagger
 
-        // Dramatic slow down if a high-value symbol (Bell or 7) is landing on this reel
-        if (reelSymbols.some(s => s.char === '🔔' || s.char === '7️⃣')) {
-            duration += 1.5;
+        if (speedActive) {
+            duration *= 0.5; // Double the spin speed
+        }
+
+        // Anticipation trigger: If the first two reels match symbols on an active payline,
+        // the third reel spins longer to build suspense for a potential 3-of-a-kind.
+        let isAnticipating = false;
+        if (index === 2) {
+            isAnticipating = activeLines.some((active, row) => 
+                active && allResults[0][row].char === allResults[1][row].char
+            );
+            if (isAnticipating) {
+                // Add anticipation delay (half the normal delay if speed is active)
+                duration += speedActive ? 1.0 : 2.0; 
+                
+                // Apply win-glow to the first two reels after they finish spinning (2.5s)
+                setTimeout(() => {
+                    activeLines.forEach((active, row) => {
+                        if (active && allResults[0][row].char === allResults[1][row].char) {
+                            for (let i = 0; i < 2; i++) {
+                                const targetStrip = document.getElementById(`strip-${i}`);
+                                const symbolIndex = STRIP_LENGTH - 3 + row;
+                                if (targetStrip && targetStrip.children[symbolIndex]) {
+                                    targetStrip.children[symbolIndex].classList.add('win-glow');
+                                }
+                            }
+                        }
+                    });
+                }, speedActive ? 1250 : 2500); // Sync with the second reel stopping
+            }
         }
 
         strip.style.transition = `transform ${duration}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
         const distance = (STRIP_LENGTH - 3) * symbolHeight;
         strip.style.transform = `translateY(-${distance}px)`;
 
+        // Play tension sound for the final reel after the first two have stopped,
+        // provided slow-motion (anticipation) is active.
+        if (index === 2 && isAnticipating) {
+            setTimeout(() => {
+                tensionSound.currentTime = 0;
+                tensionSound.play().catch(() => {});
+            }, speedActive ? 1250 : 2500); // Wait for the second reel (index 1) to finish
+        }
+
         setTimeout(() => {
+            if (index === 2) {
+                tensionSound.pause();
+                tensionSound.currentTime = 0;
+            }
             const s = stopSound.cloneNode();
             s.volume = stopSound.volume;
             s.playbackRate = 0.75 + Math.random() * 0.1; // Subtle pitch variation for a natural mechanical thud
@@ -618,8 +690,9 @@ function updateStats() {
     document.getElementById('bet-val').innerText = currentBet;
     document.getElementById('total-spin-cost').innerText = totalCost;
     
-    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `Luck: ${activeLuck}` : "50c";
-    document.getElementById('buy-double').innerText = activeDouble > 0 ? `Double: ${activeDouble}` : "100c";
+    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `50c: ${activeLuck}` : "50c";
+    document.getElementById('buy-double').innerText = activeDouble > 0 ? `100c: ${activeDouble}` : "100c";
+    document.getElementById('buy-speed').innerText = activeSpeed > 0 ? `25c: ${activeSpeed}` : "25c";
 
     // Visual notification for Luck Boost
     const reelsFrame = document.getElementById('reels-frame');
@@ -641,6 +714,7 @@ function updateStats() {
     localStorage.setItem('slot_totalPayout', totalPayout);
     localStorage.setItem('slot_spinCount', spinCount);
     localStorage.setItem('slot_activeLuck', activeLuck);
+    localStorage.setItem('slot_activeSpeed', activeSpeed);
     localStorage.setItem('slot_activeDouble', activeDouble);
 }
 
@@ -652,7 +726,8 @@ function logHistory(res, win, activeLines, num) {
     
     const entry = `Spin #${num}\n[${line1}]\n[${line2}] Payout: ${win}\n[${line3}]\n${"-".repeat(20)}\n`;
     history.value = entry + history.value;
-    const lines = (entry + history.value).split('\n');
+
+    const lines = (history.value).split('\n');
     history.value = lines.slice(0, 50).join('\n');
 }
 
@@ -663,6 +738,7 @@ function resetGame() {
         totalPayout = 0;
         currentBet = 1;
         activeLuck = 0;
+        activeSpeed = 0;
         activeDouble = 0;
         updateStats();
     }
