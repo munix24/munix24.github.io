@@ -1,5 +1,4 @@
 let currentBet = 1;
-const SYMBOL_HEIGHT = 120;
 const STRIP_LENGTH = 30; // Number of symbols in the spin animation
 let isAutoSpinning = false;
 
@@ -168,6 +167,27 @@ document.addEventListener('DOMContentLoaded', () => {
             // Heavier vibration for the mechanical lever pull, lighter for standard buttons
             const duration = target.id === 'lever-control' ? 30 : 15;
             navigator.vibrate(duration);
+        }
+    });
+
+    // Handle window resizing to keep reels aligned
+    window.addEventListener('resize', () => {
+        const spinBtn = document.getElementById('spin-btn');
+        // If the machine is currently spinning, don't interrupt the animation
+        if (spinBtn && spinBtn.disabled) return;
+
+        for (let i = 0; i < 3; i++) {
+            const strip = document.getElementById(`strip-${i}`);
+            // Only update if the strip has been spun (has a transform applied)
+            if (strip && strip.style.transform && strip.style.transform !== 'translateY(0px)' && strip.style.transform !== 'translateY(0)') {
+                const firstSymbol = strip.querySelector('.symbol');
+                if (firstSymbol) {
+                    const symbolHeight = firstSymbol.offsetHeight;
+                    const distance = (STRIP_LENGTH - 3) * symbolHeight;
+                    strip.style.transition = 'none'; // Instant update without animation
+                    strip.style.transform = `translateY(-${distance}px)`;
+                }
+            }
         }
     });
 });
@@ -540,6 +560,9 @@ async function handleSpin() {
 function animateReel(index, reelSymbols) {
     return new Promise(resolve => {
         const strip = document.getElementById(`strip-${index}`);
+        // Dynamically calculate height to support responsive CSS
+        const firstSymbol = strip.querySelector('.symbol');
+        const symbolHeight = firstSymbol ? firstSymbol.offsetHeight : 120;
         
         // Reset strip position
         strip.style.transition = 'none';
@@ -561,7 +584,7 @@ function animateReel(index, reelSymbols) {
         }
 
         strip.style.transition = `transform ${duration}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
-        const distance = (STRIP_LENGTH - 3) * SYMBOL_HEIGHT;
+        const distance = (STRIP_LENGTH - 3) * symbolHeight;
         strip.style.transform = `translateY(-${distance}px)`;
 
         setTimeout(() => {

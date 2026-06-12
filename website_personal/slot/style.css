@@ -10,6 +10,8 @@
     --led-red: #ff3131;
     --dark-metal: #1a1a1a;
     --brass: #b8860b;
+    --symbol-height: 10vh;
+    --machine-padding: 2vh;
 }
 
 body {
@@ -19,8 +21,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    justify-content: center;
+    min-height: 100vh;
+    height: 100vh;
     margin: 0;
+    overflow: hidden;
 }
 
 .machine-container {
@@ -28,19 +33,25 @@ body {
     border: 12px solid #333;
     border-image: linear-gradient(to bottom, #555, #222, #444) 1;
     border-radius: 40px;
-    padding: 40px;
+    padding: var(--machine-padding);
     position: relative;
     box-shadow: 
         0 30px 60px rgba(0,0,0,0.9),
         inset 0 0 40px rgba(0,0,0,0.8);
     overflow: visible;
-    width: 100%;
+    width: 90%;
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     max-width: 450px;
     text-align: center;
+    margin: auto;
 }
 
 h1 {
     color: var(--gold);
+    font-size: 3.5vh;
     margin: 0;
     letter-spacing: 2px;
     text-shadow: 2px 2px #000;
@@ -48,21 +59,21 @@ h1 {
 
 .subtitle {
     color: #666;
-    font-size: 0.7rem;
-    margin-bottom: 20px;
+    font-size: 1.2vh;
+    margin-bottom: 1.5vh;
 }
 
 .credit-main-box {
     background: #050505;
     border: 2px solid var(--dark-gold);
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 1vh;
+    margin-bottom: 1vh;
     border-radius: 8px;
     box-shadow: inset 0 0 15px rgba(0,0,0,1);
 }
 
 .credit-main-box .label {
-    font-size: 1rem;
+    font-size: 1.8vh;
     color: var(--led-red);
     letter-spacing: 2px;
     margin-bottom: 5px;
@@ -81,7 +92,7 @@ h1 {
 }
 
 #balance {
-    font-size: 2.8rem;
+    font-size: 5vh;
     text-shadow: 0 0 15px rgba(255, 49, 49, 0.6);
     font-weight: bold;
 }
@@ -148,7 +159,8 @@ h1 {
     justify-content: center;
     gap: 8px;
     background: #fff;
-    height: 360px;
+    height: calc(var(--symbol-height) * 3);
+    height: calc(var(--symbol-height) * 3 + 4px); /* 3 symbols + 4px top/bottom border */
     overflow: hidden;
     position: relative;
     border: 4px solid #222;
@@ -160,17 +172,22 @@ h1 {
     height: 2px;
     background: rgba(255, 0, 0, 0.3);
     z-index: 5;
+    transform: translateY(-50%);
 }
 .payline.top { top: 16.66%; }
 .payline.middle { top: 50%; }
 .payline.bottom { top: 83.33%; }
+.payline.top { top: calc(var(--symbol-height) * 0.5 + 4px); }
+.payline.middle { top: calc(var(--symbol-height) * 1.5 + 4px); }
+.payline.bottom { top: calc(var(--symbol-height) * 2.5 + 4px); }
 .payline.inactive { opacity: 0.05; }
 
 .line-toggles {
     position: absolute;
     left: 10px;
     top: 10px;
-    height: 360px; /* Matches reels-container height */
+    height: calc(var(--symbol-height) * 3);
+    height: calc(var(--symbol-height) * 3 + 8px);
     width: 30px;
     display: flex;
     flex-direction: column;
@@ -191,6 +208,9 @@ h1 {
 #line-top { top: 16.66%; }
 #line-middle { top: 50%; }
 #line-bottom { top: 83.33%; }
+#line-top { top: calc(var(--symbol-height) * 0.5 + 4px); }
+#line-middle { top: calc(var(--symbol-height) * 1.5 + 4px); }
+#line-bottom { top: calc(var(--symbol-height) * 2.5 + 4px); }
 
 .reel {
     width: 85px;
@@ -207,11 +227,12 @@ h1 {
 }
 
 .symbol {
-    height: 120px;
+    height: var(--symbol-height);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 3rem;
+    font-size: calc(var(--symbol-height) * 0.55);
     color: #000;
     transition: text-shadow 0.3s ease;
 }
@@ -237,10 +258,10 @@ h1 {
     background: radial-gradient(circle at 35% 35%, #ff5c5c, #b30000 75%);
     border: 6px solid #b3b3b3;
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 10vh;
+    height: 10vh;
     color: white;
-    font-size: 1.1rem;
+    font-size: 1.8vh;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
@@ -250,6 +271,7 @@ h1 {
         inset 0 4px 8px rgba(255,255,255,0.4),
         inset 0 -4px 8px rgba(0,0,0,0.4);
     margin-bottom: 15px;
+    margin-bottom: 1vh;
     transition: all 0.1s ease;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
     display: inline-flex;
@@ -317,7 +339,6 @@ h1 {
     color: #555;
     border: 1px solid #333;
     padding: 4px 8px;
-    margin-top: 15px;
     cursor: pointer;
     font-size: 0.65rem;
     border-radius: 3px;
@@ -554,10 +575,10 @@ textarea {
 /* Mechanical Lever Graphic */
 .lever-system {
     position: absolute;
-    right: -95px; /* Adjusted for machine-container anchor */
-    top: 200px;   /* Adjusted for machine-container anchor */
-    width: 85px;
-    height: 300px;
+    right: -9vh; 
+    top: 30vh;   
+    width: 10vh;
+    height: 40vh;
     cursor: pointer;
     z-index: 5;
 }
@@ -565,6 +586,8 @@ textarea {
     position: absolute;
     width: 55px;
     height: 90px;
+    width: 6vh;
+    height: 12vh;
     background: linear-gradient(to right, #333, #555, #222);
     border-radius: 10px 0 0 10px;
     left: 0;
@@ -574,8 +597,10 @@ textarea {
     position: absolute;
     width: 22px;
     height: 210px;
+    width: 2.5vh;
+    height: 28vh;
     background: linear-gradient(to right, #888, #eee, #666);
-    left: 28px;
+    left: 3.5vh;
     top: 0px;
     transform-origin: bottom center;
     transition: transform 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
@@ -585,10 +610,12 @@ textarea {
     position: absolute;
     width: 75px;
     height: 75px;
+    width: 9vh;
+    height: 9vh;
     background: radial-gradient(circle at 25px 25px, #ff4d4d, #800);
     border-radius: 50%;
-    top: -65px;
-    left: -26px;
+    top: -8vh;
+    left: -3.2vh;
     box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
@@ -758,4 +785,18 @@ th[data-tooltip], td[data-tooltip] {
 [data-tooltip]:hover::before {
     visibility: visible;
     opacity: 1;
+}
+
+/* Height-based scaling to ensure "One Screen" fit */
+@media (max-height: 850px) {
+    h1 { font-size: 1.5rem; }
+    #balance { font-size: 2.2rem; }
+    .machine-container { border-width: 8px; }
+}
+
+@media (max-height: 700px) {
+    .subtitle { margin-bottom: 5px; }
+    #spin-btn, #auto-btn { height: 70px; width: 70px; font-size: 0.8rem; }
+    #auto-btn { width: auto; }
+    .credit-main-box { padding: 5px; margin-bottom: 5px; }
 }
