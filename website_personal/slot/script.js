@@ -1,3 +1,9 @@
+// TODO: settings gear?
+// top panel with stats and paytable
+// bottom panel with game history
+// left panel with power-ups and upgrades
+// wild card that gives power up
+
 let currentBet = 1;
 const STRIP_LENGTH = 30; // Number of symbols in the spin animation
 let isAutoSpinning = false;
@@ -148,9 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // toggleSidebar(true); // Open sidebar by default on load
 
-    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 5));
-    document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 100, 3));
-    document.getElementById('buy-speed').addEventListener('click', () => buyPowerUp('speed', 25, 10));
+    document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 50, 10));
+    document.getElementById('buy-speed').addEventListener('click', () => buyPowerUp('speed', 50, 10));
+    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 100, 5));
 
     // Listen for line toggles to update the Total Cost UI immediately
     ['line-top', 'line-middle', 'line-bottom'].forEach(id => {
@@ -689,11 +695,11 @@ function updateStats() {
     document.getElementById('total-payout').innerText = totalPayout;
     document.getElementById('bet-val').innerText = currentBet;
     document.getElementById('total-spin-cost').innerText = totalCost;
-    
-    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `50c: ${activeLuck}` : "50c";
-    document.getElementById('buy-double').innerText = activeDouble > 0 ? `100c: ${activeDouble}` : "100c";
-    document.getElementById('buy-speed').innerText = activeSpeed > 0 ? `25c: ${activeSpeed}` : "25c";
 
+    document.getElementById('buy-double').innerText = activeDouble > 0 ? `50c: ${activeDouble}` : "50c";
+    document.getElementById('buy-speed').innerText = activeSpeed > 0 ? `50c: ${activeSpeed}` : "50c";
+    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `100c: ${activeLuck}` : "100c";
+    
     // Visual notification for Luck Boost
     const reelsFrame = document.getElementById('reels-frame');
     if (activeLuck > 0) {
