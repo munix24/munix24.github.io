@@ -340,12 +340,20 @@ function updatePaytable() {
     const totalWeight = tempSymbols.reduce((acc, s) => acc + s.weight, 0);
     tableBody.innerHTML = '';
     let theoreticalRTP = 0;
+    let totalChance = 0;
+    let totalHit3Chance = 0;
 
     tempSymbols.forEach(s => {
         const p = s.weight / totalWeight;
-        const chance = (p * 100).toFixed(1);
+        const chanceVal = p * 100;
+        const chance = chanceVal.toFixed(1);
+        totalChance += chanceVal;
+
         const p3 = Math.pow(p, 3);
-        const hit3Chance = (p3 * 100).toFixed(3);
+        const hit3ChanceVal = p3 * 100;
+        const hit3Chance = hit3ChanceVal.toFixed(3);
+        totalHit3Chance += hit3ChanceVal;
+
         const rtpContribVal = p3 * s.multiplier;
         theoreticalRTP += rtpContribVal;
         const rtpContrib = (rtpContribVal * 100).toFixed(2);
@@ -357,10 +365,17 @@ function updatePaytable() {
     const rtpStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
 
     // Add bonus row for fun
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="5" data-tooltip="Reward redeemable only once one day. Only valid if hit while luck boost is not active">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
     
     // Add Total RTP row
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="4" ${rtpStyle} data-tooltip="Theoretical Return to Player: The expected percentage of wagers that will be returned to players over time. Sum of all symbol RTP contributions.">Total ${isLuckActive ? '(BOOSTED)' : ''}</td><td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td></tr>`;
+    tableBody.innerHTML += `
+        <tr style="border-top: 1px solid #333; font-weight: bold;">
+            <td ${rtpStyle} data-tooltip="Theoretical totals for the game parameters.">Sum ${isLuckActive ? '(BOOSTED)' : ''}</td>
+            <td ${rtpStyle}>${totalChance.toFixed(0)}%</td>
+            <td ${rtpStyle}>${totalHit3Chance.toFixed(3)}%</td>
+            <td ${rtpStyle}></td>
+            <td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td>
+        </tr>`;
 }
 
 function changeBet(delta) {
@@ -570,6 +585,10 @@ async function handleSpin() {
         winSound.currentTime = 0; // Reset sound if multiple wins occur quickly
         winSound.play().catch(() => console.warn("Audio playback blocked until user interaction."));
         
+        // if (totalWin >= 100) triggerBigWinCelebration();
+
+        triggerBigWinCelebration();
+
         popup.classList.add('show');
         setTimeout(() => popup.classList.remove('show'), 2500);
     }
@@ -747,6 +766,30 @@ function resetGame() {
         activeSpeed = 0;
         activeDouble = 0;
         updateStats();
+    }
+}
+
+/**
+ * Triggers a burst of falling gold coins across the screen
+ */
+function triggerBigWinCelebration() {
+    const container = document.getElementById('coin-container');
+    const coinCount = 60; // Total coins in the burst
+
+    for (let i = 0; i < coinCount; i++) {
+        setTimeout(() => {
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            const size = Math.random() * 20 + 15; // 15px to 35px
+            coin.style.width = `${size}px`;
+            coin.style.height = `${size}px`;
+            coin.style.left = `${Math.random() * 100}vw`;
+            coin.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2s to 4s fall
+            container.appendChild(coin);
+            
+            // Clean up DOM after animation
+            setTimeout(() => coin.remove(), 4000);
+        }, Math.random() * 2000); // Stagger the start times over 2 seconds
     }
 }
 
