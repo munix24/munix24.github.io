@@ -363,16 +363,26 @@ function updatePaytable() {
         theoreticalRTP += rtpContribVal;
         const rtpContrib = (rtpContribVal * 100).toFixed(2);
 
-        // Luck Boost colors the whole row (except Cherry/7) green
-        const rowStyle = (isLuckActive && s.char !== '🍒' && s.char !== '7️⃣') ? 'style="color: #0f0; font-weight: bold;"' : '';
-        // Double Win specifically colors the Payout and RTP columns gold
+        // Determine specific column styles based on active boosts
+        const isSymbolBoosted = isLuckActive && s.char !== '🍒' && s.char !== '7️⃣';
+        const luckStyle = isSymbolBoosted ? 'style="color: #0f0; font-weight: bold;"' : '';
         const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
+        const mixedStyle = 'style="color: #8cda21; font-weight: bold;"';
 
-        tableBody.innerHTML += `<tr ${rowStyle}><td>${s.char}</td><td>${chance}%</td><td>${hit3Chance}%</td><td ${doubleStyle}>${s.multiplier}x${(isDoubleActive) ? '*2' : ''}</td><td ${doubleStyle}>${rtpContrib}%</td></tr>`;
+        tableBody.innerHTML += `
+            <tr>
+                <td>${s.char}</td>
+                <td ${luckStyle}>${chance}%</td>
+                <td ${luckStyle}>${hit3Chance}%</td>
+                <td ${doubleStyle}>${s.multiplier}x${(isDoubleActive) ? '*2' : ''}</td>
+                <td ${(isSymbolBoosted && isDoubleActive) ? mixedStyle : (doubleStyle || luckStyle)}>${rtpContrib}%</td>
+            </tr>`;
     });
 
     const luckStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
     const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
+    const mixedStyle = 'style="color: #8cda21; font-weight: bold;"';
+    const isBothActive = isLuckActive && isDoubleActive;
 
     // Add bonus row for fun
     tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="5" data-tooltip="Reward redeemable only once one day. Only valid if hit while luck boost is not active">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
@@ -380,11 +390,11 @@ function updatePaytable() {
     // Add Total RTP row
     tableBody.innerHTML += `
         <tr style="border-top: 1px solid #333; font-weight: bold;">
-            <td ${luckStyle} data-tooltip="Theoretical totals for the game parameters.">Sum</td>
-            <td ${luckStyle}>${totalChance.toFixed(0)}%</td>
-            <td ${luckStyle}>${totalHit3Chance.toFixed(3)}%</td>
+            <td data-tooltip="Theoretical totals for the game parameters.">Sum</td>
+            <td>${totalChance.toFixed(0)}%</td>
+            <td>${totalHit3Chance.toFixed(3)}%</td>
             <td></td>
-            <td ${doubleStyle || luckStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td>
+            <td ${isBothActive ? mixedStyle : (doubleStyle || luckStyle)}>${(theoreticalRTP * 100).toFixed(2)}%</td>
         </tr>`;
 }
 
@@ -733,8 +743,13 @@ function updateStats() {
     
     // Visual notification for Luck Boost
     const reelsFrame = document.getElementById('reels-frame');
-    reelsFrame.classList.toggle('luck-boost-active', activeLuck > 0);
-    reelsFrame.classList.toggle('double-win-active', activeDouble > 0);
+    const luck = activeLuck > 0;
+    const double = activeDouble > 0;
+    const both = luck && double;
+
+    reelsFrame.classList.toggle('both-boosts-active', both);
+    reelsFrame.classList.toggle('luck-boost-active', luck && !both);
+    reelsFrame.classList.toggle('double-win-active', double && !both);
 
     // Refresh paytable to reflect luck boost if active
     updatePaytable();

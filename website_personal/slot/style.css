@@ -29,7 +29,18 @@ body {
 }
 
 .machine-container {
-    background: linear-gradient(145deg, #2c2c2c, #111);
+    background: 
+        /* Metallic sheen highlight for depth */
+        /* Fine brushed vertical streaks */
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.01) 0px,
+            rgba(255, 255, 255, 0.01) 1px,
+            transparent 1px,
+            transparent 2px
+        ),
+        /* Base dark metallic gradient */
+        linear-gradient(145deg, #2c2c2c, #111);
     border: 12px solid #333;
     border-image: linear-gradient(to bottom, #555, #222, #444) 1;
     border-radius: 40px;
@@ -158,9 +169,24 @@ h1 {
     animation: doubleGlow 1.5s infinite alternate;
 }
 
+/* Combined glow for when both boosts are active */
+.reels-frame.both-boosts-active {
+    border-color: #8cda21; /* A lime-gold blend */
+    box-shadow: 
+        inset 0 10px 30px rgba(0,0,0,1),
+        0 0 20px rgba(0, 255, 0, 0.4),
+        0 0 35px rgba(212, 175, 55, 0.5);
+    animation: bothGlow 1.5s infinite alternate;
+}
+
 @keyframes doubleGlow {
     from { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 15px rgba(212, 175, 55, 0.3); }
     to { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 25px rgba(212, 175, 55, 0.7); }
+}
+
+@keyframes bothGlow {
+    from { border-color: #0f0; box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 15px rgba(0,255,0,0.4), 0 0 15px rgba(212, 175, 55, 0.2); }
+    to { border-color: var(--gold); box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 15px rgba(0,255,0,0.2), 0 0 30px rgba(212, 175, 55, 0.6); }
 }
 
 @keyframes luckGlow {
