@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 50, 10));
     document.getElementById('buy-speed').addEventListener('click', () => buyPowerUp('speed', 50, 10));
-    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 100, 5));
+    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 10));
 
     // Listen for line toggles to update the Total Cost UI immediately
     ['line-top', 'line-middle', 'line-bottom'].forEach(id => {
@@ -328,11 +328,15 @@ function buyPowerUp(type, cost, spins) {
 function updatePaytable() {
     const tableBody = document.getElementById('symbol-stats-body');
     const isLuckActive = activeLuck > 0;
+    const isDoubleActive = activeDouble > 0;
 
     let tempSymbols = symbols.map(s => {
         if (isLuckActive) {
-            if (s.char === '7️⃣') return { ...s, weight: 15 };
-            if (s.char === '🔔') return { ...s, weight: 20 };
+            if (s.char === '🍒') return { ...s, weight: 7 };
+            if (s.char === '🍋') return { ...s, weight: 40 };
+            if (s.char === '🍊') return { ...s, weight: 25 };
+            if (s.char === '🍇') return { ...s, weight: 15 };
+            if (s.char === '🔔') return { ...s, weight: 10 };
         }
         return s;
     });
@@ -346,7 +350,7 @@ function updatePaytable() {
     tempSymbols.forEach(s => {
         const p = s.weight / totalWeight;
         const chanceVal = p * 100;
-        const chance = chanceVal.toFixed(1);
+        const chance = chanceVal.toFixed(0);
         totalChance += chanceVal;
 
         const p3 = Math.pow(p, 3);
@@ -354,15 +358,21 @@ function updatePaytable() {
         const hit3Chance = hit3ChanceVal.toFixed(3);
         totalHit3Chance += hit3ChanceVal;
 
-        const rtpContribVal = p3 * s.multiplier;
+        const effectiveMultiplier = isDoubleActive ? s.multiplier * 2 : s.multiplier;
+        const rtpContribVal = p3 * effectiveMultiplier;
         theoreticalRTP += rtpContribVal;
         const rtpContrib = (rtpContribVal * 100).toFixed(2);
 
-        const rowStyle = (isLuckActive && (s.char === '7️⃣' || s.char === '🔔')) ? 'style="color: #0f0; font-weight: bold;"' : '';
-        tableBody.innerHTML += `<tr ${rowStyle}><td>${s.char}</td><td>${chance}%</td><td>${hit3Chance}%</td><td>${s.multiplier}x</td><td>${rtpContrib}%</td></tr>`;
+        // Luck Boost colors the whole row (except Cherry/7) green
+        const rowStyle = (isLuckActive && s.char !== '🍒' && s.char !== '7️⃣') ? 'style="color: #0f0; font-weight: bold;"' : '';
+        // Double Win specifically colors the Payout and RTP columns gold
+        const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
+
+        tableBody.innerHTML += `<tr ${rowStyle}><td>${s.char}</td><td>${chance}%</td><td>${hit3Chance}%</td><td ${doubleStyle}>${s.multiplier}x${(isDoubleActive) ? '*2' : ''}</td><td ${doubleStyle}>${rtpContrib}%</td></tr>`;
     });
 
-    const rtpStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
+    const luckStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
+    const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
 
     // Add bonus row for fun
     tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="5" data-tooltip="Reward redeemable only once one day. Only valid if hit while luck boost is not active">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
@@ -370,11 +380,11 @@ function updatePaytable() {
     // Add Total RTP row
     tableBody.innerHTML += `
         <tr style="border-top: 1px solid #333; font-weight: bold;">
-            <td ${rtpStyle} data-tooltip="Theoretical totals for the game parameters.">Sum ${isLuckActive ? '(BOOSTED)' : ''}</td>
-            <td ${rtpStyle}>${totalChance.toFixed(0)}%</td>
-            <td ${rtpStyle}>${totalHit3Chance.toFixed(3)}%</td>
-            <td ${rtpStyle}></td>
-            <td ${rtpStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td>
+            <td ${luckStyle} data-tooltip="Theoretical totals for the game parameters.">Sum</td>
+            <td ${luckStyle}>${totalChance.toFixed(0)}%</td>
+            <td ${luckStyle}>${totalHit3Chance.toFixed(3)}%</td>
+            <td></td>
+            <td ${doubleStyle || luckStyle}>${(theoreticalRTP * 100).toFixed(2)}%</td>
         </tr>`;
 }
 
@@ -416,9 +426,11 @@ function fillStrip(index) {
 function getRandomSymbol(isLuckActive = false) {
     let tempSymbols = [...symbols];
     if (isLuckActive) {
-        // Boost high-paying symbols weights temporarily
+        // Boost all symbol weights temporarily except Cherry and 7
         tempSymbols = symbols.map(s => {
-            if (s.char === '7️⃣') return { ...s, weight: 15 };
+            if (s.char === '🍋') return { ...s, weight: 40 };
+            if (s.char === '🍊') return { ...s, weight: 30 };
+            if (s.char === '🍇') return { ...s, weight: 25 };
             if (s.char === '🔔') return { ...s, weight: 20 };
             return s;
         });
@@ -717,15 +729,13 @@ function updateStats() {
 
     document.getElementById('buy-double').innerText = activeDouble > 0 ? `50c: ${activeDouble}` : "50c";
     document.getElementById('buy-speed').innerText = activeSpeed > 0 ? `50c: ${activeSpeed}` : "50c";
-    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `100c: ${activeLuck}` : "100c";
+    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `50c: ${activeLuck}` : "50c";
     
     // Visual notification for Luck Boost
     const reelsFrame = document.getElementById('reels-frame');
-    if (activeLuck > 0) {
-        reelsFrame.classList.add('luck-boost-active');
-    } else {
-        reelsFrame.classList.remove('luck-boost-active');
-    }
+    reelsFrame.classList.toggle('luck-boost-active', activeLuck > 0);
+    reelsFrame.classList.toggle('double-win-active', activeDouble > 0);
+
     // Refresh paytable to reflect luck boost if active
     updatePaytable();
 

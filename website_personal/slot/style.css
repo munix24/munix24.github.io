@@ -149,6 +149,20 @@ h1 {
     animation: luckGlow 1.5s infinite alternate;
 }
 
+/* Gold/Yellow glow for active double win boost */
+.reels-frame.double-win-active {
+    border-color: var(--gold);
+    box-shadow: 
+        inset 0 10px 30px rgba(0,0,0,1),
+        0 0 25px rgba(212, 175, 55, 0.7);
+    animation: doubleGlow 1.5s infinite alternate;
+}
+
+@keyframes doubleGlow {
+    from { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 15px rgba(212, 175, 55, 0.3); }
+    to { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 25px rgba(212, 175, 55, 0.7); }
+}
+
 @keyframes luckGlow {
     from { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 15px rgba(0,255,0,0.3); }
     to { box-shadow: inset 0 10px 30px rgba(0,0,0,1), 0 0 25px rgba(0,255,0,0.7); }
