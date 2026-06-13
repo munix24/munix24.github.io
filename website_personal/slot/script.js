@@ -24,6 +24,7 @@ const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/201
 const leverSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
 const stopSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3');
 const tensionSound = new Audio('https://assets.mixkit.co/active_storage/sfx/154/154-preview.mp3'); // Suspenseful riser
+const clinkSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2569/2569-preview.mp3'); // Metallic clink
 
 // Configuration: weight determines frequency
 const symbols = [
@@ -37,8 +38,9 @@ const symbols = [
 
 document.addEventListener('DOMContentLoaded', () => {
     initUI();
+    initLeverDraggable();
     document.getElementById('spin-btn').addEventListener('click', handleLeverPull);
-    document.getElementById('lever-control').addEventListener('click', handleLeverPull);
+    // Lever click is now handled by the drag logic (tap vs drag)
     document.getElementById('auto-btn').addEventListener('click', toggleAutoSpin);
     document.getElementById('bet-inc').addEventListener('click', () => changeBet(1));
     document.getElementById('bet-dec').addEventListener('click', () => changeBet(-1));
@@ -54,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         leverSound.volume = activeVol;
         stopSound.volume = activeVol;
         tensionSound.volume = activeVol;
+        clinkSound.volume = activeVol;
         volSlider.value = activeVol;
         volToggle.innerText = (isMuted || currentVolume === 0) ? '🔇' : '🔊';
         
@@ -74,6 +77,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     updateAudio();
+
+    // Fullscreen Logic for Immersive Experience
+    const fsBtn = document.getElementById('fullscreen-btn');
+    const fsIcon = document.getElementById('fullscreen-icon');
+
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) document.exitFullscreen();
+        }
+    };
+
+    fsBtn.addEventListener('click', toggleFullscreen);
+    fsIcon.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', () => {
+        fsIcon.innerText = document.fullscreenElement ? '🗗' : '🗖';
+    });
 
     const sidebar = document.querySelector('.side-panels');
     const overlay = document.getElementById('sidebar-overlay');
@@ -325,6 +348,94 @@ function buyPowerUp(type, cost, spins) {
     }
 }
 
+function initLeverDraggable() {
+    const leverControl = document.getElementById('lever-control');
+    const leverArm = leverControl.querySelector('.lever-arm');
+    const spinBtn = document.getElementById('spin-btn');
+    
+    let isDragging = false;
+    let startY = 0;
+    let thresholdMet = false;
+    let clinkPlayed = false;
+    const maxRotation = 90; // Degrees for a full mechanical pull
+    const pullThreshold = 300; // Increased distance required to pull
+
+    const startDrag = (e) => {
+        if (spinBtn.disabled) return;
+        isDragging = true;
+        thresholdMet = false;
+        clinkPlayed = false;
+        startY = e.clientY || e.touches[0].clientY;
+        leverArm.classList.add('no-transition');
+        
+        // Play initial mechanical click
+        leverSound.currentTime = 0;
+        leverSound.play().catch(() => {});
+    };
+
+    const moveDrag = (e) => {
+        if (!isDragging) return;
+        
+        const currentY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+        const deltaY = Math.max(0, currentY - startY);
+        
+        // Map deltaY to rotation (0 to 80 degrees)
+        const rotation = Math.min(maxRotation, (deltaY / pullThreshold) * maxRotation);
+        
+        // Use the same 3D rotation logic from your CSS
+        leverArm.style.transform = `rotateX(${rotation}deg)`;
+
+        // Trigger spin only if pulled almost entirely to the bottom (99%)
+        if (rotation >= maxRotation * 0.99 && !spinBtn.disabled) {
+            if (!clinkPlayed) {
+                clinkSound.currentTime = 0;
+                clinkSound.play().catch(() => {});
+                clinkPlayed = true;
+            }
+            thresholdMet = true;
+            finishPull();
+        }
+    };
+
+    const finishPull = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        leverArm.classList.remove('no-transition');
+        leverArm.style.transform = ''; // Reset to CSS default (upright)
+        
+        if (!spinBtn.disabled && thresholdMet) {
+            handleSpin();
+        }
+    };
+
+    const cancelDrag = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        leverArm.classList.remove('no-transition');
+        leverArm.style.transform = '';
+    };
+
+    // Mouse Events
+    leverControl.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('mouseup', finishPull);
+
+    // Touch Events
+    leverControl.addEventListener('touchstart', (e) => {
+        startDrag(e);
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            e.preventDefault(); // Prevent scrolling while pulling the lever
+            moveDrag(e);
+        }
+    }, { passive: false });
+    
+    document.addEventListener('touchend', finishPull);
+}
+
 function updatePaytable() {
     const tableBody = document.getElementById('symbol-stats-body');
     const isLuckActive = activeLuck > 0;
@@ -458,15 +569,22 @@ async function handleLeverPull() {
     const btn = document.getElementById('spin-btn');
     if (btn.disabled) return;
 
+    // Fallback for button click or auto-spin
     const lever = document.getElementById('lever-control');
-    lever.classList.add('pulling');
+    const arm = lever.querySelector('.lever-arm');
     
-    // Play mechanical lever sound
+    // Play mechanical sounds for programmatic pull
     leverSound.currentTime = 0;
     leverSound.play().catch(() => {});
-
-    // Brief delay to match the animation before starting spin
-    setTimeout(() => lever.classList.remove('pulling'), 500);
+    
+    arm.style.transform = 'rotateX(90deg)';
+    
+    setTimeout(() => {
+        clinkSound.currentTime = 0;
+        clinkSound.play().catch(() => {});
+        arm.style.transform = '';
+    }, 400);
+    
     handleSpin();
 }
 
@@ -670,7 +788,7 @@ function animateReel(index, reelSymbols, allResults, activeLines, speedActive) {
             );
             if (isAnticipating) {
                 // Add anticipation delay (half the normal delay if speed is active)
-                duration += speedActive ? 1.0 : 2.0; 
+                duration += speedActive ? 0.5 : 1.0; 
                 
                 // Apply win-glow to the first two reels after they finish spinning (2.5s)
                 setTimeout(() => {

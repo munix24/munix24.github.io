@@ -864,3 +864,30 @@ th[data-tooltip], td[data-tooltip] {
     0% { transform: translateY(0) rotateX(0) rotateY(0); opacity: 1; }
     100% { transform: translateY(110vh) rotateX(720deg) rotateY(360deg); opacity: 0.3; }
 }
+
+/* Landscape Mobile Optimization */
+@media (orientation: landscape) and (max-height: 550px) {
+    :root {
+        --symbol-height: 8.5vh;
+        --machine-padding: 0.5vh;
+    }
+    .machine-container {
+        height: 98vh;
+        padding: var(--machine-padding);
+        border-width: 6px;
+        max-width: 380px; /* Slimmer profile to favor height-to-width ratio */
+        margin-right: 12vh; /* Ensure clearance for the mechanical lever */
+    }
+    h1 { font-size: 5vh; }
+    .subtitle { display: none; } /* Hide secondary text to save vertical space */
+    .credit-main-box { padding: 0.2vh; margin-bottom: 0.4vh; }
+    .credit-main-box .label { font-size: 1.8vh; margin-bottom: 0; }
+    #balance { font-size: 6vh; }
+    .reels-frame { padding: 2px; }
+    .reels-container { gap: 4px; }
+    .bet-adjust { margin: 0.2vh 0; font-size: 1.8vh; gap: 10px; }
+    .total-cost-display { margin-bottom: 0.2vh; font-size: 1.5vh; }
+    #spin-btn, #auto-btn { height: 12vh; width: 12vh; font-size: 1.8vh; margin-bottom: 0; }
+    #auto-btn { width: auto; padding: 0 15px; height: 12vh; }
+    .lever-system { height: 40vh; top: 15vh; right: -5vh; }
+}
