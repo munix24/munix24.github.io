@@ -355,10 +355,39 @@ function initLeverDraggable() {
     
     let isDragging = false;
     let startY = 0;
+    let currentRotation = 0;
+    let targetRotation = 0;
     let thresholdMet = false;
     let clinkPlayed = false;
-    const maxRotation = 90; // Degrees for a full mechanical pull
-    const pullThreshold = 300; // Increased distance required to pull
+    let rafId = null;
+
+    const maxRotation = 120; // Degrees for a full mechanical pull
+    const pullThreshold = 400; // Adjusted for responsive, weighted feel
+
+    const updateLeverUI = () => {
+        if (!isDragging && Math.abs(currentRotation) < 0.1) {
+            currentRotation = 0;
+            leverArm.style.transform = '';
+            rafId = null;
+            return;
+        }
+
+        // Smooth interpolation (lerp)
+        currentRotation += (targetRotation - currentRotation);
+        leverArm.style.transform = `rotateX(${currentRotation}deg)`;
+
+        if (isDragging && currentRotation >= maxRotation * 0.98 && !spinBtn.disabled) {
+            if (!clinkPlayed) {
+                clinkSound.currentTime = 0;
+                clinkSound.play().catch(() => {});
+                clinkPlayed = true;
+            }
+            thresholdMet = true;
+            finishPull(); // Trip the mechanism
+        }
+
+        rafId = requestAnimationFrame(updateLeverUI);
+    };
 
     const startDrag = (e) => {
         if (spinBtn.disabled) return;
@@ -366,11 +395,17 @@ function initLeverDraggable() {
         thresholdMet = false;
         clinkPlayed = false;
         startY = e.clientY || e.touches[0].clientY;
-        leverArm.classList.add('no-transition');
+        leverArm.classList.add('no-transition');        // Disable transitions for immediate response during drag
+        document.body.classList.add('lever-active');    // Change cursor to grabbing for better UX
         
         // Play initial mechanical click
         leverSound.currentTime = 0;
         leverSound.play().catch(() => {});
+
+        if (!rafId) rafId = requestAnimationFrame(updateLeverUI);
+
+        document.addEventListener('mousemove', moveDrag);
+        document.addEventListener('mouseup', finishPull);
     };
 
     const moveDrag = (e) => {
@@ -378,31 +413,19 @@ function initLeverDraggable() {
         
         const currentY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
         const deltaY = Math.max(0, currentY - startY);
-        
-        // Map deltaY to rotation (0 to 80 degrees)
-        const rotation = Math.min(maxRotation, (deltaY / pullThreshold) * maxRotation);
-        
-        // Use the same 3D rotation logic from your CSS
-        leverArm.style.transform = `rotateX(${rotation}deg)`;
-
-        // Trigger spin only if pulled almost entirely to the bottom (99%)
-        if (rotation >= maxRotation * 0.99 && !spinBtn.disabled) {
-            if (!clinkPlayed) {
-                clinkSound.currentTime = 0;
-                clinkSound.play().catch(() => {});
-                clinkPlayed = true;
-            }
-            thresholdMet = true;
-            finishPull();
-        }
+        targetRotation = Math.min(maxRotation, (deltaY / pullThreshold) * maxRotation);
     };
 
     const finishPull = () => {
         if (!isDragging) return;
         isDragging = false;
+
+        document.removeEventListener('mousemove', moveDrag);
+        document.removeEventListener('mouseup', finishPull);
+        document.body.classList.remove('lever-active');
         
+        targetRotation = 0; // Return to upright position
         leverArm.classList.remove('no-transition');
-        leverArm.style.transform = ''; // Reset to CSS default (upright)
         
         if (!spinBtn.disabled && thresholdMet) {
             handleSpin();
@@ -412,14 +435,15 @@ function initLeverDraggable() {
     const cancelDrag = () => {
         if (!isDragging) return;
         isDragging = false;
+        document.removeEventListener('mousemove', moveDrag);
+        document.removeEventListener('mouseup', finishPull);
+        document.body.classList.remove('lever-active');
         leverArm.classList.remove('no-transition');
         leverArm.style.transform = '';
     };
 
     // Mouse Events
     leverControl.addEventListener('mousedown', startDrag);
-    document.addEventListener('mousemove', moveDrag);
-    document.addEventListener('mouseup', finishPull);
 
     // Touch Events
     leverControl.addEventListener('touchstart', (e) => {
@@ -565,29 +589,6 @@ function getRandomSymbol(isLuckActive = false) {
     }
 }
 
-async function handleLeverPull() {
-    const btn = document.getElementById('spin-btn');
-    if (btn.disabled) return;
-
-    // Fallback for button click or auto-spin
-    const lever = document.getElementById('lever-control');
-    const arm = lever.querySelector('.lever-arm');
-    
-    // Play mechanical sounds for programmatic pull
-    leverSound.currentTime = 0;
-    leverSound.play().catch(() => {});
-    
-    arm.style.transform = 'rotateX(90deg)';
-    
-    setTimeout(() => {
-        clinkSound.currentTime = 0;
-        clinkSound.play().catch(() => {});
-        arm.style.transform = '';
-    }, 400);
-    
-    handleSpin();
-}
-
 function toggleAutoSpin() {
     const autoBtn = document.getElementById('auto-btn');
     const spinBtn = document.getElementById('spin-btn');
@@ -613,6 +614,29 @@ function toggleAutoSpin() {
         autoBtn.classList.add('active-spinning');
         if (!spinBtn.disabled) handleLeverPull();
     }
+}
+
+async function handleLeverPull() {
+    const btn = document.getElementById('spin-btn');
+    if (btn.disabled) return;
+
+    // Fallback for button click or auto-spin
+    const lever = document.getElementById('lever-control');
+    const arm = lever.querySelector('.lever-arm');
+    
+    // Play mechanical sounds for programmatic pull
+    leverSound.currentTime = 0;
+    leverSound.play().catch(() => {});
+    
+    arm.style.transform = 'rotateX(120deg)';
+    
+    setTimeout(() => {
+        clinkSound.currentTime = 0;
+        clinkSound.play().catch(() => {});
+        arm.style.transform = '';
+    }, 400);
+    
+    handleSpin();
 }
 
 async function handleSpin() {
@@ -685,6 +709,7 @@ async function handleSpin() {
     // Calculate Outcome
     let totalWin = 0;
     let stopAutoOnBigWin = false;
+
     // Check each horizontal line (row 0, 1, 2)
     for (let row = 0; row < 3; row++) {
         if (activeLines[row]) { // Only payout if the line is active
@@ -912,9 +937,7 @@ function resetGame() {
     }
 }
 
-/**
- * Triggers a burst of falling gold coins across the screen
- */
+// Triggers a burst of falling gold coins across the screen
 function triggerBigWinCelebration() {
     const container = document.getElementById('coin-container');
     const coinCount = 60; // Total coins in the burst

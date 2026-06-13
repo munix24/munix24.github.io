@@ -637,6 +637,12 @@ textarea {
     transition: transform 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
     border-radius: 10px;
 }
+.no-transition {
+    transition: none !important;
+}
+.lever-active, .lever-active * {
+    cursor: grabbing !important;
+}
 .lever-knob {
     position: absolute;
     width: 75px;
