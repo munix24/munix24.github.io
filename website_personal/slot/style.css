@@ -642,6 +642,8 @@ textarea {
 }
 .lever-active, .lever-active * {
     cursor: grabbing !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
 }
 .lever-knob {
     position: absolute;
