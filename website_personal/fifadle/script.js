@@ -647,16 +647,9 @@ function updateScoreUI() {
             else if (avgNum < 6.0) avgText.classList.add('avg-bad');
             else avgText.classList.add('avg-terrible');
         }
-
-        if (correctCountries.length === countries.length && avgNum > 0 && (bestAverage === 0 || avgNum < bestAverage)) {
-            bestAverage = avgNum;
-            localStorage.setItem('fifadle_best_average', bestAverage);
-        }
     }
     if (bestAvgText) {
-        const isComplete = correctCountries.length === countries.length;
-        bestAvgText.innerText = `Best Avg: ${(isComplete && bestAverage > 0) ? bestAverage.toFixed(1) : "-"}`;
-        if (isComplete) scoreIndicator.classList.add('complete');
+        bestAvgText.innerText = `Best Avg: ${bestAverage > 0 ? bestAverage.toFixed(1) : "-"}`;
     }
 }
 
@@ -841,6 +834,18 @@ function endGame(isWin) {
 }
 
 function triggerCompletionAnimation() {
+    // Set best average upon completion
+    const currentAvg = totalClues / countries.length;
+    if (bestAverage === 0 || currentAvg < bestAverage) {
+        bestAverage = currentAvg;
+        localStorage.setItem('fifadle_best_average', bestAverage);
+        updateScoreUI();
+    }
+        
+    const isComplete = correctCountries.length === countries.length;
+    if (isComplete) scoreIndicator.classList.add('complete');
+    else scoreIndicator.classList.remove('complete');
+
     // Play the special victory sound
     playEffect(sounds.victory);
 
@@ -878,6 +883,23 @@ function generateShareEmoji(isWin, winClue) {
     }
     
     return `Fifadle 2026 🏆\n${isWin ? (winClue + 1) : 'X'}/${maxClues}\n${emojiRow}\nhttps://your-website.com`;
+}
+
+function newGame() {
+    if (confirm("Are you sure you want to reset current game progress? This cannot be undone.")) {
+        localStorage.removeItem('fifadle_correct_list');
+        localStorage.removeItem('fifadle_total_clues');
+        localStorage.removeItem('fifadle_saved_current_country_name');
+        localStorage.removeItem('fifadle_saved_current_clue_index');
+        localStorage.removeItem('fifadle_clue_results');
+        localStorage.removeItem('fifadle_clue_order');
+        correctCountries = [];
+        totalClues = 0;
+        updateScoreUI();
+        initGame();
+        settingsToggle.classList.remove('active');
+        settingsPanel.classList.remove('visible');
+    }
 }
 
 function resetProgress() {

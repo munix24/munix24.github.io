@@ -47,7 +47,7 @@ Can you add a "Daily Mode" where everyone gets the same country each day based o
 Can you add a visual indicator showing if the average is improving or declining per clue?
 Can you add a chart or distribution showing how many cluess it usually takes players win?
 
-Can you add a visual hint to indicate which clue type is coming next?
-
 Add side panel to the left with which countries are still left to be guessed in alphabetical order
-save bestAverage between games
+
+
+in triggerCompletionAnimation display final stats and allow player to start new game

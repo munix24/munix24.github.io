@@ -240,7 +240,7 @@ button:disabled { background-color: #ccc; }
     background-color: #a6864a;
 }
 
-#reset-progress-btn {
+#reset-progress-btn, #new-game-btn {
     margin-top: 0;
     background-color: transparent;
     color: #888;
