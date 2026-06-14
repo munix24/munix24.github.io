@@ -596,16 +596,21 @@ sfxMuteBtn.addEventListener('click', () => {
 });
 
 function updateAudioSettings() {
-    // Mute music if window loses focus or is hidden
-    const shouldMute = !document.hasFocus() || document.visibilityState === 'hidden';
-    bgMusic.volume = (shouldMute || musicVolume === 0) ? 0 : musicVolume;
+    const isMuted = musicVolume === 0;
+    const isHidden = document.visibilityState === 'hidden';
+    const isBlurred = !document.hasFocus();
+
+    // Music should stop if muted, the tab is hidden, or the window loses focus
+    const shouldStop = isMuted || isHidden || isBlurred;
 
     if (musicMuteBtn) musicMuteBtn.innerText = musicVolume > 0 ? '🎵' : '🔇';
     if (sfxMuteBtn) sfxMuteBtn.innerText = sfxVolume > 0 ? '🔊' : '🔇';
 
-    if (musicVolume === 0 || document.visibilityState === 'hidden') {
+    if (shouldStop) {
+        bgMusic.volume = 0;
         bgMusic.pause();
-    } else if (document.hasFocus()) {
+    } else {
+        bgMusic.volume = musicVolume;
         bgMusic.play().catch(e => console.debug("Playback failed during audio update", e));
     }
 }
@@ -947,7 +952,8 @@ function shareResults() {
 
 // Background music playback logic
 const startMusic = () => {
-    if (musicVolume === 0) return;
+    // Only attempt to start if not muted and tab is active/focused
+    if (musicVolume === 0 || document.visibilityState === 'hidden' || !document.hasFocus()) return;
     bgMusic.play().then(() => {
         // If successful, remove listeners to prevent redundant calls
         document.removeEventListener('click', startMusic);
@@ -975,7 +981,7 @@ document.addEventListener('mouseleave', () => {
 });
 
 document.addEventListener('mouseenter', () => {
-    if (musicVolume > 0 && document.visibilityState === 'visible') {
+    if (musicVolume > 0 && document.visibilityState === 'visible' && document.hasFocus()) {
         bgMusic.play().catch(e => console.debug("Playback failed on enter", e));
     }
 });
