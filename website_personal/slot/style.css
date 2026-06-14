@@ -811,11 +811,13 @@ textarea {
     }
 
     .modal-panel {
-        top: 50% !important;
-        left: 50% !important;
-        right: auto !important;
-        transform: translate(-50%, -50%) !important;
-        width: 90% !important;
+        top: 20px !important;
+        right: 62px !important;
+        left: auto !important;
+        transform: none !important;
+        width: auto !important;
+        max-width: calc(100vw - 80px) !important;
+        width: 380px !important;
         min-width: 280px !important;
     }
 
