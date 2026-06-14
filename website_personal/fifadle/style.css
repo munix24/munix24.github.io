@@ -390,29 +390,3 @@ p {
     color: #bbb;
     margin: 0.5rem 0;
 }
-
-.muted-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 3000;
-    border-radius: 12px;
-    backdrop-filter: blur(4px);
-    cursor: pointer;
-}
-
-.muted-overlay.visible {
-    display: flex;
-}
-
-.muted-overlay span {
-    font-size: 3rem;
-    margin-bottom: 10px;
-}

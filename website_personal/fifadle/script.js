@@ -596,7 +596,18 @@ sfxMuteBtn.addEventListener('click', () => {
 });
 
 function updateAudioSettings() {
-    bgMusic.volume = musicVolume;
+    // Mute music if window loses focus or is hidden
+    const shouldMute = !document.hasFocus() || document.visibilityState === 'hidden';
+    bgMusic.volume = (shouldMute || musicVolume === 0) ? 0 : musicVolume;
+
+    if (musicMuteBtn) musicMuteBtn.innerText = musicVolume > 0 ? '🎵' : '🔇';
+    if (sfxMuteBtn) sfxMuteBtn.innerText = sfxVolume > 0 ? '🔊' : '🔇';
+
+    if (musicVolume === 0 || document.visibilityState === 'hidden') {
+        bgMusic.pause();
+    } else if (document.hasFocus()) {
+        bgMusic.play().catch(e => console.debug("Playback failed during audio update", e));
+    }
 }
 
 // Plays a sound effect, resetting it if already playing
@@ -923,18 +934,12 @@ function resetProgress() {
 guessInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') makeGuess(); });
 
 // Automatically submit when a country is selected from the datalist
-// Automatically submit when a country is selected from the datalist
-const handleSelection = (e) => {
+guessInput.addEventListener('input', (e) => {
     const val = e.target.value;
-    if (val && countries.some(c => c.name === val)) {
-        // Force blur to ensure selection is committed on mobile and hide keyboard
-        guessInput.blur();
+    if (countries.some(c => c.name === val)) {
         makeGuess();
     }
-};
-
-guessInput.addEventListener('input', handleSelection);
-guessInput.addEventListener('change', handleSelection);
+});
 
 function shareResults() {
     navigator.clipboard.writeText(lastResultEmoji);
@@ -942,6 +947,7 @@ function shareResults() {
 
 // Background music playback logic
 const startMusic = () => {
+    if (musicVolume === 0) return;
     bgMusic.play().then(() => {
         // If successful, remove listeners to prevent redundant calls
         document.removeEventListener('click', startMusic);
@@ -951,6 +957,28 @@ const startMusic = () => {
 
 document.addEventListener('click', startMusic);
 document.addEventListener('keydown', startMusic);
+
+// Handle window focus and visibility to mute music and show pause overlay
+window.addEventListener('blur', () => {
+    updateAudioSettings();
+});
+
+window.addEventListener('focus', () => {
+    updateAudioSettings();
+});
+
+document.addEventListener('visibilitychange', updateAudioSettings);
+
+// Handle mouse leaving and entering the application window
+document.addEventListener('mouseleave', () => {
+    bgMusic.pause();
+});
+
+document.addEventListener('mouseenter', () => {
+    if (musicVolume > 0 && document.visibilityState === 'visible') {
+        bgMusic.play().catch(e => console.debug("Playback failed on enter", e));
+    }
+});
 
 updateAudioSettings();
 startMusic(); // Attempt to play immediately on page load
