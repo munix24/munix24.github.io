@@ -311,8 +311,7 @@ h1 {
         0 12px 20px rgba(0,0,0,0.5),
         inset 0 4px 8px rgba(255,255,255,0.4),
         inset 0 -4px 8px rgba(0,0,0,0.4);
-    margin-bottom: 15px;
-    margin-bottom: 1vh;
+    margin-bottom: 0;
     transition: all 0.1s ease;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
     display: inline-flex;
@@ -373,6 +372,19 @@ h1 {
     cursor: not-allowed;
     box-shadow: 0 4px 0 #222;
     transform: translateY(4px);
+}
+
+.main-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1.5vh;
+    flex-direction: row-reverse; /* Spin on right by default (lever is on right) */
+}
+
+.lever-left .main-actions {
+    flex-direction: row; /* Spin on left when lever is on left */
 }
 
 #reset-btn {
@@ -822,13 +834,13 @@ textarea {
         width: 80px;
         height: 80px;
         font-size: 0.9rem;
-        margin-bottom: 15px;
+        margin-bottom: 0;
     }
 
     #auto-btn {
         padding: 0 15px;
         font-size: 0.85rem;
-        margin: 0 0 15px 10px;
+        margin: 0;
         display: inline-flex;
         width: auto;
         height: 80px; /* Match spin-btn height */

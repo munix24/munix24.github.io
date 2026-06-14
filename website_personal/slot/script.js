@@ -204,8 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.style.transition = '';
     }
 
-    // toggleSidebar(true); // Open sidebar by default on load
-
     document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 50, 10));
     document.getElementById('buy-speed').addEventListener('click', () => buyPowerUp('speed', 50, 10));
     document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 10));
