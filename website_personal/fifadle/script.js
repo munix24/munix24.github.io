@@ -945,6 +945,16 @@ const startMusic = () => {
 document.addEventListener('click', startMusic);
 document.addEventListener('keydown', startMusic);
 
+// Handle background/foreground state for mobile and browser tabs
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        bgMusic.pause();
+    } else if (musicVolume > 0) {
+        // Only resume if the user hasn't muted the music
+        bgMusic.play().catch(e => console.debug("Resume blocked until interaction", e));
+    }
+});
+
 updateAudioSettings();
 startMusic(); // Attempt to play immediately on page load
 initGame();
