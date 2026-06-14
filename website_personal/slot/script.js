@@ -103,6 +103,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('sidebar-toggle');
     const resizer = document.getElementById('sidebar-resizer');
 
+    // Settings Modal Logic
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    const settingsClose = document.getElementById('settings-close');
+
+    const toggleSettings = (forceState) => {
+        const isOpen = (typeof forceState === 'boolean') ? forceState : !settingsPanel.classList.contains('open');
+        settingsPanel.classList.toggle('open', isOpen);
+    };
+
+    settingsBtn.addEventListener('click', () => toggleSettings());
+    settingsClose.addEventListener('click', () => toggleSettings(false));
+
     const toggleSidebar = (isOpen) => {
         sidebar.classList.toggle('open', isOpen);
         overlay.classList.toggle('open', isOpen);
@@ -190,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDraggable(document.getElementById('symbol-panel'), document.getElementById('stats-header'));
     setupDraggable(document.getElementById('session-panel'), document.getElementById('session-header'));
     setupDraggable(document.getElementById('powerup-panel'), document.getElementById('powerup-header'));
-    setupDraggable(document.getElementById('settings-panel'), document.getElementById('settings-header'));
     loadPanelOrder();
 
     // Global haptic feedback for mobile touch interactions
@@ -358,7 +370,7 @@ function initLeverDraggable() {
     let thresholdMet = false;
     let clinkPlayed = false;
     const maxRotation = 120; // Degrees for a full mechanical pull
-    const pullThreshold = 360; // Adjusted for more fluid, responsive movement
+    const pullThreshold = 300; // Adjusted for more fluid, responsive movement
 
     const startDrag = (e) => {
         if (e.type === 'mousedown') e.preventDefault();
