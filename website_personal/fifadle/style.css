@@ -1,0 +1,392 @@
+:root {
+    --fifa-blue: #004b87;
+    --fifa-gold: #c6a15b;
+    --fifa-green: #008f4c;
+    --bg-color: #000000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.game-container {
+    max-width: 500px;
+    position: relative;
+    background: #1a1a1a;
+    color: white;
+    padding: 12px 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    text-align: center;
+}
+
+h1 { 
+    color: white; 
+    margin-top: 0; 
+    margin-bottom: 0.5rem; 
+    position: relative;
+    cursor: default;
+}
+
+.clue-indicator { 
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+    font-weight: bold; 
+    color: #bbb; 
+    margin-top: 1rem; 
+}
+
+.score-indicator { 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    font-weight: bold; 
+    color: var(--fifa-gold); 
+    margin-bottom: 1rem; 
+    font-size: 0.85rem; 
+}
+
+.score-indicator span{
+    background: #2a2a2a;
+    border: 1px solid #444;
+    padding: 4px 10px;
+    border-radius: 15px;
+    white-space: nowrap;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    color: var(--fifa-gold);
+    cursor: default;
+}
+
+.score-indicator span.avg-elite {
+    background: #002b4d;
+    border-color: #0088ff;
+    color: #a3d5ff;
+}
+
+.score-indicator span.avg-great {
+    background: #1b4332;
+    border-color: var(--fifa-green);
+    color: #75f0a3;
+}
+
+.score-indicator span.avg-good {
+    background: #323f20;
+    border-color: #80ad26;
+    color: #baf1ab;
+}
+
+.score-indicator span.avg-average {
+    background: #4a3c0e;
+    border-color: #ffcc00;
+    color: #fff3b3;
+}
+
+.score-indicator span.avg-poor {
+    background: #4a2c0e;
+    border-color: #ff9900;
+    color: #ffdfb3;
+}
+
+.score-indicator span.avg-bad {
+    background: #4a0e0e;
+    border-color: #ff4d4d;
+    color: #ffb3b3;
+}
+
+.score-indicator span.avg-terrible {
+    background: #000;
+    border-color: #ff0000;
+    color: #ff0000;
+}
+
+.score-indicator span:hover, #total-clues-text:hover {
+    border-color: var(--fifa-gold);
+    box-shadow: 0 0 12px var(--fifa-gold);
+    transform: translateY(-2px);
+}
+
+/* Tooltip styling */
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    transform: translateX(-75%) translateY(-10px);
+    background: #222;
+    color: #eee;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--fifa-gold);
+    font-size: 0.75rem;
+    font-weight: normal;
+    white-space: normal;
+    width: 160px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 2000;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.clue-list {
+    text-align: left;
+    margin: 5px 0;
+    min-height: 240px;
+    min-height: 280px;
+}
+
+.clue-item {
+    padding: 6px 6px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    background: #333;
+    transition: all 0.3s ease;
+    opacity: 0.3;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    min-height: 42px;
+    font-size: .95rem;
+}
+
+.clue-item.revealed,
+.clue-item.revealed.correct,
+.clue-item.revealed.initial {
+    opacity: 1;
+    background: #004d26;
+    border-left: 5px solid var(--fifa-green);
+}
+
+.clue-item.revealed.incorrect {
+    background: #4a0e0e;
+    border-left: 5px solid #ff4d4d;
+}
+
+.clue-item.revealed.skipped {
+    background: #4a3c0e;
+    border-left: 5px solid #ffcc00;
+}
+
+.clue-icon {
+    font-size: 1.4rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#guess-input {
+    min-width: 190px;
+}
+
+input {
+    flex: 1;
+    padding: 12px 6px;
+    background: #222;
+    color: white;
+    border: 2px solid #444;
+    border-radius: 6px;
+    outline: none;
+}
+
+button {
+    padding: 12px 12px;
+    background-color: var(--fifa-blue);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover { background-color: #003366; }
+button:disabled { background-color: #ccc; }
+
+#skip-btn {
+    background-color: var(--fifa-gold);
+}
+
+#skip-btn:hover {
+    background-color: #a6864a;
+}
+
+#reset-progress-btn {
+    margin-top: 0;
+    background-color: transparent;
+    color: #888;
+    border: 1px solid #444;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+#reset-progress-btn:hover { background-color: #333; color: #ffb3b3; border-color: #666; }
+
+#share-btn {
+    background-color: #28a745;
+}
+
+#share-btn:hover {
+    background-color: #218838;
+}
+
+#message { 
+    font-weight: bold; 
+    padding: 10px; 
+    border-radius: 12px; 
+    min-height: 70px; 
+    margin-top: 15px;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #333;
+    color: #ffffff;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.success { 
+    color: #75f0a3; 
+    background: #004d26; 
+    border: 3px solid var(--fifa-green) !important; 
+    box-shadow: 0 0 25px rgba(0, 143, 76, 0.3);
+}
+.error { 
+    color: #ffb3b3; 
+    background: #4a0e0e; 
+    border: 3px solid #ff4d4d !important; 
+    box-shadow: 0 0 25px rgba(255, 77, 77, 0.3);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.6; }
+}
+
+.pulsing {
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+}
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+    border-color: #ffb3b3 !important;
+}
+
+@keyframes goldPulse {
+    0% { text-shadow: 0 0 5px var(--fifa-gold); transform: scale(1); }
+    50% { text-shadow: 0 0 20px var(--fifa-gold), 0 0 30px var(--fifa-gold); transform: scale(1.05); }
+    100% { text-shadow: 0 0 5px var(--fifa-gold); transform: scale(1); }
+}
+
+.score-indicator.complete {
+    animation: goldPulse 2s infinite ease-in-out;
+    color: #fff;
+    background: rgba(198, 161, 91, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.settings-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.settings-gear {
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s, transform 0.3s ease;
+    user-select: none;
+}
+
+.settings-gear:hover, .settings-gear.active {
+    opacity: 1;
+}
+
+.settings-gear.active {
+    transform: rotate(90deg);
+}
+
+.settings-panel {
+    background: rgba(26, 26, 26, 0.9);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.settings-panel.visible {
+    display: flex;
+}
+
+.control-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 30px;
+    text-align: center;
+}
+
+input[type="range"] {
+    cursor: pointer;
+
+    accent-color: var(--fifa-gold);
+}
+
+p {
+    font-size: 0.9rem;
+    color: #bbb;
+    margin: 0.5rem 0;
+}

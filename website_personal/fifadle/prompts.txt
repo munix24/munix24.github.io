@@ -1,0 +1,53 @@
+How can I add a counter to show the player how many countries they have correctly guessed out of the 48?
+How can I add a button to reset the progress counter and clear localStorage?
+How can I add flag icons next to the revealed country clues?
+Can you add a share button that copies the player's results as emojis to the clipboard?
+sort the datalist alphabetically so it's easier to find countries?
+
+UI
+	make game more mobile friendly and make it only max take up 95 of vw
+
+sound
+	Can you add simple not annoying sound effect for correct and incorrect guesses?
+	
+	make settings gear icon fixed on top right of screen hich is dimmed and toggles visibility of volume control
+		How can I make the settings gear icon stay inside the 95vw body constraint?
+	Add a rotation animation to the gear icon when the settings menu is open
+	volume control contains a sound effects icon when pressed mutes sound effects and slider to control volume
+	add a subtle background music track and music icon when mutes music when pressed and slider to control music volume
+		
+	save the point in the bg music track the player is so if he refreshes the page it loads the song from where it was left off?
+	
+animation:
+	Can you add a visual "shake" animation to the input field when the player makes an incorrect guess?
+	
+	How can I add a celebratory confetti effect when the player guesses correctly
+	How can I make the confetti burst twice if the player guesses on the very first clue?
+	Can you add a special "Completion" animation when the player reaches 48/48 countries?
+	Can you add a custom "Victory" sound effect that only plays when the 48th country is guessed?
+	
+
+progression:
+	show total clues and guesses count left of accuracy
+	count clues average per correct guess
+	show total clues and guesses count left of accuracy
+	How can I add a "Best Average" high score to track the player's peak efficiency?
+	only save bestAverage after all countries are filled otherwise show -
+	How can I add a background color or border to each stat item to make them look like individual badges?
+	Can you add a hover effect to the badges so they glow when I mouse over them?
+	Can you add a tool tip that shows a more detailed description of each stat when hovering over the badges?
+	change color of accuracy badge depending on performance
+
+
+
+Can you suggest how to make the clue list more compact so the game fits on one screen without scrolling?
+
+FIFA color theme?
+Can you add a "Daily Mode" where everyone gets the same country each day based on the date?
+Can you add a visual indicator showing if the average is improving or declining per clue?
+Can you add a chart or distribution showing how many cluess it usually takes players win?
+
+Can you add a visual hint to indicate which clue type is coming next?
+
+Add side panel to the left with which countries are still left to be guessed in alphabetical order
+save bestAverage between games
