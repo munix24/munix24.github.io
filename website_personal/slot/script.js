@@ -18,6 +18,7 @@ let activeDouble = parseInt(localStorage.getItem('slot_activeDouble')) || 0;
 let activeSpeed = parseInt(localStorage.getItem('slot_activeSpeed')) || 0;
 let currentVolume = localStorage.getItem('slot_volume') !== null ? parseFloat(localStorage.getItem('slot_volume')) : 0.5;
 let isMuted = localStorage.getItem('slot_muted') === 'true';
+let isLeverLeft = localStorage.getItem('slot_lever_left') === 'true';
 
 // Sound Effects
 const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
@@ -115,6 +116,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     settingsBtn.addEventListener('click', () => toggleSettings());
     settingsClose.addEventListener('click', () => toggleSettings(false));
+
+    // Lever Handedness Logic
+    const leverToggle = document.getElementById('lever-flip-toggle');
+    const updateLeverMode = () => {
+        document.body.classList.toggle('lever-left', isLeverLeft);
+        if (leverToggle) leverToggle.checked = isLeverLeft;
+        localStorage.setItem('slot_lever_left', isLeverLeft);
+    };
+    if (leverToggle) {
+        leverToggle.addEventListener('change', (e) => {
+            isLeverLeft = e.target.checked;
+            updateLeverMode();
+        });
+    }
+    updateLeverMode();
 
     const toggleSidebar = (isOpen) => {
         sidebar.classList.toggle('open', isOpen);
