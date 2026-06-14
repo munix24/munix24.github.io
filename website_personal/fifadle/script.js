@@ -564,9 +564,7 @@ musicSlider.addEventListener('input', (e) => {
     updateAudioSettings();
 });
 
-musicMuteBtn.addEventListener('click', toggleMusic);
-
-function toggleMusic() {
+musicMuteBtn.addEventListener('click', () => {
     if (musicVolume > 0) {
         preMuteMusic = musicVolume;
         musicVolume = 0;
@@ -576,7 +574,7 @@ function toggleMusic() {
     musicSlider.value = musicVolume;
     localStorage.setItem('fifadle_music_volume', musicVolume);
     updateAudioSettings();
-}
+});
 
 sfxSlider.addEventListener('input', (e) => {
     sfxVolume = parseFloat(e.target.value);
@@ -597,28 +595,8 @@ sfxMuteBtn.addEventListener('click', () => {
     updateAudioSettings();
 });
 
-function updateAudioSettings(event) {
-    if (musicMuteBtn) musicMuteBtn.innerText = musicVolume > 0 ? '🎵' : '🔇';
-    if (sfxMuteBtn) sfxMuteBtn.innerText = sfxVolume > 0 ? '🔊' : '🔇';
-
-    // Determine if the game is actually "Active"
-    const isVisible = document.visibilityState === 'visible';
-    const hasFocus = document.hasFocus();
-    const isBlurred = event?.type === 'blur' || !hasFocus;
-    
-    // Show/Hide Overlay
-    const mutedOverlay = document.getElementById('muted-overlay');
-    if (mutedOverlay) {
-        const showOverlay = (!isVisible || isBlurred) && musicVolume > 0;
-        mutedOverlay.classList.toggle('visible', showOverlay);
-    }
-
-    if (musicVolume === 0 || !isVisible || isBlurred) {
-        bgMusic.pause();
-    } else if (bgMusic.paused && musicVolume > 0) {
-        bgMusic.volume = musicVolume;
-        bgMusic.play().catch(e => console.debug("Playback failed during audio update", e));
-    }
+function updateAudioSettings() {
+    bgMusic.volume = musicVolume;
 }
 
 // Plays a sound effect, resetting it if already playing
@@ -945,12 +923,18 @@ function resetProgress() {
 guessInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') makeGuess(); });
 
 // Automatically submit when a country is selected from the datalist
-guessInput.addEventListener('input', (e) => {
+// Automatically submit when a country is selected from the datalist
+const handleSelection = (e) => {
     const val = e.target.value;
-    if (countries.some(c => c.name === val)) {
+    if (val && countries.some(c => c.name === val)) {
+        // Force blur to ensure selection is committed on mobile and hide keyboard
+        guessInput.blur();
         makeGuess();
     }
-});
+};
+
+guessInput.addEventListener('input', handleSelection);
+guessInput.addEventListener('change', handleSelection);
 
 function shareResults() {
     navigator.clipboard.writeText(lastResultEmoji);
@@ -958,23 +942,15 @@ function shareResults() {
 
 // Background music playback logic
 const startMusic = () => {
-    // Only start if volume is up and window is focused/visible
-    if (musicVolume === 0 || document.visibilityState !== 'visible' || !document.hasFocus()) return;
     bgMusic.play().then(() => {
         // If successful, remove listeners to prevent redundant calls
         document.removeEventListener('click', startMusic);
         document.removeEventListener('keydown', startMusic);
     }).catch(e => console.debug("Autoplay blocked, waiting for interaction", e));
 };
+
 document.addEventListener('click', startMusic);
 document.addEventListener('keydown', startMusic);
-
-// Handle background/foreground state for mobile and browser tabs
-const handleAudioVisibility = (event) => updateAudioSettings(event);
-
-document.addEventListener('visibilitychange', handleAudioVisibility);
-window.addEventListener('blur', handleAudioVisibility);
-window.addEventListener('focus', handleAudioVisibility);
 
 updateAudioSettings();
 startMusic(); // Attempt to play immediately on page load
