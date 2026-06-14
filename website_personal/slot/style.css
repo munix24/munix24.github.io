@@ -435,8 +435,7 @@ h1 {
 /* Sidebar Drawer */
 .side-panels {
     position: fixed;
-    left: 0;
-    transform: translateX(-100%);
+    left: -100%; /* Ensure it's fully hidden regardless of dynamic width */
     top: 0;
     bottom: 0;
     width: 260px;
@@ -445,15 +444,14 @@ h1 {
     background: rgba(10, 10, 10, 0.95);
     border-right: 2px solid var(--gold);
     z-index: 2000;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 20px 2px 2px 2px;
     overflow-y: auto;
     box-shadow: 10px 0 30px rgba(0,0,0,0.8);
-    will-change: transform;
 }
 
 .side-panels.open {
-    transform: translateX(0);
+    left: 0;
 }
 
 .sidebar-overlay {
@@ -466,7 +464,7 @@ h1 {
     z-index: 1999;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
 }
 
@@ -490,7 +488,7 @@ h1 {
     font-size: 0.75rem;
     font-weight: bold;
     letter-spacing: 1px;
-    transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s, padding-left 0.3s;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, padding-left 0.3s;
 }
 
 .settings-toggle-btn {
