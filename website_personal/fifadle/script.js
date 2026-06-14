@@ -564,7 +564,9 @@ musicSlider.addEventListener('input', (e) => {
     updateAudioSettings();
 });
 
-musicMuteBtn.addEventListener('click', () => {
+musicMuteBtn.addEventListener('click', toggleMusic);
+
+function toggleMusic() {
     if (musicVolume > 0) {
         preMuteMusic = musicVolume;
         musicVolume = 0;
@@ -574,7 +576,7 @@ musicMuteBtn.addEventListener('click', () => {
     musicSlider.value = musicVolume;
     localStorage.setItem('fifadle_music_volume', musicVolume);
     updateAudioSettings();
-});
+}
 
 sfxSlider.addEventListener('input', (e) => {
     sfxVolume = parseFloat(e.target.value);
@@ -595,8 +597,28 @@ sfxMuteBtn.addEventListener('click', () => {
     updateAudioSettings();
 });
 
-function updateAudioSettings() {
-    bgMusic.volume = musicVolume;
+function updateAudioSettings(event) {
+    if (musicMuteBtn) musicMuteBtn.innerText = musicVolume > 0 ? '🎵' : '🔇';
+    if (sfxMuteBtn) sfxMuteBtn.innerText = sfxVolume > 0 ? '🔊' : '🔇';
+
+    // Determine if the game is actually "Active"
+    const isVisible = document.visibilityState === 'visible';
+    const hasFocus = document.hasFocus();
+    const isBlurred = event?.type === 'blur' || !hasFocus;
+    
+    // Show/Hide Overlay
+    const mutedOverlay = document.getElementById('muted-overlay');
+    if (mutedOverlay) {
+        const showOverlay = (!isVisible || isBlurred) && musicVolume > 0;
+        mutedOverlay.classList.toggle('visible', showOverlay);
+    }
+
+    if (musicVolume === 0 || !isVisible || isBlurred) {
+        bgMusic.pause();
+    } else if (bgMusic.paused && musicVolume > 0) {
+        bgMusic.volume = musicVolume;
+        bgMusic.play().catch(e => console.debug("Playback failed during audio update", e));
+    }
 }
 
 // Plays a sound effect, resetting it if already playing
@@ -936,6 +958,8 @@ function shareResults() {
 
 // Background music playback logic
 const startMusic = () => {
+    // Only start if volume is up and window is focused/visible
+    if (musicVolume === 0 || document.visibilityState !== 'visible' || !document.hasFocus()) return;
     bgMusic.play().then(() => {
         // If successful, remove listeners to prevent redundant calls
         document.removeEventListener('click', startMusic);
@@ -946,14 +970,11 @@ document.addEventListener('click', startMusic);
 document.addEventListener('keydown', startMusic);
 
 // Handle background/foreground state for mobile and browser tabs
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-        bgMusic.pause();
-    } else if (musicVolume > 0) {
-        // Only resume if the user hasn't muted the music
-        bgMusic.play().catch(e => console.debug("Resume blocked until interaction", e));
-    }
-});
+const handleAudioVisibility = (event) => updateAudioSettings(event);
+
+document.addEventListener('visibilitychange', handleAudioVisibility);
+window.addEventListener('blur', handleAudioVisibility);
+window.addEventListener('focus', handleAudioVisibility);
 
 updateAudioSettings();
 startMusic(); // Attempt to play immediately on page load
