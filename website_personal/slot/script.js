@@ -1,4 +1,4 @@
-// TODO: settings gear?
+// TODO:
 // top panel with stats and paytable
 // bottom panel with game history
 // left panel with power-ups and upgrades

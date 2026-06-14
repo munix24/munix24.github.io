@@ -810,6 +810,15 @@ textarea {
         width: 100% !important;
     }
 
+    .modal-panel {
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: 90% !important;
+        min-width: 280px !important;
+    }
+
     #symbol-panel .panel-content,
     #session-panel .panel-content,
     #powerup-panel,
