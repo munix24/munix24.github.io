@@ -600,11 +600,15 @@ h1 {
     box-shadow: 0 0 15px rgba(0,0,0,0.5);
     width: fit-content;
     position: fixed;
-    top: 20px;
-    right: 62px;
+    top: 20px !important;
+    right: 62px !important;
     z-index: 3000;
+    width: 380px;
     min-width: 320px;
+    max-width: calc(100vw - 80px);
     display: none;
+        /* left: auto !important;
+        transform: none !important; */
 }
 
 .modal-panel.open {
@@ -808,17 +812,6 @@ textarea {
         top: auto !important;
         left: auto !important;
         width: 100% !important;
-    }
-
-    .modal-panel {
-        top: 20px !important;
-        right: 62px !important;
-        left: auto !important;
-        transform: none !important;
-        width: auto !important;
-        max-width: calc(100vw - 80px) !important;
-        width: 380px !important;
-        min-width: 280px !important;
     }
 
     #symbol-panel .panel-content,
