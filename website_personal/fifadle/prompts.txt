@@ -37,17 +37,23 @@ progression:
 	Can you add a hover effect to the badges so they glow when I mouse over them?
 	Can you add a tool tip that shows a more detailed description of each stat when hovering over the badges?
 	change color of accuracy badge depending on performance
+	
+
+Can we add a list of all available and correctly guessed countries to a top panel touch drag from top to show?
+Add side panel to the left with which countries are still left to be guessed in alphabetical order
+	typing in guess-input filters the side panel countries with the substring typed
+	putting focus on guess-input opens side-panel and clicking anywhere besides side-panel closes it
 
 
-
-Can you suggest how to make the clue list more compact so the game fits on one screen without scrolling?
 
 FIFA color theme?
 Can you add a "Daily Mode" where everyone gets the same country each day based on the date?
 Can you add a visual indicator showing if the average is improving or declining per clue?
 Can you add a chart or distribution showing how many cluess it usually takes players win?
+Can you suggest how to make the clue list more compact so the game fits on one screen without scrolling?
 
-Add side panel to the left with which countries are still left to be guessed in alphabetical order
 
 
-in triggerCompletionAnimation display final stats and allow player to start new game
+in triggerCompletionAnimation display summary stats and allow player to start new game
+Can we add a progress bar that fills up as the player completes more countries?
+

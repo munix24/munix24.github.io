@@ -502,11 +502,12 @@ let correctCountries = JSON.parse(localStorage.getItem('fifadle_correct_list')) 
 let totalClues = JSON.parse(localStorage.getItem('fifadle_total_clues')) || 0;
 let bestAverage = parseFloat(localStorage.getItem('fifadle_best_average')) || 0;
 
+// AUDIO
 // Sound state management
-let sfxVolume = localStorage.getItem('fifadle_sfx_volume') !== null ? parseFloat(localStorage.getItem('fifadle_sfx_volume')) : 0.5;
-let musicVolume = localStorage.getItem('fifadle_music_volume') !== null ? parseFloat(localStorage.getItem('fifadle_music_volume')) : 0.2;
-let preMuteSfx = sfxVolume > 0 ? sfxVolume : 0.1;
-let preMuteMusic = musicVolume > 0 ? musicVolume : 0.1;
+let sfxVolume = localStorage.getItem('fifadle_sfx_volume') !== null ? parseFloat(localStorage.getItem('fifadle_sfx_volume')) : 0.1;
+let musicVolume = localStorage.getItem('fifadle_music_volume') !== null ? parseFloat(localStorage.getItem('fifadle_music_volume')) : 0.1;
+let preMuteSfx = sfxVolume > 0;
+let preMuteMusic = musicVolume > 0;
 
 // Background music initialization
 const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3');
@@ -528,7 +529,7 @@ const sounds = {
     // External royalty-free sound effect URLs
     correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
     incorrect: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
-    victory: new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3')
+    victory: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3')
 };
 
 // Settings panel logic
@@ -550,6 +551,10 @@ document.addEventListener('click', (e) => {
     if (!settingsPanel.contains(e.target) && !settingsToggle.contains(e.target)) {
         settingsToggle.classList.remove('active');
         settingsPanel.classList.remove('visible');
+    }
+    // Close side panel when clicking outside of the panel, the toggle, or the input
+    if (!sidePanel.contains(e.target) && !progressToggle.contains(e.target) && !guessInput.contains(e.target)) {
+        sidePanel.classList.remove('open');
     }
 });
 
@@ -635,7 +640,11 @@ const submitBtn = document.getElementById('submit-btn');
 const playAgainBtn = document.getElementById('play-again-btn');
 const shareBtn = document.getElementById('share-btn');
 const skipBtn = document.getElementById('skip-btn');
+const newGameBtn = document.getElementById('new-game-btn');
 const datalist = document.getElementById('countries-list');
+const sidePanel = document.getElementById('side-panel');
+const progressToggle = document.getElementById('progress-toggle');
+const closePanelBtn = document.getElementById('close-panel');
 
 // Populate datalist alphabetically for better UX
 [...countries]
@@ -669,6 +678,34 @@ function updateScoreUI() {
     }
 }
 
+function updateSidePanelList(filterText = '') {
+    const sideList = document.getElementById('side-country-list');
+    if (!sideList) return;
+    sideList.innerHTML = '';
+    
+    const lowerFilter = filterText.toLowerCase();
+
+    [...countries]
+        .filter(c => c.name.toLowerCase().includes(lowerFilter))
+        .sort((a,b) => a.name.localeCompare(b.name))
+        .forEach(c => {
+        const isGuessed = correctCountries.includes(c.name);
+        const div = document.createElement('div');
+        div.className = `side-item ${isGuessed ? 'guessed' : 'pending'}`;
+        div.innerHTML = `
+            <span>${c.name}</span>
+            <span>${isGuessed ? '✔️' : ''}</span>
+        `;
+        div.addEventListener('click', () => {
+            if (guessInput.disabled || isGuessed) return;
+            guessInput.value = c.name;
+            makeGuess();
+            sidePanel.classList.remove('open');
+        });
+        sideList.appendChild(div);
+    });
+}
+
 function getShuffledClueOrder() {
     const order = Array.from({length: clueTypes.length}, (_, i) => i);
     for (let i = order.length - 1; i > 0; i--) {
@@ -690,7 +727,6 @@ function initGame() {
         clueResults = savedClueResults ? JSON.parse(savedClueResults) : new Array(maxClues).fill(null);
         clueOrder = JSON.parse(savedClueOrder);
         totalClues = JSON.parse(localStorage.getItem('fifadle_total_clues')) || 0;
-        updateScoreUI();
     } else {
         currentClue = 0;
         clueResults = new Array(maxClues).fill(null);
@@ -714,12 +750,26 @@ function initGame() {
     messageDiv.innerText = '???';
     guessInput.value = '';
     guessInput.disabled = false;
+    guessInput.style.display = 'inline-block';
     submitBtn.style.display = 'inline-block';
-    playAgainBtn.style.display = 'none';
     skipBtn.style.display = 'inline-block';
+    playAgainBtn.style.display = 'none';
+    if (newGameBtn) newGameBtn.style.display = 'none';
+
+    const isComplete = correctCountries.length >= countries.length;
+    if (isComplete) {
+        guessInput.style.display = 'none';
+        submitBtn.style.display = 'none';
+        skipBtn.style.display = 'none';
+        triggerCompletionAnimation();
+    } else {
+        scoreIndicator.classList.remove('complete');
+    }
     
     renderClues();
     updateCluesUI();
+    updateScoreUI();
+    updateSidePanelList();
 }
 
 function renderClues() {
@@ -783,6 +833,7 @@ function makeGuess() {
             renderClues();
             updateCluesUI();
             guessInput.value = '';
+            updateSidePanelList();
         } else {
             endGame(false);
         }
@@ -801,6 +852,7 @@ function skipClue() {
         renderClues();
         updateCluesUI();
         guessInput.value = '';
+        updateSidePanelList();
     } else {
         clueResults[currentClue] = 'skipped';
         renderClues();
@@ -809,11 +861,12 @@ function skipClue() {
 }
 
 function endGame(isWin) {
-    const winClue = currentClue;
     guessInput.disabled = true;
+    guessInput.style.display = 'none';
     submitBtn.style.display = 'none';
-    playAgainBtn.style.display = 'block';
     skipBtn.style.display = 'none';
+    playAgainBtn.style.display = 'block';
+    if (newGameBtn) newGameBtn.style.display = 'none';
     currentClue = maxClues - 1;
     renderClues();
     updateCluesUI();
@@ -835,15 +888,19 @@ function endGame(isWin) {
     }
 
     // Update correct countries list and localStorage even if didnt win
-    correctCountries.push(currentCountry.name);
-    localStorage.setItem('fifadle_correct_list', JSON.stringify(correctCountries));
-    updateScoreUI();
+    if (!correctCountries.includes(currentCountry.name)) {
+        correctCountries.push(currentCountry.name);
+        localStorage.setItem('fifadle_correct_list', JSON.stringify(correctCountries));
+        updateScoreUI();
+        updateSidePanelList();
+    }
 
     // Check for total tournament completion (48/48)
-    if (correctCountries.length === countries.length) {
+    if (correctCountries.length >= countries.length) {
         triggerCompletionAnimation();
     }
 
+    const winClue = currentClue;
     lastResultEmoji = generateShareEmoji(isWin, winClue);
     messageDiv.innerHTML = `${currentCountry.name} <span style="font-size: 2.2rem; margin-left: 10px;">${currentCountry.flag}</span>`;
     messageDiv.className = isWin ? 'success' : 'error';
@@ -858,7 +915,15 @@ function triggerCompletionAnimation() {
         updateScoreUI();
     }
         
-    const isComplete = correctCountries.length === countries.length;
+    // Show "New Game" button instead of "Next Country" on tournament completion
+    guessInput.disabled = true;
+    guessInput.style.display = 'none';
+    submitBtn.style.display = 'none';
+    skipBtn.style.display = 'none';
+    if (playAgainBtn) playAgainBtn.style.display = 'none';
+    if (newGameBtn) newGameBtn.style.display = 'block';
+
+    const isComplete = correctCountries.length >= countries.length;
     if (isComplete) scoreIndicator.classList.add('complete');
     else scoreIndicator.classList.remove('complete');
 
@@ -901,7 +966,7 @@ function generateShareEmoji(isWin, winClue) {
     return `Fifadle 2026 🏆\n${isWin ? (winClue + 1) : 'X'}/${maxClues}\n${emojiRow}\nhttps://your-website.com`;
 }
 
-function newGame() {
+function resetGame(resetProgress = false) {
     if (confirm("Are you sure you want to reset current game progress? This cannot be undone.")) {
         localStorage.removeItem('fifadle_correct_list');
         localStorage.removeItem('fifadle_total_clues');
@@ -909,28 +974,39 @@ function newGame() {
         localStorage.removeItem('fifadle_saved_current_clue_index');
         localStorage.removeItem('fifadle_clue_results');
         localStorage.removeItem('fifadle_clue_order');
+        if (resetProgress) {
+            localStorage.removeItem('fifadle_best_average');
+            bestAverage = 0;
+        }
         correctCountries = [];
         totalClues = 0;
         updateScoreUI();
+        updateSidePanelList();
         initGame();
         settingsToggle.classList.remove('active');
         settingsPanel.classList.remove('visible');
     }
 }
 
-function resetProgress() {
-    if (confirm("Are you sure you want to reset all your progress? This cannot be undone.")) {
-        localStorage.removeItem('fifadle_correct_list');
-        localStorage.removeItem('fifadle_total_clues');
+function testCompletion() {
+    if (confirm("Debug: Set progress to 47/48 countries?")) {
+        // Fill progress with the first 47 countries in the list
+        correctCountries = countries.slice(0, 47).map(c => c.name);
+        localStorage.setItem('fifadle_correct_list', JSON.stringify(correctCountries));
+        
+        // Set total clues so the average looks realistic (e.g., 3 clues per country)
+        totalClues = 47 * 3;
+        localStorage.setItem('fifadle_total_clues', totalClues);
+
+        // Clear current session to force the game to pick the 48th country
         localStorage.removeItem('fifadle_saved_current_country_name');
         localStorage.removeItem('fifadle_saved_current_clue_index');
         localStorage.removeItem('fifadle_clue_results');
         localStorage.removeItem('fifadle_clue_order');
-        localStorage.removeItem('fifadle_best_average');
-        correctCountries = [];
-        totalClues = 0;
+
         updateScoreUI();
         initGame();
+        
         settingsToggle.classList.remove('active');
         settingsPanel.classList.remove('visible');
     }
@@ -938,9 +1014,14 @@ function resetProgress() {
 
 guessInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') makeGuess(); });
 
+// Open side panel when input is focused
+guessInput.addEventListener('focus', () => { sidePanel.classList.add('open'); });
+
 // Automatically submit when a country is selected from the datalist
 guessInput.addEventListener('input', (e) => {
     const val = e.target.value;
+    updateSidePanelList(val);
+
     if (countries.some(c => c.name === val)) {
         makeGuess();
     }
@@ -965,27 +1046,43 @@ document.addEventListener('click', startMusic);
 document.addEventListener('keydown', startMusic);
 
 // Handle window focus and visibility to mute music and show pause overlay
-window.addEventListener('blur', () => {
-    updateAudioSettings();
-});
-
-window.addEventListener('focus', () => {
-    updateAudioSettings();
-});
-
 document.addEventListener('visibilitychange', updateAudioSettings);
+window.addEventListener('blur', () => {updateAudioSettings();});
+window.addEventListener('focus', () => {updateAudioSettings();});
 
 // Handle mouse leaving and entering the application window
-document.addEventListener('mouseleave', () => {
-    bgMusic.pause();
-});
-
+document.addEventListener('mouseleave', () => {bgMusic.pause();});
 document.addEventListener('mouseenter', () => {
     if (musicVolume > 0 && document.visibilityState === 'visible' && document.hasFocus()) {
         bgMusic.play().catch(e => console.debug("Playback failed on enter", e));
     }
 });
 
+// Swipe Logic for Side Panel
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+document.addEventListener('touchend', e => {
+    const touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    const fromRightEdge = touchStartX > window.innerWidth - 60;
+
+    if (fromRightEdge && diff > 50) {
+        sidePanel.classList.add('open');
+    } else if (diff < -50 && sidePanel.classList.contains('open')) {
+        sidePanel.classList.remove('open');
+    }
+}, { passive: true });
+
+if (closePanelBtn) {
+    closePanelBtn.addEventListener('click', () => sidePanel.classList.remove('open'));
+}
+
+if (progressToggle) {
+    progressToggle.addEventListener('click', () => {
+        sidePanel.classList.toggle('open');
+    });
+}
+
 updateAudioSettings();
-startMusic(); // Attempt to play immediately on page load
+startMusic(); 
 initGame();
