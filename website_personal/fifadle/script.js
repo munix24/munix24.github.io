@@ -6,8 +6,9 @@ const clueTypes = [
     { key: 'capital', label: 'Capital', icon: '🏛️' },
     { key: 'star', label: 'Star', icon: '⭐' },
     { key: 'fifaRank', label: 'Rank', icon: '📈' },
+    { key: 'nickname', label: 'Nickname', icon: '🗣️' },
     { key: 'history', label: 'WC History', icon: '🏆' },
-    { key: 'fact', label: '', icon: '' },
+    { key: 'fact', label: 'Fact', icon: '💡' },
     { key: 'flag', label: 'Flag', icon: '🏁' }
 ];
 
@@ -726,7 +727,7 @@ document.addEventListener('mouseenter', () => {
 function validateCountriesData(data) {
     if (!Array.isArray(data) || data.length === 0) return false;
 
-    const requiredKeys = ['name', 'flag', 'continent', 'colors', 'capital', 'star', 'fifaRank', 'fact', 'history'];
+    const requiredKeys = ['name', 'flag', 'continent', 'colors', 'capital', 'star', 'fifaRank', 'fact', 'history', 'nickname'];
     return data.every(c => 
         requiredKeys.every(key => c[key] !== undefined && c[key] !== null)
     );

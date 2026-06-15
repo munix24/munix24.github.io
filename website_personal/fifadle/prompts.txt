@@ -54,8 +54,6 @@ progression:
 	Can you add a tool tip that shows a more detailed description of each stat when hovering over the badges?
 	add a badge counter for correct, accuracy (correct/countries) and best accuracy
 	change color of accuracy badge depending on performance
-	
-
 
 
 
@@ -73,3 +71,8 @@ Can we add a progress bar that fills up as the player completes more countries?
 
 Can you add a "Daily Mode" where everyone gets the same country each day based on the date?
 Can you add a chart or distribution showing how many clues it usually takes players win?
+
+
+
+generate new fact for Mali, Algeria, Poland, Ecuador, Austria, Switzerland, Senegal, Colombia, Germany, England, USA to be more distinguishable
+separate mode to not randomize clues

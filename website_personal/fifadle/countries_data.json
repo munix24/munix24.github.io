@@ -8,7 +8,8 @@
         "star": "Lionel Messi",
         "fifaRank": "1",
         "fact": "Defending 2022 Champions",
-        "history": "Appearances: 18 | Titles: 3"
+        "history": "Appearances: 18 | Titles: 3",
+        "nickname": "La Albiceleste"
     },
     { 
         "name": "France", 
@@ -19,7 +20,8 @@
         "star": "Kylian Mbappé",
         "fifaRank": "2",
         "fact": "2018 World Cup Winners",
-        "history": "Appearances: 16 | Titles: 2"
+        "history": "Appearances: 16 | Titles: 2",
+        "nickname": "Les Bleus"
     },
     { 
         "name": "USA", 
@@ -30,7 +32,8 @@
         "star": "Christian Pulisic",
         "fifaRank": "11",
         "fact": "One of the three 2026 host nations",
-        "history": "Appearances: 11 | Titles: 0"
+        "history": "Appearances: 11 | Titles: 0",
+        "nickname": "The Stars and Stripes"
     },
     { 
         "name": "Morocco", 
@@ -40,8 +43,9 @@
         "capital": "Rabat",
         "star": "Achraf Hakimi",
         "fifaRank": "13",
-        "fact": "First African team to reach a WC semi-final",
-        "history": "Appearances: 6 | Titles: 0"
+        "fact": "First African team to reach a WC semi-final in 2022",
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "The Atlas Lions"
     },
     { 
         "name": "Japan", 
@@ -51,8 +55,9 @@
         "capital": "Tokyo",
         "star": "Takefusa Kubo",
         "fifaRank": "18",
-        "fact": "Known as the Samurai Blue",
-        "history": "Appearances: 7 | Titles: 0"
+        "fact": "First Asian team to defeat a South American country at a World Cup (2018).",
+        "history": "Appearances: 7 | Titles: 0",
+        "nickname": "Samurai Blue"
     },
     { 
         "name": "Brazil", 
@@ -63,7 +68,8 @@
         "star": "Vinícius Júnior",
         "fifaRank": "5",
         "fact": "Only team to play in every World Cup",
-        "history": "Appearances: 22 | Titles: 5"
+        "history": "Appearances: 22 | Titles: 5",
+        "nickname": "Seleção"
     },
     { 
         "name": "England", 
@@ -74,7 +80,8 @@
         "star": "Harry Kane",
         "fifaRank": "4",
         "fact": "Winners of the 1966 World Cup",
-        "history": "Appearances: 16 | Titles: 1"
+        "history": "Appearances: 16 | Titles: 1",
+        "nickname": "The Three Lions"
     },
     { 
         "name": "Belgium", 
@@ -84,8 +91,9 @@
         "capital": "Brussels",
         "star": "Kevin De Bruyne",
         "fifaRank": "3",
-        "fact": "Known as the Red Devils",
-        "history": "Appearances: 14 | Titles: 0"
+        "fact": "Held the #1 FIFA world ranking for over three consecutive years (2018-2021).",
+        "history": "Appearances: 14 | Titles: 0",
+        "nickname": "The Red Devils"
     },
     { 
         "name": "Portugal", 
@@ -96,7 +104,8 @@
         "star": "Cristiano Ronaldo",
         "fifaRank": "6",
         "fact": "Winners of Euro 2016",
-        "history": "Appearances: 8 | Titles: 0"
+        "history": "Appearances: 8 | Titles: 0",
+        "nickname": "Os Navegadores"
     },
     { 
         "name": "Netherlands", 
@@ -106,8 +115,9 @@
         "capital": "Amsterdam",
         "star": "Virgil van Dijk",
         "fifaRank": "7",
-        "fact": "Three-time World Cup runners-up",
-        "history": "Appearances: 11 | Titles: 0"
+        "fact": "Three-time World Cup runners-up and zero wins",
+        "history": "Appearances: 11 | Titles: 0",
+        "nickname": "Oranje"
     },
     { 
         "name": "Spain", 
@@ -118,7 +128,8 @@
         "star": "Rodri",
         "fifaRank": "8",
         "fact": "Winners of the 2010 World Cup",
-        "history": "Appearances: 16 | Titles: 1"
+        "history": "Appearances: 16 | Titles: 1",
+        "nickname": "La Roja"
     },
     { 
         "name": "Croatia", 
@@ -129,7 +140,8 @@
         "star": "Luka Modrić",
         "fifaRank": "10",
         "fact": "Runners-up in the 2018 World Cup",
-        "history": "Appearances: 6 | Titles: 0"
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Kockasti"
     },
     { 
         "name": "Germany", 
@@ -140,7 +152,8 @@
         "star": "Florian Wirtz",
         "fifaRank": "16",
         "fact": "Won their 4th title in 2014",
-        "history": "Appearances: 20 | Titles: 4"
+        "history": "Appearances: 20 | Titles: 4",
+        "nickname": "Nationalelf"
     },
     { 
         "name": "Mexico", 
@@ -151,7 +164,8 @@
         "star": "Santiago Giménez",
         "fifaRank": "15",
         "fact": "First country to host three World Cups",
-        "history": "Appearances: 17 | Titles: 0"
+        "history": "Appearances: 17 | Titles: 0",
+        "nickname": "El Tri"
     },
     { 
         "name": "Uruguay", 
@@ -162,7 +176,8 @@
         "star": "Federico Valverde",
         "fifaRank": "14",
         "fact": "Winners of the first ever World Cup",
-        "history": "Appearances: 14 | Titles: 2"
+        "history": "Appearances: 14 | Titles: 2",
+        "nickname": "La Celeste"
     },
     { 
         "name": "Colombia", 
@@ -173,7 +188,8 @@
         "star": "Luis Díaz",
         "fifaRank": "12",
         "fact": "Reached the quarter-finals in 2014",
-        "history": "Appearances: 6 | Titles: 0"
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Los Cafeteros"
     },
     { 
         "name": "Senegal", 
@@ -184,7 +200,8 @@
         "star": "Sadio Mané",
         "fifaRank": "17",
         "fact": "Current AFCON heavyweights",
-        "history": "Appearances: 3 | Titles: 0"
+        "history": "Appearances: 3 | Titles: 0",
+        "nickname": "Les Lions de la Teranga"
     },
     { 
         "name": "Switzerland", 
@@ -195,7 +212,8 @@
         "star": "Granit Xhaka",
         "fifaRank": "19",
         "fact": "Regularly reach the Round of 16",
-        "history": "Appearances: 12 | Titles: 0"
+        "history": "Appearances: 12 | Titles: 0",
+        "nickname": "Nati"
     },
     { 
         "name": "Iran", 
@@ -206,7 +224,8 @@
         "star": "Mehdi Taremi",
         "fifaRank": "20",
         "fact": "Highest ranked team in Central Asia",
-        "history": "Appearances: 6 | Titles: 0"
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Team Melli"
     },
     { 
         "name": "Denmark", 
@@ -217,7 +236,8 @@
         "star": "Christian Eriksen",
         "fifaRank": "21",
         "fact": "Euro 1992 surprise winners",
-        "history": "Appearances: 6 | Titles: 0"
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "De Rød-Hvide"
     },
     { 
         "name": "South Korea", 
@@ -228,7 +248,8 @@
         "star": "Son Heung-min",
         "fifaRank": "23",
         "fact": "Semi-finalists in 2002",
-        "history": "Appearances: 11 | Titles: 0"
+        "history": "Appearances: 11 | Titles: 0",
+        "nickname": "Taegeuk Warriors"
     },
     { 
         "name": "Australia", 
@@ -238,8 +259,9 @@
         "capital": "Canberra",
         "star": "Mathew Ryan",
         "fifaRank": "24",
-        "fact": "Known as the Socceroos",
-        "history": "Appearances: 6 | Titles: 0"
+        "fact": "Hold the record for the largest win in an international match (31-0).",
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Socceroos"
     },
     { 
         "name": "Uzbekistan", 
@@ -250,7 +272,8 @@
         "star": "Eldor Shomurodov",
         "fifaRank": "64",
         "fact": "Strong contenders for their first ever WC debut in 2026.",
-        "history": "Appearances: 0 | Titles: 0"
+        "history": "Appearances: 0 | Titles: 0",
+        "nickname": "White Wolves"
     },
     { 
         "name": "Austria", 
@@ -261,7 +284,8 @@
         "star": "David Alaba",
         "fifaRank": "25",
         "fact": "Finished 3rd in 1954",
-        "history": "Appearances: 7 | Titles: 0"
+        "history": "Appearances: 7 | Titles: 0",
+        "nickname": "Das Team"
     },
     { 
         "name": "Nigeria", 
@@ -271,8 +295,9 @@
         "capital": "Abuja",
         "star": "Victor Osimhen",
         "fifaRank": "30",
-        "fact": "Known as the Super Eagles",
-        "history": "Appearances: 6 | Titles: 0"
+        "fact": "The first African nation to win Olympic Gold in football (1996).",
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Super Eagles"
     },
     { 
         "name": "Canada", 
@@ -283,7 +308,8 @@
         "star": "Alphonso Davies",
         "fifaRank": "49",
         "fact": "Co-host making their 3rd appearance",
-        "history": "Appearances: 2 | Titles: 0"
+        "history": "Appearances: 2 | Titles: 0",
+        "nickname": "Les Rouges"
     },
     { 
         "name": "Egypt", 
@@ -294,7 +320,8 @@
         "star": "Mohamed Salah",
         "fifaRank": "36",
         "fact": "Most AFCON titles in history",
-        "history": "Appearances: 3 | Titles: 0"
+        "history": "Appearances: 3 | Titles: 0",
+        "nickname": "The Pharaohs"
     },
     { 
         "name": "Ecuador", 
@@ -305,7 +332,8 @@
         "star": "Enner Valencia",
         "fifaRank": "31",
         "fact": "Played the opening match in 2022",
-        "history": "Appearances: 4 | Titles: 0"
+        "history": "Appearances: 4 | Titles: 0",
+        "nickname": "La Tri"
     },
     { 
         "name": "Serbia", 
@@ -316,7 +344,8 @@
         "star": "Dušan Vlahović",
         "fifaRank": "33",
         "fact": "Successor to the Yugoslavia team",
-        "history": "Appearances: 13 | Titles: 0"
+        "history": "Appearances: 13 | Titles: 0",
+        "nickname": "Orlovi"
     },
     { 
         "name": "DR Congo", 
@@ -327,7 +356,8 @@
         "star": "Chancel Mbemba",
         "fifaRank": "61",
         "fact": "Looking to return to the world stage for the first time since 1974.",
-        "history": "Appearances: 1 | Titles: 0"
+        "history": "Appearances: 1 | Titles: 0",
+        "nickname": "The Leopards"
     },
     { 
         "name": "Scotland", 
@@ -338,7 +368,8 @@
         "star": "Andrew Robertson",
         "fifaRank": "39",
         "fact": "Played in the first ever international match",
-        "history": "Appearances: 8 | Titles: 0"
+        "history": "Appearances: 8 | Titles: 0",
+        "nickname": "The Tartan Army"
     },
     { 
         "name": "Poland", 
@@ -349,7 +380,8 @@
         "star": "Robert Lewandowski",
         "fifaRank": "28",
         "fact": "Finished 3rd in 1974 and 1982",
-        "history": "Appearances: 9 | Titles: 0"
+        "history": "Appearances: 9 | Titles: 0",
+        "nickname": "Biało-czerwoni"
     },
     { 
         "name": "Algeria", 
@@ -360,7 +392,8 @@
         "star": "Riyad Mahrez",
         "fifaRank": "43",
         "fact": "Beat West Germany in 1982",
-        "history": "Appearances: 4 | Titles: 0"
+        "history": "Appearances: 4 | Titles: 0",
+        "nickname": "Les Fennecs"
     },
     { 
         "name": "Tunisia", 
@@ -371,7 +404,8 @@
         "star": "Ellyes Skhiri",
         "fifaRank": "41",
         "fact": "First African team to win a WC match (1978)",
-        "history": "Appearances: 6 | Titles: 0"
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Les Aigles de Carthage"
     },
     { 
         "name": "Paraguay", 
@@ -381,8 +415,9 @@
         "capital": "Asunción",
         "star": "Miguel Almirón",
         "fifaRank": "56",
-        "fact": "Reached the quarter-finals in 2010.",
-        "history": "Appearances: 8 | Titles: 0"
+        "fact": "Last appearance reached the quarter-finals in 2010.",
+        "history": "Appearances: 8 | Titles: 0",
+        "nickname": "Los Guaraníes"
     },
     { 
         "name": "Turkey", 
@@ -393,7 +428,8 @@
         "star": "Hakan Çalhanoğlu",
         "fifaRank": "40",
         "fact": "Finished 3rd in 2002",
-        "history": "Appearances: 2 | Titles: 0"
+        "history": "Appearances: 2 | Titles: 0",
+        "nickname": "Ay-Yıldızlılar"
     },
     { 
         "name": "South Africa", 
@@ -404,7 +440,8 @@
         "star": "Percy Tau",
         "fifaRank": "59",
         "fact": "The first African nation to host a World Cup (2010).",
-        "history": "Appearances: 3 | Titles: 0"
+        "history": "Appearances: 3 | Titles: 0",
+        "nickname": "Bafana Bafana"
     },
     { 
         "name": "Jordan", 
@@ -415,7 +452,8 @@
         "star": "Musa Al-Taamari",
         "fifaRank": "71",
         "fact": "Reached the 2023 Asian Cup Final, making them favorites to qualify.",
-        "history": "Appearances: 0 | Titles: 0"
+        "history": "Appearances: 0 | Titles: 0",
+        "nickname": "The Chivalrous"
     },
     { 
         "name": "Cameroon", 
@@ -426,7 +464,8 @@
         "star": "Vincent Aboubakar",
         "fifaRank": "51",
         "fact": "First African quarter-finalists (1990)",
-        "history": "Appearances: 8 | Titles: 0"
+        "history": "Appearances: 8 | Titles: 0",
+        "nickname": "Indomitable Lions"
     },
     { 
         "name": "Mali", 
@@ -437,7 +476,8 @@
         "star": "Yves Bissouma",
         "fifaRank": "44",
         "fact": "Consistent performers in youth WCs",
-        "history": "Appearances: 0 | Titles: 0"
+        "history": "Appearances: 0 | Titles: 0",
+        "nickname": "Les Aigles"
     },
     { 
         "name": "Ghana", 
@@ -447,8 +487,9 @@
         "capital": "Accra",
         "star": "Mohammed Kudus",
         "fifaRank": "68",
-        "fact": "Known as the Black Stars",
-        "history": "Appearances: 4 | Titles: 0"
+        "fact": "Nearly became the first African semi-finalists in 2010.",
+        "history": "Appearances: 4 | Titles: 0",
+        "nickname": "Black Stars"
     },
     { 
         "name": "Haiti", 
@@ -458,8 +499,9 @@
         "capital": "Port-au-Prince",
         "star": "Duckens Nazon",
         "fifaRank": "90",
-        "fact": "Participated in the 1974 World Cup.",
-        "history": "Appearances: 1 | Titles: 0"
+        "fact": "Last participated in the 1974 World Cup.",
+        "history": "Appearances: 1 | Titles: 0",
+        "nickname": "Les Grenadiers"
     },
     { 
         "name": "Costa Rica", 
@@ -470,7 +512,8 @@
         "star": "Keylor Navas",
         "fifaRank": "52",
         "fact": "Reached the quarter-finals in 2014",
-        "history": "Appearances: 6 | Titles: 0"
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Los Ticos"
     },
     { 
         "name": "New Zealand", 
@@ -481,7 +524,8 @@
         "star": "Chris Wood",
         "fifaRank": "107",
         "fact": "Only undefeated team in 2010 WC",
-        "history": "Appearances: 2 | Titles: 0"
+        "history": "Appearances: 2 | Titles: 0",
+        "nickname": "All Whites"
     },
     { 
         "name": "Qatar", 
@@ -492,7 +536,8 @@
         "star": "Akram Afif",
         "fifaRank": "34",
         "fact": "Hosts of the 2022 World Cup",
-        "history": "Appearances: 1 | Titles: 0"
+        "history": "Appearances: 1 | Titles: 0",
+        "nickname": "The Maroons"
     },
     { 
         "name": "Iraq", 
@@ -503,7 +548,8 @@
         "star": "Aymen Hussein",
         "fifaRank": "58",
         "fact": "Asian Cup winners in 2007",
-        "history": "Appearances: 1 | Titles: 0"
+        "history": "Appearances: 1 | Titles: 0",
+        "nickname": "Lions of Mesopotamia"
     },
     { 
         "name": "Curacao", 
@@ -514,7 +560,8 @@
         "star": "Leandro Bacuna",
         "fifaRank": "91",
         "fact": "A rising power in the CONCACAF region.",
-        "history": "Appearances: 0 | Titles: 0"
+        "history": "Appearances: 0 | Titles: 0",
+        "nickname": "La Familia Azul"
     },
     { 
         "name": "Saudi Arabia", 
@@ -525,6 +572,7 @@
         "star": "Salem Al-Dawsari",
         "fifaRank": "53",
         "fact": "Beat Argentina in 2022",
-        "history": "Appearances: 6 | Titles: 0"
+        "history": "Appearances: 6 | Titles: 0",
+        "nickname": "Green Falcons"
     }
 ]
