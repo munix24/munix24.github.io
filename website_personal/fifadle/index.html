@@ -56,18 +56,17 @@
     <button id="share-btn" style="margin-top:8px; width:100%; display:none;" onclick="shareResults()">Share Result 📋</button>
 
     <div class="input-group" id="controls">
-        <input type="text" id="guess-input" placeholder="Enter country name..." list="countries-list">
+        <input type="text" id="guess-input" placeholder="Enter country..." list="countries-list">
         <datalist id="countries-list"></datalist>
         <button onclick="makeGuess()" id="submit-btn">Submit</button>
         <button onclick="skipClue()" id="skip-btn" style="padding: 12px 6px;">Skip Clue</button>
         <button onclick="initGame()" id="play-again-btn" style="display:none; width:100%;">Next Country</button>
-        <button onclick="resetGame()" id="new-game-btn" style="display:none; width:100%;">New Game</button>
+        <button onclick="resetGame(false, false)" id="new-game-btn" style="display:none; width:100%;">New Game</button>
     </div>
 
     <div id="side-panel" class="side-panel">
         <div class="side-panel-header">
             <h3>48 / 48</h3>
-            <span id="close-panel" class="close-icon">&times;</span>
         </div>
         <div id="side-country-list" class="side-country-list"></div>
     </div>

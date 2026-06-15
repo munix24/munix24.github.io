@@ -505,6 +505,8 @@ let totalClues = JSON.parse(localStorage.getItem('fifadle_total_clues')) || 0;
 let bestAverage = parseFloat(localStorage.getItem('fifadle_best_average')) || 0;
 let winCount = parseInt(localStorage.getItem('fifadle_win_count')) || 0;
 let bestAccuracy = parseFloat(localStorage.getItem('fifadle_best_accuracy')) || 0;
+let isRoundOver = false;
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 const clueContainer = document.getElementById('clue-container');
 const clueText = document.getElementById('clue-text');
@@ -576,18 +578,17 @@ function initGame() {
     messageDiv.className = 'pulsing';
     messageDiv.innerText = '???';
     guessInput.value = '';
+    isRoundOver = false;
+    guessInput.readOnly = isMobile; // Disable typing on mobile to encourage using the datalist
     guessInput.disabled = false;
     guessInput.style.display = 'inline-block';
-    submitBtn.style.display = 'inline-block';
+    submitBtn.style.display = isMobile ? 'none' : 'inline-block';
     skipBtn.style.display = 'inline-block';
     playAgainBtn.style.display = 'none';
     if (newGameBtn) newGameBtn.style.display = 'none';
 
     const isComplete = correctCountries.length >= countries.length;
     if (isComplete) {
-        guessInput.style.display = 'none';
-        submitBtn.style.display = 'none';
-        skipBtn.style.display = 'none';
         triggerCompletionAnimation();
     } else {
         scoreIndicator.classList.remove('complete');
@@ -611,7 +612,6 @@ function getShuffledClueOrder() {
 }
 
 function renderClues() {
-    const isGameOver = guessInput.disabled;
     clueContainer.innerHTML = '';
     for (let i = 0; i < maxClues; i++) {
         const div = document.createElement('div');
@@ -623,7 +623,7 @@ function renderClues() {
         // status should be already set to 'correct' / 'incorrect' / 'skipped' 
         const status = clueResults[i];
         // default to initial - no class if not revealed or game is over
-        const statusClass = status || (i <= currentClue ? (isGameOver ? '' : 'initial') : '');  
+        const statusClass = status || (i <= currentClue ? (isRoundOver ? '' : 'initial') : '');  
         div.className += `${statusClass}`;
         
         const clue = clueTypes[clueOrder[i]];
@@ -761,7 +761,7 @@ function updateSidePanelList(filterText = '') {
             div.innerHTML = `<span>${c.name}</span><span>${isGuessed ? '✔️' : ''}</span>`;
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (guessInput.disabled || isGuessed) return;
+                if (isRoundOver || isGuessed) return;
                 guessInput.value = c.name;
                 makeGuess();
             });
@@ -824,6 +824,7 @@ function skipClue() {
 }
 
 function endGame(isWin) {
+    isRoundOver = true;
     // Add clues revealed this round to the total tournament count
     totalClues += (currentClue + 1);    // add 1 since currentClue is 0-indexed
     localStorage.setItem('fifadle_total_clues', totalClues);
@@ -877,6 +878,7 @@ function endGame(isWin) {
 }
 
 function triggerCompletionAnimation() {
+    isRoundOver = true;
     // Set best average upon completion
     const currentAvg = totalClues / countries.length;
     if (bestAverage === 0 || currentAvg < bestAverage) {
@@ -947,8 +949,8 @@ function shareResults() {
     navigator.clipboard.writeText(lastResultEmoji);
 }
 
-function resetGame(resetProgress = false) {
-    if (confirm("Are you sure you want to reset current game progress? This cannot be undone.")) {
+function resetGame(resetProgress = false, confirmation = true) {
+    if (!confirmation || confirm("Are you sure you want to reset current game progress? This cannot be undone.")) {
         localStorage.removeItem('fifadle_correct_list');
         localStorage.removeItem('fifadle_total_clues');
         localStorage.removeItem('fifadle_saved_current_country_name');
@@ -984,8 +986,8 @@ function testCompletion() {
         winCount = 40;
         localStorage.setItem('fifadle_win_count', winCount);
         
-        // Set total clues so the average looks realistic (e.g., 3 clues per country)
-        totalClues = 47 * 3;
+        // Set total clues so the average looks realistic (e.g., 6 clues per country)
+        totalClues = 47 * 6;
         localStorage.setItem('fifadle_total_clues', totalClues);
 
         // Auto-collapse completed continents
@@ -1021,7 +1023,7 @@ document.addEventListener('keydown', (e) => {
         } 
         // Priority 2: New Game (at 48/48)
         else if (newGameBtn && newGameBtn.style.display !== 'none') {
-            resetGame();
+            resetGame(false, false);
         }
         // Priority 3: Skip Clue (active gameplay)
         else if (skipBtn && skipBtn.style.display !== 'none') {
@@ -1033,6 +1035,7 @@ document.addEventListener('keydown', (e) => {
 guessInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') makeGuess(); });
 
 // Open side panel when input is focused
+messageDiv.addEventListener('click', () => { sidePanel.classList.add('open'); });
 guessInput.addEventListener('focus', () => { sidePanel.classList.add('open'); });
 
 // Automatically submit when a country is selected from the datalist
@@ -1105,7 +1108,7 @@ document.addEventListener('click', (e) => {
         settingsPanel.classList.remove('visible');
     }
     // Close side panel when clicking outside of the panel, the toggle, or the input
-    if (!sidePanel.contains(e.target) && !guessInput.contains(e.target)) {
+    if (!sidePanel.contains(e.target) && !guessInput.contains(e.target) && !messageDiv.contains(e.target)) {
         sidePanel.classList.remove('open');
     }
 });

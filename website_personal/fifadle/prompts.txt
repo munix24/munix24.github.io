@@ -61,11 +61,15 @@ progression:
 
 
 FIFA color theme?
-Can you add a "Daily Mode" where everyone gets the same country each day based on the date?
-Can you add a chart or distribution showing how many cluess it usually takes players win?
+Can you add a leaderboard?
 Can you suggest how to make the clue list more compact so the game fits on one screen without scrolling?
 
 
 
 in triggerCompletionAnimation display summary stats and allow player to start new game
 Can we add a progress bar that fills up as the player completes more countries?
+
+
+
+Can you add a "Daily Mode" where everyone gets the same country each day based on the date?
+Can you add a chart or distribution showing how many clues it usually takes players win?
