@@ -344,7 +344,7 @@ function endGame(isWin) {
     skipBtn.style.display = 'none';
     playAgainBtn.style.display = 'block';
     if (newGameBtn) newGameBtn.style.display = 'none';
-    currentClue = maxClues - 1;
+    // currentClue = maxClues - 1;
     renderClues();
     updateCluesUI();
     localStorage.removeItem('fifadle_saved_current_country_name');
