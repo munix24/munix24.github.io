@@ -222,7 +222,7 @@ const countries = [
     { 
         name: "Australia", 
         flag: "🇦🇺",
-        continent: "Oceania/Asia",
+        continent: "Oceania",
         colors: "Gold and Green",
         capital: "Canberra",
         star: "Mathew Ryan",
@@ -497,6 +497,8 @@ const maxClues = 6;
 let lastResultEmoji = "";
 let clueResults = [];
 let clueOrder = [];
+// State to track collapsed continents in the side panel
+let collapsedContinents = new Set();
 // Try to load from the new key, fallback to the old key for migration, default to empty array
 let correctCountries = JSON.parse(localStorage.getItem('fifadle_correct_list')) || [];
 let totalClues = JSON.parse(localStorage.getItem('fifadle_total_clues')) || 0;
@@ -504,10 +506,19 @@ let bestAverage = parseFloat(localStorage.getItem('fifadle_best_average')) || 0;
 
 // AUDIO
 // Sound state management
-let sfxVolume = localStorage.getItem('fifadle_sfx_volume') !== null ? parseFloat(localStorage.getItem('fifadle_sfx_volume')) : 0.1;
-let musicVolume = localStorage.getItem('fifadle_music_volume') !== null ? parseFloat(localStorage.getItem('fifadle_music_volume')) : 0.1;
-let preMuteSfx = sfxVolume > 0;
-let preMuteMusic = musicVolume > 0;
+function getSafeVolume(key, defaultValue) {
+    const saved = localStorage.getItem(key);
+    if (saved === null) return defaultValue;
+    const parsed = parseFloat(saved);
+    // Ensure it's a finite number and clamped within the valid range [0, 1]
+    return isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : defaultValue;
+}
+
+let sfxVolume = getSafeVolume('fifadle_sfx_volume', 0.1);
+let musicVolume = getSafeVolume('fifadle_music_volume', 0.1);
+// if volume was set 0 on prior go, set a default to .1
+let preMuteSfx = sfxVolume > 0 ? sfxVolume : 0.1;           
+let preMuteMusic = musicVolume > 0 ? musicVolume : 0.1;
 
 // Background music initialization
 const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3');
@@ -529,6 +540,7 @@ const sounds = {
     // External royalty-free sound effect URLs
     correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
     incorrect: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+    reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
     victory: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3')
 };
 
@@ -553,7 +565,7 @@ document.addEventListener('click', (e) => {
         settingsPanel.classList.remove('visible');
     }
     // Close side panel when clicking outside of the panel, the toggle, or the input
-    if (!sidePanel.contains(e.target) && !progressToggle.contains(e.target) && !guessInput.contains(e.target)) {
+    if (!sidePanel.contains(e.target) && !guessInput.contains(e.target)) {
         sidePanel.classList.remove('open');
     }
 });
@@ -643,7 +655,6 @@ const skipBtn = document.getElementById('skip-btn');
 const newGameBtn = document.getElementById('new-game-btn');
 const datalist = document.getElementById('countries-list');
 const sidePanel = document.getElementById('side-panel');
-const progressToggle = document.getElementById('progress-toggle');
 const closePanelBtn = document.getElementById('close-panel');
 
 // Populate datalist alphabetically for better UX
@@ -681,28 +692,74 @@ function updateScoreUI() {
 function updateSidePanelList(filterText = '') {
     const sideList = document.getElementById('side-country-list');
     if (!sideList) return;
+
+    // Update the header count to show countries remaining
+    const headerH3 = document.querySelector('.side-panel-header h3');
+    if (headerH3) {
+        headerH3.innerText = `${countries.length - correctCountries.length} / ${countries.length}`;
+    }
+
     sideList.innerHTML = '';
     
     const lowerFilter = filterText.toLowerCase();
+    
+    // Determine if the 'continent' clue has been revealed in the current round
+    const continentClueIdx = clueTypes.findIndex(ct => ct.key === 'continent');
+    const isContinentRevealed = currentCountry && clueOrder.slice(0, currentClue + 1).includes(continentClueIdx);
 
-    [...countries]
-        .filter(c => c.name.toLowerCase().includes(lowerFilter))
-        .sort((a,b) => a.name.localeCompare(b.name))
-        .forEach(c => {
-        const isGuessed = correctCountries.includes(c.name);
-        const div = document.createElement('div');
-        div.className = `side-item ${isGuessed ? 'guessed' : 'pending'}`;
-        div.innerHTML = `
-            <span>${c.name}</span>
-            <span>${isGuessed ? '✔️' : ''}</span>
-        `;
-        div.addEventListener('click', () => {
-            if (guessInput.disabled || isGuessed) return;
-            guessInput.value = c.name;
-            makeGuess();
-            sidePanel.classList.remove('open');
+    let filtered = [...countries].filter(c => c.name.toLowerCase().includes(lowerFilter) || c.continent.toLowerCase().includes(lowerFilter));
+
+    // Filter to target continent if the clue is revealed
+    if (isContinentRevealed) {
+        filtered = filtered.filter(c => c.continent === currentCountry.continent);
+    }
+
+    // Group countries by continent
+    const grouped = filtered.reduce((acc, c) => {
+        if (!acc[c.continent]) acc[c.continent] = [];
+        acc[c.continent].push(c);
+        return acc;
+    }, {});
+
+    // Display grouped countries
+    Object.keys(grouped).sort().forEach(continent => {
+        // Auto-collapse if manually toggled, but force expand if user is searching
+        const isCollapsed = collapsedContinents.has(continent) && !lowerFilter;
+        
+        const header = document.createElement('div');
+        header.className = 'side-continent-header';
+        if (isCollapsed) header.classList.add('collapsed');
+        header.innerText = continent;
+        sideList.appendChild(header);
+
+        const itemsContainer = document.createElement('div');
+        itemsContainer.className = 'side-continent-items';
+        if (isCollapsed) itemsContainer.classList.add('collapsed');
+        sideList.appendChild(itemsContainer);
+
+        header.addEventListener('click', () => {
+            const isCollapsed = itemsContainer.classList.toggle('collapsed');
+            header.classList.toggle('collapsed');
+            if (isCollapsed) {
+                collapsedContinents.add(continent);
+            } else {
+                collapsedContinents.delete(continent);
+            }
         });
-        sideList.appendChild(div);
+
+        grouped[continent].sort((a,b) => a.name.localeCompare(b.name)).forEach(c => {
+            const isGuessed = correctCountries.includes(c.name);
+            const div = document.createElement('div');
+            div.className = `side-item ${isGuessed ? 'guessed' : 'pending'}`;
+            div.innerHTML = `<span>${c.name}</span><span>${isGuessed ? '✔️' : ''}</span>`;
+            div.addEventListener('click', () => {
+                if (guessInput.disabled || isGuessed) return;
+                guessInput.value = c.name;
+                makeGuess();
+                sidePanel.classList.remove('open');
+            });
+            itemsContainer.appendChild(div);
+        });
     });
 }
 
@@ -732,12 +789,11 @@ function initGame() {
         clueResults = new Array(maxClues).fill(null);
         clueResults[0] = 'initial';
         clueOrder = getShuffledClueOrder();
-        totalClues++;
-        localStorage.setItem('fifadle_total_clues', totalClues);
         const availableCountries = countries.filter(c => !correctCountries.includes(c.name));
         currentCountry = availableCountries.length > 0 
             ? availableCountries[Math.floor(Math.random() * availableCountries.length)]
             : countries[Math.floor(Math.random() * countries.length)];
+        collapsedContinents.clear();
     }
 
     // Always save the current state after initGame (whether loaded or new)
@@ -745,6 +801,13 @@ function initGame() {
     localStorage.setItem('fifadle_saved_current_clue_index', currentClue.toString());
     localStorage.setItem('fifadle_clue_results', JSON.stringify(clueResults));
     localStorage.setItem('fifadle_clue_order', JSON.stringify(clueOrder));
+
+    // Auto-collapse completed continents on load
+    const continents = [...new Set(countries.map(c => c.continent))];
+    continents.forEach(cont => {
+        const allGuessed = countries.filter(c => c.continent === cont).every(c => correctCountries.includes(c.name));
+        if (allGuessed) collapsedContinents.add(cont);
+    });
     
     messageDiv.className = 'pulsing';
     messageDiv.innerText = '???';
@@ -764,21 +827,31 @@ function initGame() {
         triggerCompletionAnimation();
     } else {
         scoreIndicator.classList.remove('complete');
+
+        // only proceed with clue rendering if game is not already complete, otherwise just show the completion state
+        renderClues();
     }
     
-    renderClues();
     updateCluesUI();
-    updateScoreUI();
+    updateScoreUI();               
     updateSidePanelList();
 }
 
 function renderClues() {
+    const isGameOver = guessInput.disabled;
     clueContainer.innerHTML = '';
     for (let i = 0; i < maxClues; i++) {
         const div = document.createElement('div');
+        // add base class
+        div.className = `clue-item `;
+        // add revealed class if clue is revealed
+        div.className += `${i <= currentClue ? 'revealed' : ''} `;
+
+        // status should be already set to 'correct' / 'incorrect' / 'skipped' 
         const status = clueResults[i];
-        const statusClass = status || (i <= currentClue ? 'correct' : '');
-        div.className = `clue-item ${i <= currentClue ? 'revealed' : ''} ${statusClass}`;
+        // default to initial - no class if not revealed or game is over
+        const statusClass = status || (i <= currentClue ? (isGameOver ? '' : 'initial') : '');  
+        div.className += `${statusClass}`;
         
         const clue = clueTypes[clueOrder[i]];
         if (clue.key === 'fact' && i <= currentClue) {
@@ -799,7 +872,7 @@ function renderClues() {
 function updateCluesUI() {
     clueText.innerText = `Clue ${currentClue + 1} / ${maxClues}`;
     if (totalCluesText) {
-        totalCluesText.innerText = `Total Clues: ${totalClues}`;
+        totalCluesText.innerText = `Clues Used: ${totalClues}`;
     }
 }
 
@@ -823,17 +896,15 @@ function makeGuess() {
         }, { once: true });
 
         if (currentClue < maxClues - 1) {
-            totalClues++;
-            localStorage.setItem('fifadle_total_clues', totalClues);
-
             currentClue++;
+            playEffect(sounds.reveal);
             clueResults[currentClue] = 'initial';
             localStorage.setItem('fifadle_saved_current_clue_index', currentClue.toString());
             localStorage.setItem('fifadle_clue_results', JSON.stringify(clueResults));
             renderClues();
             updateCluesUI();
-            guessInput.value = '';
             updateSidePanelList();
+            guessInput.value = '';
         } else {
             endGame(false);
         }
@@ -841,26 +912,27 @@ function makeGuess() {
 }
 
 function skipClue() {
+    clueResults[currentClue] = 'skipped';
     if (currentClue < maxClues - 1) {
-        clueResults[currentClue] = 'skipped';
-        totalClues++;
-        localStorage.setItem('fifadle_total_clues', totalClues);
-
         currentClue++;
+        playEffect(sounds.reveal);
+        clueResults[currentClue] = 'initial';
         localStorage.setItem('fifadle_saved_current_clue_index', currentClue.toString());
         localStorage.setItem('fifadle_clue_results', JSON.stringify(clueResults));
         renderClues();
         updateCluesUI();
-        guessInput.value = '';
         updateSidePanelList();
+        guessInput.value = '';
     } else {
-        clueResults[currentClue] = 'skipped';
-        renderClues();
         endGame(false);
     }
 }
 
 function endGame(isWin) {
+    // Add clues revealed this round to the total tournament count
+    totalClues += (currentClue + 1);    // add 1 since currentClue is 0-indexed
+    localStorage.setItem('fifadle_total_clues', totalClues);
+
     guessInput.disabled = true;
     guessInput.style.display = 'none';
     submitBtn.style.display = 'none';
@@ -891,6 +963,7 @@ function endGame(isWin) {
     if (!correctCountries.includes(currentCountry.name)) {
         correctCountries.push(currentCountry.name);
         localStorage.setItem('fifadle_correct_list', JSON.stringify(correctCountries));
+
         updateScoreUI();
         updateSidePanelList();
     }
@@ -980,6 +1053,7 @@ function resetGame(resetProgress = false) {
         }
         correctCountries = [];
         totalClues = 0;
+        collapsedContinents.clear();
         updateScoreUI();
         updateSidePanelList();
         initGame();
@@ -997,6 +1071,13 @@ function testCompletion() {
         // Set total clues so the average looks realistic (e.g., 3 clues per country)
         totalClues = 47 * 3;
         localStorage.setItem('fifadle_total_clues', totalClues);
+
+        // Auto-collapse completed continents
+        const continents = [...new Set(countries.map(c => c.continent))];
+        continents.forEach(cont => {
+            const allGuessed = countries.filter(c => c.continent === cont).every(c => correctCountries.includes(c.name));
+            if (allGuessed) collapsedContinents.add(cont);
+        });
 
         // Clear current session to force the game to pick the 48th country
         localStorage.removeItem('fifadle_saved_current_country_name');
@@ -1045,6 +1126,27 @@ const startMusic = () => {
 document.addEventListener('click', startMusic);
 document.addEventListener('keydown', startMusic);
 
+// Add Spacebar shortcut to skip clue, start next country, or start new game
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && document.activeElement !== guessInput) {
+        // Prevent the default behavior of scrolling the page
+        e.preventDefault();
+        
+        // Priority 1: Next Country
+        if (playAgainBtn && playAgainBtn.style.display !== 'none') {
+            initGame();
+        } 
+        // Priority 2: New Game (at 48/48)
+        else if (newGameBtn && newGameBtn.style.display !== 'none') {
+            resetGame();
+        }
+        // Priority 3: Skip Clue (active gameplay)
+        else if (skipBtn && skipBtn.style.display !== 'none') {
+            skipClue();
+        }
+    }
+});
+
 // Handle window focus and visibility to mute music and show pause overlay
 document.addEventListener('visibilitychange', updateAudioSettings);
 window.addEventListener('blur', () => {updateAudioSettings();});
@@ -1075,12 +1177,6 @@ document.addEventListener('touchend', e => {
 
 if (closePanelBtn) {
     closePanelBtn.addEventListener('click', () => sidePanel.classList.remove('open'));
-}
-
-if (progressToggle) {
-    progressToggle.addEventListener('click', () => {
-        sidePanel.classList.toggle('open');
-    });
 }
 
 updateAudioSettings();

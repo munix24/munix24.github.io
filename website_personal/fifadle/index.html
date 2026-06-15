@@ -17,7 +17,6 @@
 <div class="game-container">
     <div class="settings-container">
         <span id="settings-toggle" class="settings-gear" title="Settings">⚙️</span>
-        <span id="progress-toggle" class="progress-icon" title="Tournament Progress">📊</span>
         <div id="settings-panel" class="settings-panel">
             <div class="control-row">
                 <span id="music-mute-btn" class="control-icon" title="Toggle Music">🎵</span>
@@ -34,9 +33,9 @@
     </div>
     <h1>🏆 Fifadle 2026</h1>
     <div class="score-indicator">
-        <span id="score-text" data-tooltip="Total countries successfully guessed.">Countries: 0 / 48</span>
-        <span id="avg-text" data-tooltip="Average number of clues needed per country (Total Clues / Countries).">Avg Clues: 0.0</span>
-        <span id="best-avg-text" data-tooltip="Your best average rounds record after finding all 48 teams.">Best Avg: -</span>
+        <span id="score-text" data-tooltip="Countries guessed / Total Countries.">Countries: 0 / 48</span>
+        <span id="avg-text" data-tooltip="Average number of clues used per country (Clues Used / Countries guessed).">Avg Clues: 0.0</span>
+        <span id="best-avg-text" data-tooltip="Your best average clues record after finding all 48 teams.">Best Avg: -</span>
     </div>
 
     <p>Guess the 2026 World Cup Country using the given clues</p>
@@ -44,7 +43,7 @@
 
     <div class="clue-indicator">
         <span id="clue-text">Clue 1 / 6</span>
-        <span id="total-clues-text" data-tooltip="The total number of clues revealed this game (includes guesses and skips).">Total Clues: 0</span>
+        <span id="total-clues-text" data-tooltip="The total number of clues revealed this game (includes guesses and skips).">Clues Used: 0</span>
     </div>
 
     <div class="clue-list" id="clue-container">
@@ -61,14 +60,14 @@
         <button onclick="initGame()" id="play-again-btn" style="display:none; width:100%;">Next Country</button>
         <button onclick="resetGame()" id="new-game-btn" style="display:none; width:100%;">New Game</button>
     </div>
-</div>
 
-<div id="side-panel" class="side-panel">
-    <div class="side-panel-header">
-        <h3>Countries</h3>
-        <span id="close-panel" class="close-icon">&times;</span>
+    <div id="side-panel" class="side-panel">
+        <div class="side-panel-header">
+            <h3>48 / 48</h3>
+            <span id="close-panel" class="close-icon">&times;</span>
+        </div>
+        <div id="side-country-list" class="side-country-list"></div>
     </div>
-    <div id="side-country-list" class="side-country-list"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>

@@ -6,6 +6,16 @@ sort the datalist alphabetically so it's easier to find countries?
 
 UI
 	make game more mobile friendly and make it only max take up 95 of vw
+	Can we add a list of all available and correctly guessed countries to a top panel touch drag from top to show?
+	Add side panel to the right with which countries are still remaining to be guessed in alphabetical order
+		typing in guess-input filters the side panel countries or continent with the substring typed
+		putting focus on guess-input opens side-panel and clicking anywhere besides side-panel closes it
+		How can I make the side panel h3 count how many countries are left to guess?
+		
+	
+UX
+	clicking side-continent-header toggles collapsing continent countries 
+	Can we add a "Skip Clue" shortcut key like the Spacebar to quickly move to the next Clue?
 
 sound
 	Can you add simple not annoying sound effect for correct and incorrect guesses?
@@ -15,8 +25,10 @@ sound
 	Add a rotation animation to the gear icon when the settings menu is open
 	volume control contains a sound effects icon when pressed mutes sound effects and slider to control volume
 	add a subtle background music track and music icon when mutes music when pressed and slider to control music volume
-		
 	save the point in the bg music track the player is so if he refreshes the page it loads the song from where it was left off?
+	Can you add a custom "Victory" sound effect that only plays when the 48th country is guessed?
+	
+	How can I add a sound effect that plays specifically when a new clue is revealed?
 	
 animation:
 	Can you add a visual "shake" animation to the input field when the player makes an incorrect guess?
@@ -24,7 +36,10 @@ animation:
 	How can I add a celebratory confetti effect when the player guesses correctly
 	How can I make the confetti burst twice if the player guesses on the very first clue?
 	Can you add a special "Completion" animation when the player reaches 48/48 countries?
-	Can you add a custom "Victory" sound effect that only plays when the 48th country is guessed?
+	
+	How can I add a subtle pulse animation to the 'initial' clue to show it is the active one?
+	How can I make the current active clue slightly larger than the others?
+	How can I make the solved clues (correct/incorrect) slightly transparent so the focus stays on the active one?
 	
 
 progression:
@@ -39,16 +54,12 @@ progression:
 	change color of accuracy badge depending on performance
 	
 
-Can we add a list of all available and correctly guessed countries to a top panel touch drag from top to show?
-Add side panel to the left with which countries are still left to be guessed in alphabetical order
-	typing in guess-input filters the side panel countries with the substring typed
-	putting focus on guess-input opens side-panel and clicking anywhere besides side-panel closes it
+
 
 
 
 FIFA color theme?
 Can you add a "Daily Mode" where everyone gets the same country each day based on the date?
-Can you add a visual indicator showing if the average is improving or declining per clue?
 Can you add a chart or distribution showing how many cluess it usually takes players win?
 Can you suggest how to make the clue list more compact so the game fits on one screen without scrolling?
 
@@ -56,4 +67,3 @@ Can you suggest how to make the clue list more compact so the game fits on one s
 
 in triggerCompletionAnimation display summary stats and allow player to start new game
 Can we add a progress bar that fills up as the player completes more countries?
-
