@@ -506,141 +506,6 @@ let bestAverage = parseFloat(localStorage.getItem('fifadle_best_average')) || 0;
 let winCount = parseInt(localStorage.getItem('fifadle_win_count')) || 0;
 let bestAccuracy = parseFloat(localStorage.getItem('fifadle_best_accuracy')) || 0;
 
-// AUDIO
-// Sound state management
-function getSafeVolume(key, defaultValue) {
-    const saved = localStorage.getItem(key);
-    if (saved === null) return defaultValue;
-    const parsed = parseFloat(saved);
-    // Ensure it's a finite number and clamped within the valid range [0, 1]
-    return isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : defaultValue;
-}
-
-let sfxVolume = getSafeVolume('fifadle_sfx_volume', 0.1);
-let musicVolume = getSafeVolume('fifadle_music_volume', 0.1);
-// if volume was set 0 on prior go, set a default to .1
-let preMuteSfx = sfxVolume > 0 ? sfxVolume : 0.1;           
-let preMuteMusic = musicVolume > 0 ? musicVolume : 0.1;
-
-// Background music initialization
-const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3');
-bgMusic.loop = true;
-
-// Restore music position from localStorage
-const savedPosition = localStorage.getItem('fifadle_music_position');
-if (savedPosition) {
-    bgMusic.currentTime = parseFloat(savedPosition);
-}
-
-// Save music position whenever the time updates
-bgMusic.addEventListener('timeupdate', () => {
-    localStorage.setItem('fifadle_music_position', bgMusic.currentTime);
-});
-
-// Sound effects initialization
-const sounds = {
-    // External royalty-free sound effect URLs
-    correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
-    incorrect: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
-    reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
-    victory: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3')
-};
-
-// Settings panel logic
-const settingsToggle = document.getElementById('settings-toggle');
-const settingsPanel = document.getElementById('settings-panel');
-const musicSlider = document.getElementById('music-volume');
-const sfxSlider = document.getElementById('sfx-volume');
-const musicMuteBtn = document.getElementById('music-mute-btn');
-const sfxMuteBtn = document.getElementById('sfx-mute-btn');
-
-settingsToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    settingsToggle.classList.toggle('active');
-    settingsPanel.classList.toggle('visible');
-});
-
-// Close settings panel when clicking outside
-document.addEventListener('click', (e) => {
-    if (!settingsPanel.contains(e.target) && !settingsToggle.contains(e.target)) {
-        settingsToggle.classList.remove('active');
-        settingsPanel.classList.remove('visible');
-    }
-    // Close side panel when clicking outside of the panel, the toggle, or the input
-    if (!sidePanel.contains(e.target) && !guessInput.contains(e.target)) {
-        sidePanel.classList.remove('open');
-    }
-});
-
-// Audio control listeners
-musicSlider.value = musicVolume;
-sfxSlider.value = sfxVolume;
-
-musicSlider.addEventListener('input', (e) => {
-    musicVolume = parseFloat(e.target.value);
-    if (musicVolume > 0) preMuteMusic = musicVolume;
-    localStorage.setItem('fifadle_music_volume', musicVolume);
-    updateAudioSettings();
-});
-
-musicMuteBtn.addEventListener('click', () => {
-    if (musicVolume > 0) {
-        preMuteMusic = musicVolume;
-        musicVolume = 0;
-    } else {
-        musicVolume = preMuteMusic;
-    }
-    musicSlider.value = musicVolume;
-    localStorage.setItem('fifadle_music_volume', musicVolume);
-    updateAudioSettings();
-});
-
-sfxSlider.addEventListener('input', (e) => {
-    sfxVolume = parseFloat(e.target.value);
-    if (sfxVolume > 0) preMuteSfx = sfxVolume;
-    localStorage.setItem('fifadle_sfx_volume', sfxVolume);
-    updateAudioSettings();
-});
-
-sfxMuteBtn.addEventListener('click', () => {
-    if (sfxVolume > 0) {
-        preMuteSfx = sfxVolume;
-        sfxVolume = 0;
-    } else {
-        sfxVolume = preMuteSfx;
-    }
-    sfxSlider.value = sfxVolume;
-    localStorage.setItem('fifadle_sfx_volume', sfxVolume);
-    updateAudioSettings();
-});
-
-function updateAudioSettings() {
-    const isMuted = musicVolume === 0;
-    const isHidden = document.visibilityState === 'hidden';
-    const isBlurred = !document.hasFocus();
-
-    // Music should stop if muted, the tab is hidden, or the window loses focus
-    const shouldStop = isMuted || isHidden || isBlurred;
-
-    if (musicMuteBtn) musicMuteBtn.innerText = musicVolume > 0 ? '🎵' : '🔇';
-    if (sfxMuteBtn) sfxMuteBtn.innerText = sfxVolume > 0 ? '🔊' : '🔇';
-
-    if (shouldStop) {
-        bgMusic.volume = 0;
-        bgMusic.pause();
-    } else {
-        bgMusic.volume = musicVolume;
-        bgMusic.play().catch(e => console.debug("Playback failed during audio update", e));
-    }
-}
-
-// Plays a sound effect, resetting it if already playing
-function playEffect(audio, multiplier = 1) {
-    audio.volume = sfxVolume * multiplier;
-    audio.currentTime = 0;
-    audio.play().catch(e => console.debug("Audio playback prevented", e));
-}
-
 const clueContainer = document.getElementById('clue-container');
 const clueText = document.getElementById('clue-text');
 const scoreText = document.getElementById('score-text');
@@ -777,6 +642,13 @@ function renderClues() {
     }
 }
 
+function updateCluesUI() {
+    clueText.innerText = `Clue ${currentClue + 1} / ${maxClues}`;
+    if (totalCluesText) {
+        totalCluesText.innerText = `Clues Used: ${totalClues}`;
+    }
+}
+
 function updateScoreUI() {
     scoreText.innerText = `Country: ${correctCountries.length} / ${countries.length}`;
     
@@ -871,7 +743,8 @@ function updateSidePanelList(filterText = '') {
         if (isCollapsed) itemsContainer.classList.add('collapsed');
         sideList.appendChild(itemsContainer);
 
-        header.addEventListener('click', () => {
+        header.addEventListener('click', (e) => {
+            e.stopPropagation();
             const isCollapsed = itemsContainer.classList.toggle('collapsed');
             header.classList.toggle('collapsed');
             if (isCollapsed) {
@@ -886,22 +759,15 @@ function updateSidePanelList(filterText = '') {
             const div = document.createElement('div');
             div.className = `side-item ${isGuessed ? 'guessed' : 'pending'}`;
             div.innerHTML = `<span>${c.name}</span><span>${isGuessed ? '✔️' : ''}</span>`;
-            div.addEventListener('click', () => {
+            div.addEventListener('click', (e) => {
+                e.stopPropagation();
                 if (guessInput.disabled || isGuessed) return;
                 guessInput.value = c.name;
                 makeGuess();
-                sidePanel.classList.remove('open');
             });
             itemsContainer.appendChild(div);
         });
     });
-}
-
-function updateCluesUI() {
-    clueText.innerText = `Clue ${currentClue + 1} / ${maxClues}`;
-    if (totalCluesText) {
-        totalCluesText.innerText = `Clues Used: ${totalClues}`;
-    }
 }
 
 function makeGuess() {
@@ -912,6 +778,7 @@ function makeGuess() {
 
     if (userGuess === correctAnswer) {
         clueResults[currentClue] = 'correct';
+        sidePanel.classList.remove('open');
         endGame(true);
     } else {
         clueResults[currentClue] = 'incorrect';
@@ -1076,6 +943,10 @@ function generateShareEmoji(isWin, winClue) {
     return `Fifadle 2026 🏆\n${isWin ? (winClue + 1) : 'X'}/${maxClues}\n${emojiRow}\nhttps://your-website.com`;
 }
 
+function shareResults() {
+    navigator.clipboard.writeText(lastResultEmoji);
+}
+
 function resetGame(resetProgress = false) {
     if (confirm("Are you sure you want to reset current game progress? This cannot be undone.")) {
         localStorage.removeItem('fifadle_correct_list');
@@ -1138,39 +1009,6 @@ function testCompletion() {
     }
 }
 
-guessInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') makeGuess(); });
-
-// Open side panel when input is focused
-guessInput.addEventListener('focus', () => { sidePanel.classList.add('open'); });
-
-// Automatically submit when a country is selected from the datalist
-guessInput.addEventListener('input', (e) => {
-    const val = e.target.value;
-    updateSidePanelList(val);
-
-    if (countries.some(c => c.name === val)) {
-        makeGuess();
-    }
-});
-
-function shareResults() {
-    navigator.clipboard.writeText(lastResultEmoji);
-}
-
-// Background music playback logic
-const startMusic = () => {
-    // Only attempt to start if not muted and tab is active/focused
-    if (musicVolume === 0 || document.visibilityState === 'hidden' || !document.hasFocus()) return;
-    bgMusic.play().then(() => {
-        // If successful, remove listeners to prevent redundant calls
-        document.removeEventListener('click', startMusic);
-        document.removeEventListener('keydown', startMusic);
-    }).catch(e => console.debug("Autoplay blocked, waiting for interaction", e));
-};
-
-document.addEventListener('click', startMusic);
-document.addEventListener('keydown', startMusic);
-
 // Add Spacebar shortcut to skip clue, start next country, or start new game
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space' && document.activeElement !== guessInput) {
@@ -1192,6 +1030,169 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+guessInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') makeGuess(); });
+
+// Open side panel when input is focused
+guessInput.addEventListener('focus', () => { sidePanel.classList.add('open'); });
+
+// Automatically submit when a country is selected from the datalist
+guessInput.addEventListener('input', (e) => {
+    const val = e.target.value;
+    updateSidePanelList(val);
+
+    if (countries.some(c => c.name === val)) {
+        makeGuess();
+    }
+});
+
+// AUDIO
+function getSafeVolume(key, defaultValue) {
+    const saved = localStorage.getItem(key);
+    if (saved === null) return defaultValue;
+    const parsed = parseFloat(saved);
+    // Ensure it's a finite number and clamped within the valid range [0, 1]
+    return isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : defaultValue;
+}
+
+let sfxVolume = getSafeVolume('fifadle_sfx_volume', 0.1);
+let musicVolume = getSafeVolume('fifadle_music_volume', 0.1);
+// if volume was set 0 on prior go, set a default to .1
+let preMuteSfx = sfxVolume > 0 ? sfxVolume : 0.1;           
+let preMuteMusic = musicVolume > 0 ? musicVolume : 0.1;
+
+// Background music initialization
+const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3');
+bgMusic.loop = true;
+
+// Restore music position from localStorage
+const savedPosition = localStorage.getItem('fifadle_music_position');
+if (savedPosition) {
+    bgMusic.currentTime = parseFloat(savedPosition);
+}
+
+// Save music position whenever the time updates
+bgMusic.addEventListener('timeupdate', () => {
+    localStorage.setItem('fifadle_music_position', bgMusic.currentTime);
+});
+
+// Sound effects initialization
+const sounds = {
+    // External royalty-free sound effect URLs
+    correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
+    incorrect: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+    reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+    victory: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3')
+};
+
+// Settings panel logic
+const settingsToggle = document.getElementById('settings-toggle');
+const settingsPanel = document.getElementById('settings-panel');
+const musicSlider = document.getElementById('music-volume');
+const sfxSlider = document.getElementById('sfx-volume');
+const musicMuteBtn = document.getElementById('music-mute-btn');
+const sfxMuteBtn = document.getElementById('sfx-mute-btn');
+
+settingsToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    settingsToggle.classList.toggle('active');
+    settingsPanel.classList.toggle('visible');
+});
+
+// Close settings panel when clicking outside
+document.addEventListener('click', (e) => {
+    if (!settingsPanel.contains(e.target) && !settingsToggle.contains(e.target)) {
+        settingsToggle.classList.remove('active');
+        settingsPanel.classList.remove('visible');
+    }
+    // Close side panel when clicking outside of the panel, the toggle, or the input
+    if (!sidePanel.contains(e.target) && !guessInput.contains(e.target)) {
+        sidePanel.classList.remove('open');
+    }
+});
+
+// Audio control listeners
+musicSlider.value = musicVolume;
+sfxSlider.value = sfxVolume;
+
+musicSlider.addEventListener('input', (e) => {
+    musicVolume = parseFloat(e.target.value);
+    if (musicVolume > 0) preMuteMusic = musicVolume;
+    localStorage.setItem('fifadle_music_volume', musicVolume);
+    updateAudioSettings();
+});
+
+musicMuteBtn.addEventListener('click', () => {
+    if (musicVolume > 0) {
+        preMuteMusic = musicVolume;
+        musicVolume = 0;
+    } else {
+        musicVolume = preMuteMusic;
+    }
+    musicSlider.value = musicVolume;
+    localStorage.setItem('fifadle_music_volume', musicVolume);
+    updateAudioSettings();
+});
+
+sfxSlider.addEventListener('input', (e) => {
+    sfxVolume = parseFloat(e.target.value);
+    if (sfxVolume > 0) preMuteSfx = sfxVolume;
+    localStorage.setItem('fifadle_sfx_volume', sfxVolume);
+    updateAudioSettings();
+});
+
+sfxMuteBtn.addEventListener('click', () => {
+    if (sfxVolume > 0) {
+        preMuteSfx = sfxVolume;
+        sfxVolume = 0;
+    } else {
+        sfxVolume = preMuteSfx;
+    }
+    sfxSlider.value = sfxVolume;
+    localStorage.setItem('fifadle_sfx_volume', sfxVolume);
+    updateAudioSettings();
+});
+
+function updateAudioSettings() {
+    const isMuted = musicVolume === 0;
+    const isHidden = document.visibilityState === 'hidden';
+    const isBlurred = !document.hasFocus();
+
+    // Music should stop if muted, the tab is hidden, or the window loses focus
+    const shouldStop = isMuted || isHidden || isBlurred;
+
+    if (musicMuteBtn) musicMuteBtn.innerText = musicVolume > 0 ? '🎵' : '🔇';
+    if (sfxMuteBtn) sfxMuteBtn.innerText = sfxVolume > 0 ? '🔊' : '🔇';
+
+    if (shouldStop) {
+        bgMusic.volume = 0;
+        bgMusic.pause();
+    } else {
+        bgMusic.volume = musicVolume;
+        bgMusic.play().catch(e => console.debug("Playback failed during audio update", e));
+    }
+}
+
+// Plays a sound effect, resetting it if already playing
+function playEffect(audio, multiplier = 1) {
+    audio.volume = sfxVolume * multiplier;
+    audio.currentTime = 0;
+    audio.play().catch(e => console.debug("Audio playback prevented", e));
+}
+
+// Background music playback logic
+const startMusic = () => {
+    // Only attempt to start if not muted and tab is active/focused
+    if (musicVolume === 0 || document.visibilityState === 'hidden' || !document.hasFocus()) return;
+    bgMusic.play().then(() => {
+        // If successful, remove listeners to prevent redundant calls
+        document.removeEventListener('click', startMusic);
+        document.removeEventListener('keydown', startMusic);
+    }).catch(e => console.debug("Autoplay blocked, waiting for interaction", e));
+};
+
+document.addEventListener('click', startMusic);
+document.addEventListener('keydown', startMusic);
+
 // Handle window focus and visibility to mute music and show pause overlay
 document.addEventListener('visibilitychange', updateAudioSettings);
 window.addEventListener('blur', () => {updateAudioSettings();});
@@ -1204,25 +1205,6 @@ document.addEventListener('mouseenter', () => {
         bgMusic.play().catch(e => console.debug("Playback failed on enter", e));
     }
 });
-
-// Swipe Logic for Side Panel
-let touchStartX = 0;
-document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-document.addEventListener('touchend', e => {
-    const touchEndX = e.changedTouches[0].screenX;
-    const diff = touchStartX - touchEndX;
-    const fromRightEdge = touchStartX > window.innerWidth - 60;
-
-    if (fromRightEdge && diff > 50) {
-        sidePanel.classList.add('open');
-    } else if (diff < -50 && sidePanel.classList.contains('open')) {
-        sidePanel.classList.remove('open');
-    }
-}, { passive: true });
-
-if (closePanelBtn) {
-    closePanelBtn.addEventListener('click', () => sidePanel.classList.remove('open'));
-}
 
 updateAudioSettings();
 startMusic(); 

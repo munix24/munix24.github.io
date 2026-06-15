@@ -11,6 +11,7 @@ UI
 		typing in guess-input filters the side panel countries or continent with the substring typed
 		putting focus on guess-input opens side-panel and clicking anywhere besides side-panel closes it
 		How can I make the side panel h3 count how many countries are left to guess?
+	make side-item text not selectable
 		
 	
 UX
