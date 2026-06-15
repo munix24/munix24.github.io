@@ -51,6 +51,7 @@ progression:
 	How can I add a background color or border to each stat item to make them look like individual badges?
 	Can you add a hover effect to the badges so they glow when I mouse over them?
 	Can you add a tool tip that shows a more detailed description of each stat when hovering over the badges?
+	add a badge counter for correct, accuracy (correct/countries) and best accuracy
 	change color of accuracy badge depending on performance
 	
 

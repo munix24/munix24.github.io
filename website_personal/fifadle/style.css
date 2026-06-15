@@ -24,7 +24,7 @@ body {
 
 .game-container {
     height: 100vh;
-    max-width: 500px;
+    max-width: 400px;
     max-height: 700px;
     position: relative;
     background: #1a1a1a;
@@ -122,10 +122,36 @@ h1 {
     color: #ff0000;
 }
 
+/* Accuracy color coding */
+.score-indicator span.acc-elite {
+    background: #002b4d; border-color: #0088ff; color: #a3d5ff;
+}
+.score-indicator span.acc-great {
+    background: #1b4332; border-color: var(--fifa-green); color: #75f0a3;
+}
+.score-indicator span.acc-good {
+    background: #323f20; border-color: #80ad26; color: #baf1ab;
+}
+.score-indicator span.acc-average {
+    background: #4a3c0e; border-color: #ffcc00; color: #fff3b3;
+}
+.score-indicator span.acc-poor {
+    background: #4a2c0e; border-color: #ff9900; color: #ffdfb3;
+}
+.score-indicator span.acc-bad {
+    background: #4a0e0e; border-color: #ff4d4d; color: #ffb3b3;
+}
+
 .score-indicator span:hover, #total-clues-text:hover {
     border-color: var(--fifa-gold);
     box-shadow: 0 0 12px var(--fifa-gold);
     transform: translateY(-2px);
+    z-index: 2000;
+}
+
+/* Ensure any element with a tooltip creates a positioning context */
+[data-tooltip] {
+    position: relative;
 }
 
 /* Tooltip styling */
@@ -148,7 +174,6 @@ h1 {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 2000;
     pointer-events: none;
     box-shadow: 0 4px 15px rgba(0,0,0,0.6);
 }

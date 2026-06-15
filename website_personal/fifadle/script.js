@@ -503,6 +503,8 @@ let collapsedContinents = new Set();
 let correctCountries = JSON.parse(localStorage.getItem('fifadle_correct_list')) || [];
 let totalClues = JSON.parse(localStorage.getItem('fifadle_total_clues')) || 0;
 let bestAverage = parseFloat(localStorage.getItem('fifadle_best_average')) || 0;
+let winCount = parseInt(localStorage.getItem('fifadle_win_count')) || 0;
+let bestAccuracy = parseFloat(localStorage.getItem('fifadle_best_accuracy')) || 0;
 
 // AUDIO
 // Sound state management
@@ -643,8 +645,11 @@ const clueContainer = document.getElementById('clue-container');
 const clueText = document.getElementById('clue-text');
 const scoreText = document.getElementById('score-text');
 const scoreIndicator = document.querySelector('.score-indicator');
+const winCountText = document.getElementById('win-count-text');
+const accuracyText = document.getElementById('accuracy-text');
 const avgText = document.getElementById('avg-text');
 const bestAvgText = document.getElementById('best-avg-text');
+const bestAccuracyText = document.getElementById('best-accuracy-text');
 const totalCluesText = document.getElementById('total-clues-text');
 const guessInput = document.getElementById('guess-input');
 const messageDiv = document.getElementById('message');
@@ -666,8 +671,134 @@ const closePanelBtn = document.getElementById('close-panel');
         datalist.appendChild(option);
     });
 
+function initGame() {
+    let savedCurrentCountryName = localStorage.getItem('fifadle_saved_current_country_name');
+    let savedCurrentClueIndex = localStorage.getItem('fifadle_saved_current_clue_index');
+    let savedClueResults = localStorage.getItem('fifadle_clue_results');
+    let savedClueOrder = localStorage.getItem('fifadle_clue_order');
+
+    if (savedCurrentCountryName && savedCurrentClueIndex !== null && savedClueOrder) {
+        currentCountry = countries.find(c => c.name === savedCurrentCountryName);
+        currentClue = parseInt(savedCurrentClueIndex);
+        clueResults = savedClueResults ? JSON.parse(savedClueResults) : new Array(maxClues).fill(null);
+        clueOrder = JSON.parse(savedClueOrder);
+        totalClues = JSON.parse(localStorage.getItem('fifadle_total_clues')) || 0;
+    } else {
+        currentClue = 0;
+        clueResults = new Array(maxClues).fill(null);
+        clueResults[0] = 'initial';
+        clueOrder = getShuffledClueOrder();
+        const availableCountries = countries.filter(c => !correctCountries.includes(c.name));
+        currentCountry = availableCountries.length > 0 
+            ? availableCountries[Math.floor(Math.random() * availableCountries.length)]
+            : countries[Math.floor(Math.random() * countries.length)];
+        collapsedContinents.clear();
+    }
+
+    // Always save the current state after initGame (whether loaded or new)
+    localStorage.setItem('fifadle_saved_current_country_name', currentCountry.name);
+    localStorage.setItem('fifadle_saved_current_clue_index', currentClue.toString());
+    localStorage.setItem('fifadle_clue_results', JSON.stringify(clueResults));
+    localStorage.setItem('fifadle_clue_order', JSON.stringify(clueOrder));
+
+    // Auto-collapse completed continents on load
+    const continents = [...new Set(countries.map(c => c.continent))];
+    continents.forEach(cont => {
+        const allGuessed = countries.filter(c => c.continent === cont).every(c => correctCountries.includes(c.name));
+        if (allGuessed) collapsedContinents.add(cont);
+    });
+    
+    messageDiv.className = 'pulsing';
+    messageDiv.innerText = '???';
+    guessInput.value = '';
+    guessInput.disabled = false;
+    guessInput.style.display = 'inline-block';
+    submitBtn.style.display = 'inline-block';
+    skipBtn.style.display = 'inline-block';
+    playAgainBtn.style.display = 'none';
+    if (newGameBtn) newGameBtn.style.display = 'none';
+
+    const isComplete = correctCountries.length >= countries.length;
+    if (isComplete) {
+        guessInput.style.display = 'none';
+        submitBtn.style.display = 'none';
+        skipBtn.style.display = 'none';
+        triggerCompletionAnimation();
+    } else {
+        scoreIndicator.classList.remove('complete');
+
+        // only proceed with clue rendering if game is not already complete, otherwise just show the completion state
+        renderClues();
+    }
+    
+    updateCluesUI();
+    updateScoreUI();               
+    updateSidePanelList();
+}
+
+function getShuffledClueOrder() {
+    const order = Array.from({length: clueTypes.length}, (_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+    }
+    return order.slice(0, maxClues);
+}
+
+function renderClues() {
+    const isGameOver = guessInput.disabled;
+    clueContainer.innerHTML = '';
+    for (let i = 0; i < maxClues; i++) {
+        const div = document.createElement('div');
+        // add base class
+        div.className = `clue-item `;
+        // add revealed class if clue is revealed
+        div.className += `${i <= currentClue ? 'revealed' : ''} `;
+
+        // status should be already set to 'correct' / 'incorrect' / 'skipped' 
+        const status = clueResults[i];
+        // default to initial - no class if not revealed or game is over
+        const statusClass = status || (i <= currentClue ? (isGameOver ? '' : 'initial') : '');  
+        div.className += `${statusClass}`;
+        
+        const clue = clueTypes[clueOrder[i]];
+        if (clue.key === 'fact' && i <= currentClue) {
+            // Special case for Fact: no icon, but show label
+            div.innerHTML = `<div><strong>${clue.label}:</strong> ${currentCountry[clue.key]}</div>`;
+        } else {
+            const icon = i <= currentClue ? clue.icon : '🔒';
+            const content = i <= currentClue 
+                ? `<strong>${clue.label}:</strong> ${currentCountry[clue.key]}` 
+                : `<strong>Clue ${i + 1}:</strong> Locked`;
+                
+            div.innerHTML = `<span class="clue-icon">${icon}</span><div>${content}</div>`;
+        }
+        clueContainer.appendChild(div);
+    }
+}
+
 function updateScoreUI() {
     scoreText.innerText = `Country: ${correctCountries.length} / ${countries.length}`;
+    
+    if (winCountText) winCountText.innerText = `Wins: ${winCount}`;
+
+    if (accuracyText) {
+        const played = correctCountries.length;
+        const accuracy = played > 0 ? (winCount / played) * 100 : 0;
+        accuracyText.innerText = `Accuracy: ${accuracy.toFixed(1)}%`;
+
+        // Accuracy color coding
+        accuracyText.classList.remove('acc-elite', 'acc-great', 'acc-good', 'acc-average', 'acc-poor', 'acc-bad');
+        if (played > 0) {
+            if (accuracy >= 100) accuracyText.classList.add('acc-elite');
+            else if (accuracy >= 90) accuracyText.classList.add('acc-great');
+            else if (accuracy >= 80) accuracyText.classList.add('acc-good');
+            else if (accuracy >= 70) accuracyText.classList.add('acc-average');
+            else if (accuracy >= 60) accuracyText.classList.add('acc-poor');
+            else accuracyText.classList.add('acc-bad');
+        }
+    }
+
     if (avgText) {
         const avgNum = correctCountries.length > 0 ? (totalClues / correctCountries.length) : totalClues;
         avgText.innerText = `Avg Clues: ${avgNum > 0 ? avgNum.toFixed(1) : "0.0"}`;
@@ -686,6 +817,9 @@ function updateScoreUI() {
     }
     if (bestAvgText) {
         bestAvgText.innerText = `Best Avg: ${bestAverage > 0 ? bestAverage.toFixed(1) : "-"}`;
+    }
+    if (bestAccuracyText) {
+        bestAccuracyText.innerText = `Best Acc: ${bestAccuracy > 0 ? bestAccuracy.toFixed(1) + "%" : "-"}`;
     }
 }
 
@@ -761,112 +895,6 @@ function updateSidePanelList(filterText = '') {
             itemsContainer.appendChild(div);
         });
     });
-}
-
-function getShuffledClueOrder() {
-    const order = Array.from({length: clueTypes.length}, (_, i) => i);
-    for (let i = order.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [order[i], order[j]] = [order[j], order[i]];
-    }
-    return order.slice(0, maxClues);
-}
-
-function initGame() {
-    let savedCurrentCountryName = localStorage.getItem('fifadle_saved_current_country_name');
-    let savedCurrentClueIndex = localStorage.getItem('fifadle_saved_current_clue_index');
-    let savedClueResults = localStorage.getItem('fifadle_clue_results');
-    let savedClueOrder = localStorage.getItem('fifadle_clue_order');
-
-    if (savedCurrentCountryName && savedCurrentClueIndex !== null && savedClueOrder) {
-        currentCountry = countries.find(c => c.name === savedCurrentCountryName);
-        currentClue = parseInt(savedCurrentClueIndex);
-        clueResults = savedClueResults ? JSON.parse(savedClueResults) : new Array(maxClues).fill(null);
-        clueOrder = JSON.parse(savedClueOrder);
-        totalClues = JSON.parse(localStorage.getItem('fifadle_total_clues')) || 0;
-    } else {
-        currentClue = 0;
-        clueResults = new Array(maxClues).fill(null);
-        clueResults[0] = 'initial';
-        clueOrder = getShuffledClueOrder();
-        const availableCountries = countries.filter(c => !correctCountries.includes(c.name));
-        currentCountry = availableCountries.length > 0 
-            ? availableCountries[Math.floor(Math.random() * availableCountries.length)]
-            : countries[Math.floor(Math.random() * countries.length)];
-        collapsedContinents.clear();
-    }
-
-    // Always save the current state after initGame (whether loaded or new)
-    localStorage.setItem('fifadle_saved_current_country_name', currentCountry.name);
-    localStorage.setItem('fifadle_saved_current_clue_index', currentClue.toString());
-    localStorage.setItem('fifadle_clue_results', JSON.stringify(clueResults));
-    localStorage.setItem('fifadle_clue_order', JSON.stringify(clueOrder));
-
-    // Auto-collapse completed continents on load
-    const continents = [...new Set(countries.map(c => c.continent))];
-    continents.forEach(cont => {
-        const allGuessed = countries.filter(c => c.continent === cont).every(c => correctCountries.includes(c.name));
-        if (allGuessed) collapsedContinents.add(cont);
-    });
-    
-    messageDiv.className = 'pulsing';
-    messageDiv.innerText = '???';
-    guessInput.value = '';
-    guessInput.disabled = false;
-    guessInput.style.display = 'inline-block';
-    submitBtn.style.display = 'inline-block';
-    skipBtn.style.display = 'inline-block';
-    playAgainBtn.style.display = 'none';
-    if (newGameBtn) newGameBtn.style.display = 'none';
-
-    const isComplete = correctCountries.length >= countries.length;
-    if (isComplete) {
-        guessInput.style.display = 'none';
-        submitBtn.style.display = 'none';
-        skipBtn.style.display = 'none';
-        triggerCompletionAnimation();
-    } else {
-        scoreIndicator.classList.remove('complete');
-
-        // only proceed with clue rendering if game is not already complete, otherwise just show the completion state
-        renderClues();
-    }
-    
-    updateCluesUI();
-    updateScoreUI();               
-    updateSidePanelList();
-}
-
-function renderClues() {
-    const isGameOver = guessInput.disabled;
-    clueContainer.innerHTML = '';
-    for (let i = 0; i < maxClues; i++) {
-        const div = document.createElement('div');
-        // add base class
-        div.className = `clue-item `;
-        // add revealed class if clue is revealed
-        div.className += `${i <= currentClue ? 'revealed' : ''} `;
-
-        // status should be already set to 'correct' / 'incorrect' / 'skipped' 
-        const status = clueResults[i];
-        // default to initial - no class if not revealed or game is over
-        const statusClass = status || (i <= currentClue ? (isGameOver ? '' : 'initial') : '');  
-        div.className += `${statusClass}`;
-        
-        const clue = clueTypes[clueOrder[i]];
-        if (clue.key === 'fact' && i <= currentClue) {
-            // Special case for Fact: no icon, but show label
-            div.innerHTML = `<div><strong>${clue.label}:</strong> ${currentCountry[clue.key]}</div>`;
-        } else {
-            const icon = i <= currentClue ? clue.icon : '🔒';
-            const content = i <= currentClue 
-                ? `<strong>${clue.label}:</strong> ${currentCountry[clue.key]}` 
-                : `<strong>Clue ${i + 1}:</strong> Locked`;
-                
-            div.innerHTML = `<span class="clue-icon">${icon}</span><div>${content}</div>`;
-        }
-        clueContainer.appendChild(div);
-    }
 }
 
 function updateCluesUI() {
@@ -949,6 +977,8 @@ function endGame(isWin) {
 
     if (isWin) {
         playEffect(sounds.correct);
+        winCount++;
+        localStorage.setItem('fifadle_win_count', winCount);
         
         // Trigger celebratory confetti
         confetti({
@@ -985,6 +1015,13 @@ function triggerCompletionAnimation() {
     if (bestAverage === 0 || currentAvg < bestAverage) {
         bestAverage = currentAvg;
         localStorage.setItem('fifadle_best_average', bestAverage);
+        updateScoreUI();
+    }
+
+    const currentAcc = (winCount / countries.length) * 100;
+    if (bestAccuracy === 0 || currentAcc > bestAccuracy) {
+        bestAccuracy = currentAcc;
+        localStorage.setItem('fifadle_best_accuracy', bestAccuracy);
         updateScoreUI();
     }
         
@@ -1047,11 +1084,15 @@ function resetGame(resetProgress = false) {
         localStorage.removeItem('fifadle_saved_current_clue_index');
         localStorage.removeItem('fifadle_clue_results');
         localStorage.removeItem('fifadle_clue_order');
+        localStorage.removeItem('fifadle_win_count');
         if (resetProgress) {
             localStorage.removeItem('fifadle_best_average');
+            localStorage.removeItem('fifadle_best_accuracy');
             bestAverage = 0;
+            bestAccuracy = 0;
         }
         correctCountries = [];
+        winCount = 0;
         totalClues = 0;
         collapsedContinents.clear();
         updateScoreUI();
@@ -1067,6 +1108,10 @@ function testCompletion() {
         // Fill progress with the first 47 countries in the list
         correctCountries = countries.slice(0, 47).map(c => c.name);
         localStorage.setItem('fifadle_correct_list', JSON.stringify(correctCountries));
+
+        // Mock some wins (e.g., 40 wins out of 47)
+        winCount = 40;
+        localStorage.setItem('fifadle_win_count', winCount);
         
         // Set total clues so the average looks realistic (e.g., 3 clues per country)
         totalClues = 47 * 3;
