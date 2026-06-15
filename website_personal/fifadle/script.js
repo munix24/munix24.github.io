@@ -6,7 +6,8 @@ const clueTypes = [
     { key: 'capital', label: 'Capital', icon: '🏛️' },
     { key: 'star', label: 'Star', icon: '⭐' },
     { key: 'fifaRank', label: 'Rank', icon: '📈' },
-    { key: 'fact', label: 'Fact', icon: '' },
+    { key: 'history', label: 'WC History', icon: '🏆' },
+    { key: 'fact', label: '', icon: '' },
     { key: 'flag', label: 'Flag', icon: '🏁' }
 ];
 
@@ -136,17 +137,21 @@ function renderClues() {
         div.className += `${statusClass}`;
         
         const clue = clueTypes[clueOrder[i]];
-        if (clue.key === 'fact' && i <= currentClue) {
-            // Special case for Fact: no icon, but show label
-            div.innerHTML = `<div><strong>${clue.label}:</strong> ${currentCountry[clue.key]}</div>`;
+
+        const icon = i <= currentClue ? clue.icon : '🔒';
+        const iconHtml = icon ? `<span class="clue-icon">${icon}</span>` : '';
+        
+        let content;
+        let label;
+        if (i <= currentClue) {
+            label = clue.label ? `${clue.label}: ` : '';
+            content = `${currentCountry[clue.key]}`;
         } else {
-            const icon = i <= currentClue ? clue.icon : '🔒';
-            const content = i <= currentClue 
-                ? `<strong>${clue.label}:</strong> ${currentCountry[clue.key]}` 
-                : `<strong>Clue ${i + 1}:</strong> Locked`;
-                
-            div.innerHTML = `<span class="clue-icon">${icon}</span><div>${content}</div>`;
+            label = `Clue ${i + 1}: `;
+            content = `Locked`;
         }
+            
+        div.innerHTML = `${iconHtml}<div><strong>${label}</strong>${content}</div>`;
         clueContainer.appendChild(div);
     }
 }
@@ -718,10 +723,25 @@ document.addEventListener('mouseenter', () => {
     }
 });
 
+function validateCountriesData(data) {
+    if (!Array.isArray(data) || data.length === 0) return false;
+
+    const requiredKeys = ['name', 'flag', 'continent', 'colors', 'capital', 'star', 'fifaRank', 'fact', 'history'];
+    return data.every(c => 
+        requiredKeys.every(key => c[key] !== undefined && c[key] !== null)
+    );
+}
+
 async function loadCountries() {
     try {
         const response = await fetch('countries_data.json');
-        countries = await response.json();
+        const data = await response.json();
+
+        if (!validateCountriesData(data)) {
+            throw new Error("Data validation failed: countries_data.json is malformed or missing required keys.");
+        }
+
+        countries = data;
 
         // Populate datalist alphabetically for better UX
         [...countries]
