@@ -1,0 +1,482 @@
+[
+    { 
+        "name": "Argentina", 
+        "flag": "🇦🇷",
+        "continent": "South America",
+        "colors": "Sky Blue and White",
+        "capital": "Buenos Aires",
+        "star": "Lionel Messi",
+        "fifaRank": "1",
+        "fact": "Defending 2022 Champions"
+    },
+    { 
+        "name": "France", 
+        "flag": "🇫🇷",
+        "continent": "Europe",
+        "colors": "Blue, White, Red",
+        "capital": "Paris",
+        "star": "Kylian Mbappé",
+        "fifaRank": "2",
+        "fact": "2018 World Cup Winners"
+    },
+    { 
+        "name": "USA", 
+        "flag": "🇺🇸",
+        "continent": "North America",
+        "colors": "Red, White, Blue",
+        "capital": "Washington D.C.",
+        "star": "Christian Pulisic",
+        "fifaRank": "11",
+        "fact": "One of the three 2026 host nations"
+    },
+    { 
+        "name": "Morocco", 
+        "flag": "🇲🇦",
+        "continent": "Africa",
+        "colors": "Red and Green",
+        "capital": "Rabat",
+        "star": "Achraf Hakimi",
+        "fifaRank": "13",
+        "fact": "First African team to reach a WC semi-final"
+    },
+    { 
+        "name": "Japan", 
+        "flag": "🇯🇵",
+        "continent": "Asia",
+        "colors": "Blue and White",
+        "capital": "Tokyo",
+        "star": "Takefusa Kubo",
+        "fifaRank": "18",
+        "fact": "Known as the Samurai Blue"
+    },
+    { 
+        "name": "Brazil", 
+        "flag": "🇧🇷",
+        "continent": "South America",
+        "colors": "Yellow and Green",
+        "capital": "Brasília",
+        "star": "Vinícius Júnior",
+        "fifaRank": "5",
+        "fact": "Only team to play in every World Cup"
+    },
+    { 
+        "name": "England", 
+        "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "continent": "Europe",
+        "colors": "White and Red",
+        "capital": "London",
+        "star": "Harry Kane",
+        "fifaRank": "4",
+        "fact": "Winners of the 1966 World Cup"
+    },
+    { 
+        "name": "Belgium", 
+        "flag": "🇧🇪",
+        "continent": "Europe",
+        "colors": "Red and Black",
+        "capital": "Brussels",
+        "star": "Kevin De Bruyne",
+        "fifaRank": "3",
+        "fact": "Known as the Red Devils"
+    },
+    { 
+        "name": "Portugal", 
+        "flag": "🇵🇹",
+        "continent": "Europe",
+        "colors": "Red and Green",
+        "capital": "Lisbon",
+        "star": "Cristiano Ronaldo",
+        "fifaRank": "6",
+        "fact": "Winners of Euro 2016"
+    },
+    { 
+        "name": "Netherlands", 
+        "flag": "🇳🇱",
+        "continent": "Europe",
+        "colors": "Orange",
+        "capital": "Amsterdam",
+        "star": "Virgil van Dijk",
+        "fifaRank": "7",
+        "fact": "Three-time World Cup runners-up"
+    },
+    { 
+        "name": "Spain", 
+        "flag": "🇪🇸",
+        "continent": "Europe",
+        "colors": "Red and Gold",
+        "capital": "Madrid",
+        "star": "Rodri",
+        "fifaRank": "8",
+        "fact": "Winners of the 2010 World Cup"
+    },
+    { 
+        "name": "Italy", 
+        "flag": "🇮🇹",
+        "continent": "Europe",
+        "colors": "Blue",
+        "capital": "Rome",
+        "star": "Nicolò Barella",
+        "fifaRank": "9",
+        "fact": "Four-time World Cup winners"
+    },
+    { 
+        "name": "Croatia", 
+        "flag": "🇭🇷",
+        "continent": "Europe",
+        "colors": "Red and White Checks",
+        "capital": "Zagreb",
+        "star": "Luka Modrić",
+        "fifaRank": "10",
+        "fact": "Runners-up in the 2018 World Cup"
+    },
+    { 
+        "name": "Germany", 
+        "flag": "🇩🇪",
+        "continent": "Europe",
+        "colors": "White and Black",
+        "capital": "Berlin",
+        "star": "Florian Wirtz",
+        "fifaRank": "16",
+        "fact": "Won their 4th title in 2014"
+    },
+    { 
+        "name": "Mexico", 
+        "flag": "🇲🇽",
+        "continent": "North America",
+        "colors": "Green, White, Red",
+        "capital": "Mexico City",
+        "star": "Santiago Giménez",
+        "fifaRank": "15",
+        "fact": "First country to host three World Cups"
+    },
+    { 
+        "name": "Uruguay", 
+        "flag": "🇺🇾",
+        "continent": "South America",
+        "colors": "Sky Blue",
+        "capital": "Montevideo",
+        "star": "Federico Valverde",
+        "fifaRank": "14",
+        "fact": "Winners of the first ever World Cup"
+    },
+    { 
+        "name": "Colombia", 
+        "flag": "🇨🇴",
+        "continent": "South America",
+        "colors": "Yellow, Blue, Red",
+        "capital": "Bogotá",
+        "star": "Luis Díaz",
+        "fifaRank": "12",
+        "fact": "Reached the quarter-finals in 2014"
+    },
+    { 
+        "name": "Senegal", 
+        "flag": "🇸🇳",
+        "continent": "Africa",
+        "colors": "White and Green",
+        "capital": "Dakar",
+        "star": "Sadio Mané",
+        "fifaRank": "17",
+        "fact": "Current AFCON heavyweights"
+    },
+    { 
+        "name": "Switzerland", 
+        "flag": "🇨🇭",
+        "continent": "Europe",
+        "colors": "Red and White",
+        "capital": "Bern",
+        "star": "Granit Xhaka",
+        "fifaRank": "19",
+        "fact": "Regularly reach the Round of 16"
+    },
+    { 
+        "name": "Iran", 
+        "flag": "🇮🇷",
+        "continent": "Asia",
+        "colors": "White and Green",
+        "capital": "Tehran",
+        "star": "Mehdi Taremi",
+        "fifaRank": "20",
+        "fact": "Highest ranked team in Central Asia"
+    },
+    { 
+        "name": "Denmark", 
+        "flag": "🇩🇰",
+        "continent": "Europe",
+        "colors": "Red and White",
+        "capital": "Copenhagen",
+        "star": "Christian Eriksen",
+        "fifaRank": "21",
+        "fact": "Euro 1992 surprise winners"
+    },
+    { 
+        "name": "South Korea", 
+        "flag": "🇰🇷",
+        "continent": "Asia",
+        "colors": "Red",
+        "capital": "Seoul",
+        "star": "Son Heung-min",
+        "fifaRank": "23",
+        "fact": "Semi-finalists in 2002"
+    },
+    { 
+        "name": "Australia", 
+        "flag": "🇦🇺",
+        "continent": "Oceania",
+        "colors": "Gold and Green",
+        "capital": "Canberra",
+        "star": "Mathew Ryan",
+        "fifaRank": "24",
+        "fact": "Known as the Socceroos"
+    },
+    { 
+        "name": "Ukraine", 
+        "flag": "🇺🇦",
+        "continent": "Europe",
+        "colors": "Blue and Yellow",
+        "capital": "Kyiv",
+        "star": "Oleksandr Zinchenko",
+        "fifaRank": "22",
+        "fact": "Reached 2006 WC Quarter-finals"
+    },
+    { 
+        "name": "Austria", 
+        "flag": "🇦🇹",
+        "continent": "Europe",
+        "colors": "Red and White",
+        "capital": "Vienna",
+        "star": "David Alaba",
+        "fifaRank": "25",
+        "fact": "Finished 3rd in 1954"
+    },
+    { 
+        "name": "Nigeria", 
+        "flag": "🇳🇬",
+        "continent": "Africa",
+        "colors": "Green and White",
+        "capital": "Abuja",
+        "star": "Victor Osimhen",
+        "fifaRank": "30",
+        "fact": "Known as the Super Eagles"
+    },
+    { 
+        "name": "Canada", 
+        "flag": "🇨🇦",
+        "continent": "North America",
+        "colors": "Red and White",
+        "capital": "Ottawa",
+        "star": "Alphonso Davies",
+        "fifaRank": "49",
+        "fact": "Co-host making their 3rd appearance"
+    },
+    { 
+        "name": "Egypt", 
+        "flag": "🇪🇬",
+        "continent": "Africa",
+        "colors": "Red, White, Black",
+        "capital": "Cairo",
+        "star": "Mohamed Salah",
+        "fifaRank": "36",
+        "fact": "Most AFCON titles in history"
+    },
+    { 
+        "name": "Ecuador", 
+        "flag": "🇪🇨",
+        "continent": "South America",
+        "colors": "Yellow, Blue, Red",
+        "capital": "Quito",
+        "star": "Enner Valencia",
+        "fifaRank": "31",
+        "fact": "Played the opening match in 2022"
+    },
+    { 
+        "name": "Serbia", 
+        "flag": "🇷🇸",
+        "continent": "Europe",
+        "colors": "Red",
+        "capital": "Belgrade",
+        "star": "Dušan Vlahović",
+        "fifaRank": "33",
+        "fact": "Successor to the Yugoslavia team"
+    },
+    { 
+        "name": "Peru", 
+        "flag": "🇵🇪",
+        "continent": "South America",
+        "colors": "White with Red Sash",
+        "capital": "Lima",
+        "star": "Luis Advíncula",
+        "fifaRank": "32",
+        "fact": "Returned to the WC in 2018 after 36 years"
+    },
+    { 
+        "name": "Scotland", 
+        "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+        "continent": "Europe",
+        "colors": "Dark Blue",
+        "capital": "Edinburgh",
+        "star": "Andrew Robertson",
+        "fifaRank": "39",
+        "fact": "Played in the first ever international match"
+    },
+    { 
+        "name": "Poland", 
+        "flag": "🇵🇱",
+        "continent": "Europe",
+        "colors": "White and Red",
+        "capital": "Warsaw",
+        "star": "Robert Lewandowski",
+        "fifaRank": "28",
+        "fact": "Finished 3rd in 1974 and 1982"
+    },
+    { 
+        "name": "Algeria", 
+        "flag": "🇩🇿",
+        "continent": "Africa",
+        "colors": "White and Green",
+        "capital": "Algiers",
+        "star": "Riyad Mahrez",
+        "fifaRank": "43",
+        "fact": "Beat West Germany in 1982"
+    },
+    { 
+        "name": "Tunisia", 
+        "flag": "🇹🇳",
+        "continent": "Africa",
+        "colors": "Red and White",
+        "capital": "Tunis",
+        "star": "Ellyes Skhiri",
+        "fifaRank": "41",
+        "fact": "First African team to win a WC match (1978)"
+    },
+    { 
+        "name": "Chile", 
+        "flag": "🇨🇱",
+        "continent": "South America",
+        "colors": "Red, White, Blue",
+        "capital": "Santiago",
+        "star": "Alexis Sánchez",
+        "fifaRank": "42",
+        "fact": "Hosted the 1962 World Cup"
+    },
+    { 
+        "name": "Turkey", 
+        "flag": "🇹🇷",
+        "continent": "Europe",
+        "colors": "Red and White",
+        "capital": "Ankara",
+        "star": "Hakan Çalhanoğlu",
+        "fifaRank": "40",
+        "fact": "Finished 3rd in 2002"
+    },
+    { 
+        "name": "Norway", 
+        "flag": "🇳🇴",
+        "continent": "Europe",
+        "colors": "Red, White, Blue",
+        "capital": "Oslo",
+        "star": "Erling Haaland",
+        "fifaRank": "47",
+        "fact": "Famous win against Brazil in 1998"
+    },
+    { 
+        "name": "Ivory Coast", 
+        "flag": "🇨🇮",
+        "continent": "Africa",
+        "colors": "Orange",
+        "capital": "Yamoussoukro",
+        "star": "Sébastien Haller",
+        "fifaRank": "38",
+        "fact": "Known as the Elephants"
+    },
+    { 
+        "name": "Cameroon", 
+        "flag": "🇨🇲",
+        "continent": "Africa",
+        "colors": "Green and Red",
+        "capital": "Yaoundé",
+        "star": "Vincent Aboubakar",
+        "fifaRank": "51",
+        "fact": "First African quarter-finalists (1990)"
+    },
+    { 
+        "name": "Mali", 
+        "flag": "🇲🇱",
+        "continent": "Africa",
+        "colors": "Green, Yellow, Red",
+        "capital": "Bamako",
+        "star": "Yves Bissouma",
+        "fifaRank": "44",
+        "fact": "Consistent performers in youth WCs"
+    },
+    { 
+        "name": "Ghana", 
+        "flag": "🇬🇭",
+        "continent": "Africa",
+        "colors": "White and Black",
+        "capital": "Accra",
+        "star": "Mohammed Kudus",
+        "fifaRank": "68",
+        "fact": "Known as the Black Stars"
+    },
+    { 
+        "name": "Panama", 
+        "flag": "🇵🇦",
+        "continent": "North America",
+        "colors": "Red",
+        "capital": "Panama City",
+        "star": "Adalberto Carrasquilla",
+        "fifaRank": "45",
+        "fact": "Made their debut in 2018"
+    },
+    { 
+        "name": "Costa Rica", 
+        "flag": "🇨🇷",
+        "continent": "North America",
+        "colors": "Red and Blue",
+        "capital": "San José",
+        "star": "Keylor Navas",
+        "fifaRank": "52",
+        "fact": "Reached the quarter-finals in 2014"
+    },
+    { 
+        "name": "New Zealand", 
+        "flag": "🇳🇿",
+        "continent": "Oceania",
+        "colors": "White",
+        "capital": "Wellington",
+        "star": "Chris Wood",
+        "fifaRank": "107",
+        "fact": "Only undefeated team in 2010 WC"
+    },
+    { 
+        "name": "Qatar", 
+        "flag": "🇶🇦",
+        "continent": "Asia",
+        "colors": "Maroon and White",
+        "capital": "Doha",
+        "star": "Akram Afif",
+        "fifaRank": "34",
+        "fact": "Hosts of the 2022 World Cup"
+    },
+    { 
+        "name": "Iraq", 
+        "flag": "🇮🇶",
+        "continent": "Asia",
+        "colors": "White",
+        "capital": "Baghdad",
+        "star": "Aymen Hussein",
+        "fifaRank": "58",
+        "fact": "Asian Cup winners in 2007"
+    },
+    { 
+        "name": "Saudi Arabia", 
+        "flag": "🇸🇦",
+        "continent": "Asia",
+        "colors": "Green and White",
+        "capital": "Riyadh",
+        "star": "Salem Al-Dawsari",
+        "fifaRank": "53",
+        "fact": "Beat Argentina in 2022"
+    }
+]
