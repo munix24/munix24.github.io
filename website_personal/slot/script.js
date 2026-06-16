@@ -220,9 +220,15 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.style.transition = '';
     }
 
-    document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 50, 5));
+    document.getElementById('buy-double').addEventListener('click', () => {
+        const cost = Math.max(50, Math.floor(credits * 0.10));
+        buyPowerUp('double', cost, 5);
+    });
     document.getElementById('buy-speed').addEventListener('click', () => buyPowerUp('speed', 50, 10));
-    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 5));
+    document.getElementById('buy-luck').addEventListener('click', () => {
+        const cost = Math.max(50, Math.floor(credits * 0.10));
+        buyPowerUp('luck', cost, 5);
+    });
 
     // Listen for line toggles to update the Total Cost UI immediately
     ['line-top', 'line-middle', 'line-bottom'].forEach(id => {
@@ -905,9 +911,11 @@ function updateStats() {
     document.getElementById('bet-val').innerText = currentBet;
     document.getElementById('total-spin-cost').innerText = totalCost;
 
-    document.getElementById('buy-double').innerText = activeDouble > 0 ? `50c: ${activeDouble}` : "50c";
+    const boostCost = Math.max(50, Math.floor(credits * 0.10));
+
+    document.getElementById('buy-double').innerText = activeDouble > 0 ? `${boostCost}c: ${activeDouble}` : `${boostCost}c`;
     document.getElementById('buy-speed').innerText = activeSpeed > 0 ? `50c: ${activeSpeed}` : "50c";
-    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `50c: ${activeLuck}` : "50c";
+    document.getElementById('buy-luck').innerText = activeLuck > 0 ? `${boostCost}c: ${activeLuck}` : `${boostCost}c`;
     
     // Visual notification for Luck Boost
     const reelsFrame = document.getElementById('reels-frame');
