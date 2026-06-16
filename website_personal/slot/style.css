@@ -406,7 +406,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 5px;
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -422,7 +422,7 @@ h1 {
     color: var(--gold);
     border: 1px solid var(--gold);
     border-radius: 5px;
-    padding: 5px 15px;
+    padding: 5px 10px;
     cursor: pointer;
     font-weight: bold;
 }
@@ -991,4 +991,11 @@ th[data-tooltip], td[data-tooltip] {
     .lever-left .lever-system { right: auto; left: -5vh; }
     .lever-left .lever-base { border-radius: 0 10px 10px 0; left: auto; right: 1.5vh; }
     .lever-left .lever-arm { left: auto; right: 3.5vh; }
+}
+
+.powerup-item button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(1);
+    border-color: #555;
 }

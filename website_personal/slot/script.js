@@ -45,6 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('auto-btn').addEventListener('click', toggleAutoSpin);
     document.getElementById('bet-inc').addEventListener('click', () => changeBet(1));
     document.getElementById('bet-dec').addEventListener('click', () => changeBet(-1));
+    document.getElementById('bet-min').addEventListener('click', () => {
+        currentBet = 1;
+        updateStats();
+    });
+    document.getElementById('bet-max').addEventListener('click', () => {
+        const activeLines = [
+            document.getElementById('line-top').checked,
+            document.getElementById('line-middle').checked,
+            document.getElementById('line-bottom').checked
+        ];
+        const lineCount = activeLines.filter(Boolean).length;
+        if (lineCount > 0) {
+            currentBet = Math.max(1, Math.floor(credits / lineCount));
+            updateStats();
+        }
+    });
     document.getElementById('reset-btn').addEventListener('click', resetGame);
 
     // Volume Control Initialization
@@ -204,9 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.style.transition = '';
     }
 
-    document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 50, 10));
+    document.getElementById('buy-double').addEventListener('click', () => buyPowerUp('double', 50, 5));
     document.getElementById('buy-speed').addEventListener('click', () => buyPowerUp('speed', 50, 10));
-    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 10));
+    document.getElementById('buy-luck').addEventListener('click', () => buyPowerUp('luck', 50, 5));
 
     // Listen for line toggles to update the Total Cost UI immediately
     ['line-top', 'line-middle', 'line-bottom'].forEach(id => {
@@ -681,6 +697,8 @@ async function handleSpin() {
     btn.disabled = true;
     document.getElementById('bet-inc').disabled = true;
     document.getElementById('bet-dec').disabled = true;
+    document.getElementById('bet-min').disabled = true;
+    document.getElementById('bet-max').disabled = true;
 
     // Logic: Determine winners for 3 lines (top, mid, bot) across 3 reels
     // results[reelIndex] = [topSymbol, midSymbol, botSymbol]
@@ -768,6 +786,8 @@ async function handleSpin() {
     btn.disabled = false;
     document.getElementById('bet-inc').disabled = false;
     document.getElementById('bet-dec').disabled = false;
+    document.getElementById('bet-min').disabled = false;
+    document.getElementById('bet-max').disabled = false;
 
     if (stopAutoOnBigWin && isAutoSpinning) {
         toggleAutoSpin();

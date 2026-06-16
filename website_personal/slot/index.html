@@ -1,40 +1,4 @@
-<!-- 
-    create html and javascript of a playable slot machine game
 
-theme:
-    Make the machine and text in vintage slot colors and theme with a black background.
-
-    machine style more colorful and animated to bring attention
-
-animation:
-    Make a lever pull animation to begin the spin add sound effects for lever pull, spinning, and winning
-
-    make the reel animation spin similar to a vintage slot machine
-
-images:    
-    Make 3 reels and 5 symbols (Cherry, Lemon, Bell, Bar, 7) with different probabilities and payouts.
-
-gameplay:
-    3 symbols in a row or 2 symbold trigger a payout.
-
-    Start with 100 credits and each spin costs default 10. 
-
-    Make bet adjustable from 1 to 10 per line
-
-    Make each line toggelable so player can choose to bet on 1, 2 or 3 lines and adjust the total cost accordingly
-
-stats:
-    Display symbol panel with each symbol and probability and payout and theoretical rtp of each and total rtp of the game
-
-    Below symbol panel display stats panel with total bet and total payout and calculate the actual rtp
-
-    Below stats panel display panel with the history of # spin and payout
-
-    Make each panel resizeable and collapsable with a toggle button on the header of each panel
-
-etc:
-    what else can I add to the game for a successful and fun slot game
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,16 +43,16 @@ etc:
             </div>
             <div class="panel-content">
                 <div class="powerup-item">
-                    <span>💰 Double Win 10 turns</span>
-                    <button id="buy-double">50c</button>
+                    <span>💰 Double Win 5 turns</span>
+                    <button id="buy-double" disabled>50c</button>
                 </div>
                 <div class="powerup-item">
                     <span>⚡ Speed Spin 10 turns</span>
                     <button id="buy-speed">50c</button>
                 </div>
                 <div class="powerup-item">
-                    <span>🍀 Luck Boost 10 turns</span>
-                    <button id="buy-luck">50c</button>
+                    <span>🍀 Luck Boost 5 turns</span>
+                    <button id="buy-luck" disabled>50c</button>
                 </div>
             </div>
         </div>
@@ -174,9 +138,11 @@ etc:
         <div class="controls">
             <div class="bet-adjust">
                 BET/LINE: 
+                <button id="bet-min">MIN</button>
                 <button id="bet-dec">-</button>
                 <span id="bet-val">1</span>
                 <button id="bet-inc">+</button>
+                <button id="bet-max">MAX</button>
             </div>
             <div class="total-cost-display">TOTAL COST: <span id="total-spin-cost">3</span> CREDITS</div>
             <div class="main-actions">
