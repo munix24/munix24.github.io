@@ -74,5 +74,4 @@ Can you add a chart or distribution showing how many clues it usually takes play
 
 
 
-generate new fact for Mali, Algeria, Poland, Ecuador, Austria, Switzerland, Senegal, Colombia, Germany, England, USA to be more distinguishable
 separate mode to not randomize clues
