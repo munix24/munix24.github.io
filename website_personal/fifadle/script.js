@@ -5,7 +5,7 @@ const clueTypes = [
     { key: 'colors', label: 'Colors', icon: '🎨' },
     { key: 'capital', label: 'Capital', icon: '🏛️' },
     { key: 'star', label: 'Star', icon: '⭐' },
-    { key: 'fifaRank', label: 'Rank', icon: '📈' },
+    { key: 'fifaRank', label: 'Rank / Group', icon: '📈' },
     { key: 'nickname', label: 'Nickname', icon: '🗣️' },
     { key: 'history', label: 'WC History', icon: '🏆' },
     { key: 'fact', label: 'Fact', icon: '💡' },
