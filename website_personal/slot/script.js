@@ -530,6 +530,20 @@ function updatePaytable() {
     let totalChance = 0;
     let totalHit3Chance = 0;
 
+    const lineIds = ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'];
+    const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
+    const lineCount = activeLines.filter(Boolean).length;
+    const numHeld = heldReels.filter(Boolean).length;
+
+    // Define the row mapping for each payline across the 3 reels
+    const paylineRows = [
+        [0, 0, 0], // Top
+        [1, 1, 1], // Middle
+        [2, 2, 2], // Bottom
+        [0, 1, 2], // Diag 1
+        [2, 1, 0]  // Diag 2
+    ];
+
     tempSymbols.forEach(s => {
         const p = s.weight / totalWeight;
         const chanceVal = p * 100;
@@ -631,7 +645,30 @@ function fillStrip(index) {
     for (let i = 0; i < STRIP_LENGTH; i++) {
         const div = document.createElement('div');
         div.className = 'symbol';
-        div.innerText = getRandomSymbol().char;
+        let symbol = getRandomSymbol();
+
+        // Rigging: prevent 7-7-7 jackpot on initial load/reset for rows and diagonals
+        if (index === 2 && i >= STRIP_LENGTH - 3) {
+            const rowIdx = i - (STRIP_LENGTH - 3);
+            const rigChecks = [
+                [0, 0, 0], [1, 1, 1], [2, 2, 2], // Rows
+                [0, 1, 2], [2, 1, 0]             // Diagonals
+            ];
+
+            const isJackpot = rigChecks.some(r => {
+                if (r[2] !== rowIdx) return false;
+                const s0 = document.getElementById('strip-0').children[STRIP_LENGTH - 3 + r[0]];
+                const s1 = document.getElementById('strip-1').children[STRIP_LENGTH - 3 + r[1]];
+                if (!s0 || !s1) return false;
+                return s0.innerText === '7️⃣' && s1.innerText === '7️⃣' && symbol.char === '7️⃣';
+            });
+
+            if (isJackpot) {
+                symbol = symbols.find(s => s.char === '🍇');
+            }
+        }
+
+        div.innerText = symbol.char;
         strip.appendChild(div);
     }
 }
