@@ -75,3 +75,6 @@ Can you add a chart or distribution showing how many clues it usually takes play
 
 
 separate mode to not randomize clues
+
+
+make text not selectable on mobile

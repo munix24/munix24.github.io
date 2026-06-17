@@ -5,7 +5,7 @@ const clueTypes = [
     { key: 'colors', label: 'Colors', icon: '🎨' },
     { key: 'capital', label: 'Capital', icon: '🏛️' },
     { key: 'star', label: 'Star', icon: '⭐' },
-    { key: 'fifaRank', label: 'Rank / Group', icon: '📈' },
+    { key: 'fifaRank', label: 'FifaRank and Group', icon: '📈' },
     { key: 'nickname', label: 'Nickname', icon: '🗣️' },
     { key: 'history', label: 'WC History', icon: '🏆' },
     { key: 'fact', label: 'Fact', icon: '💡' },
@@ -33,6 +33,7 @@ const clueContainer = document.getElementById('clue-container');
 const clueText = document.getElementById('clue-text');
 const scoreText = document.getElementById('score-text');
 const scoreIndicator = document.querySelector('.score-indicator');
+const progressBar = document.getElementById('progress-bar');
 const winCountText = document.getElementById('win-count-text');
 const accuracyText = document.getElementById('accuracy-text');
 const avgText = document.getElementById('avg-text');
@@ -40,7 +41,7 @@ const bestAvgText = document.getElementById('best-avg-text');
 const bestAccuracyText = document.getElementById('best-accuracy-text');
 const totalCluesText = document.getElementById('total-clues-text');
 const guessInput = document.getElementById('guess-input');
-const messageDiv = document.getElementById('message');
+const correctCountry = document.getElementById('correctCountry');
 const submitBtn = document.getElementById('submit-btn');
 const playAgainBtn = document.getElementById('play-again-btn');
 const shareBtn = document.getElementById('share-btn');
@@ -86,8 +87,8 @@ function initGame() {
         if (allGuessed) collapsedContinents.add(cont);
     });
     
-    messageDiv.className = 'pulsing';
-    messageDiv.innerText = '???';
+    correctCountry.className = 'pulsing';
+    correctCountry.innerText = '???';
     guessInput.value = '';
     isRoundOver = false;
     guessInput.readOnly = isMobile; // Disable typing on mobile to encourage using the datalist
@@ -165,9 +166,14 @@ function updateCluesUI() {
 }
 
 function updateScoreUI() {
-    scoreText.innerText = `Country: ${correctCountries.length} / ${countries.length}`;
+    const total = countries.length || 48;
+    const finished = correctCountries.length;
+    const progressPercent = (finished / total) * 100;
+
+    if (progressBar) progressBar.style.width = `${progressPercent}%`;
+    scoreText.innerText = `Country: ${finished} / ${total}`;
     
-    if (winCountText) winCountText.innerText = `Wins: ${winCount}`;
+    if (winCountText) winCountText.innerText = `Correct: ${winCount}`;
 
     if (accuracyText) {
         const played = correctCountries.length;
@@ -388,8 +394,8 @@ function endGame(isWin) {
 
     const winClue = currentClue;
     lastResultEmoji = generateShareEmoji(isWin, winClue);
-    messageDiv.innerHTML = `${currentCountry.name} <span style="font-size: 2.2rem; margin-left: 10px;">${currentCountry.flag}</span>`;
-    messageDiv.className = isWin ? 'success' : 'error';
+    correctCountry.innerHTML = `${currentCountry.name} <span style="font-size: 2.2rem; margin-left: 10px;">${currentCountry.flag}</span>`;
+    correctCountry.className = isWin ? 'success' : 'error';
 }
 
 function triggerCompletionAnimation() {
@@ -550,7 +556,7 @@ document.addEventListener('keydown', (e) => {
 guessInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') makeGuess(); });
 
 // Open side panel when input is focused
-messageDiv.addEventListener('click', () => { sidePanel.classList.add('open'); });
+correctCountry.addEventListener('click', () => { sidePanel.classList.add('open'); });
 guessInput.addEventListener('focus', () => { sidePanel.classList.add('open'); });
 
 // Automatically submit when a country is selected from the datalist
@@ -623,7 +629,7 @@ document.addEventListener('click', (e) => {
         settingsPanel.classList.remove('visible');
     }
     // Close side panel when clicking outside of the panel, the toggle, or the input
-    if (!sidePanel.contains(e.target) && !guessInput.contains(e.target) && !messageDiv.contains(e.target)) {
+    if (!sidePanel.contains(e.target) && !guessInput.contains(e.target) && !correctCountry.contains(e.target)) {
         sidePanel.classList.remove('open');
     }
 });

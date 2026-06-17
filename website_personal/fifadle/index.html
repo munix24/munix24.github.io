@@ -33,16 +33,20 @@
     </div>
     <h1>🏆 Fifadle 2026</h1>
     <div class="score-indicator">
-        <span id="score-text" data-tooltip="Countries played / Total Countries.">Countries: 0 / 48</span>
+        <span id="win-count-text" data-tooltip="Total number of countries guessed correctly.">Correct: 0</span>
+        <span id="accuracy-text" data-tooltip="Percentage of games won (Correct / Total countries played).">Accuracy: 0.0%</span>
+        <span id="best-accuracy-text" data-tooltip="Your highest accuracy record after guessing all 48 teams.">Best Acc: -</span>
+        <div class="break"></div>
         <span id="avg-text" data-tooltip="Average number of clues used per country (Clues Used / Countries played).">Avg Clues: 0.0</span>
         <span id="best-avg-text" data-tooltip="Your best average clues record after finding all 48 teams.">Best Avg: -</span>
-        <span id="win-count-text" data-tooltip="Total number of countries guessed correctly.">Wins: 0</span>
-        <span id="accuracy-text" data-tooltip="Percentage of games won (Wins / Total games finished).">Accuracy: 0.0%</span>
-        <span id="best-accuracy-text" data-tooltip="Your highest accuracy record after finding all 48 teams.">Best Acc: -</span>
     </div>
 
     <p>Guess the 2026 World Cup Country using the clues</p>
-    <div id="message"></div>
+    <div class="progress-container" data-tooltip="Overall progress: Number of countries guessed out of 48.">
+        <div id="progress-bar" class="progress-bar"></div>
+        <span id="score-text">0 / 48</span>
+    </div>
+    <div id="correctCountry"></div>
 
     <div class="clue-indicator">
         <span id="clue-text">Clue 1 / 6</span>
