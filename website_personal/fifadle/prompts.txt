@@ -17,6 +17,8 @@ UI
 UX
 	clicking side-continent-header toggles collapsing continent countries 
 	Can we add a "Skip Clue" shortcut key like the Spacebar to quickly move to the next Clue?
+	make text not selectable on mobile
+
 
 sound
 	Can you add simple not annoying sound effect for correct and incorrect guesses?
@@ -60,7 +62,8 @@ progression:
 
 FIFA color theme?
 Can you add a leaderboard?
-Can you suggest how to make the clue list more compact so the game fits on one screen without scrolling?
+
+Can you suggest how to make the clue list variable height so the game fits on one screen without scrolling?
 
 
 
@@ -77,4 +80,3 @@ Can you add a chart or distribution showing how many clues it usually takes play
 separate mode to not randomize clues
 
 
-make text not selectable on mobile

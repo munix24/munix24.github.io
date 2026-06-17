@@ -31,6 +31,7 @@ const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 const clueContainer = document.getElementById('clue-container');
 const clueText = document.getElementById('clue-text');
+const gameContainer = document.querySelector('.game-container');
 const scoreText = document.getElementById('score-text');
 const scoreIndicator = document.querySelector('.score-indicator');
 const progressBar = document.getElementById('progress-bar');
@@ -104,6 +105,7 @@ function initGame() {
         triggerCompletionAnimation();
     } else {
         scoreIndicator.classList.remove('complete');
+        if (gameContainer) gameContainer.classList.remove('tournament-complete');
 
         // only proceed with clue rendering if game is not already complete, otherwise just show the completion state
         renderClues();
@@ -170,8 +172,15 @@ function updateScoreUI() {
     const finished = correctCountries.length;
     const progressPercent = (finished / total) * 100;
 
-    if (progressBar) progressBar.style.width = `${progressPercent}%`;
-    scoreText.innerText = `Country: ${finished} / ${total}`;
+    if (progressBar) {
+        progressBar.style.width = `${progressPercent}%`;
+        if (finished >= total && total > 0) {
+            progressBar.classList.add('full');
+        } else {
+            progressBar.classList.remove('full');
+        }
+    }
+    scoreText.innerText = `Country: ${Math.min(finished + 1, total)} / ${total}`;
     
     if (winCountText) winCountText.innerText = `Correct: ${winCount}`;
 
@@ -424,8 +433,14 @@ function triggerCompletionAnimation() {
     if (newGameBtn) newGameBtn.style.display = 'block';
 
     const isComplete = correctCountries.length >= countries.length;
-    if (isComplete) scoreIndicator.classList.add('complete');
-    else scoreIndicator.classList.remove('complete');
+    if (isComplete) {
+        scoreIndicator.classList.add('complete');
+        if (gameContainer) gameContainer.classList.add('tournament-complete');
+    }
+    else {
+        scoreIndicator.classList.remove('complete');
+        if (gameContainer) gameContainer.classList.remove('tournament-complete');
+    }
 
     // Play the special victory sound
     playEffect(sounds.victory);
