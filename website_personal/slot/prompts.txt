@@ -1,0 +1,48 @@
+create html and javascript of a playable slot machine game
+
+theme:
+    Make the machine and text in vintage slot colors and theme with a black background.
+
+    machine style more colorful and animated to bring attention
+
+animation:
+    Make a lever pull animation to begin the spin add sound effects for lever pull, spinning, and winning
+
+    make the reel animation spin similar to a vintage slot machine
+
+images:    
+    Make 3 reels and 5 symbols (Cherry, Lemon, Bell, Bar, 7) with different probabilities and payouts.
+
+gameplay:
+    3 symbols in a row or 2 symbold trigger a payout.
+
+    Start with 100 credits and each spin costs default 10. 
+
+    Make bet adjustable from 1 to 10 per line
+
+    Make each line toggelable so player can choose to bet on 1, 2 or 3 lines and adjust the total cost accordingly
+
+stats:
+    Display symbol panel with each symbol and probability and payout and theoretical rtp of each and total rtp of the game
+
+    Below symbol panel display stats panel with total bet and total payout and calculate the actual rtp
+
+    Below stats panel display panel with the history of # spin and payout
+
+    Make each panel resizeable and collapsable with a toggle button on the header of each panel
+
+etc:
+    what else can I add to the game for a successful and fun slot game
+
+
+
+make the diagonals also playable lines toggleable by a checkbox
+make the the 3 vertical lines also playable lines toggleable by a checkbox
+How can I implement a "Hold" feature that lets me lock a vertical reel so it doesn't even spin and makes bet/line double in cost and can max hold two lines
+Can you replace current Hold buttons with "Locked" icon or unlock icon that toggles 
+
+
+
+How can I add "Wild" symbols that substitute for any other symbol to complete a winning line?
+How can I add a "Gamble" feature where I can double my win by guessing a card color?
+Can you help me add a "Nudge" feature that allows players to move a reel up or down by one symbol for a small cost?

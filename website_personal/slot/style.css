@@ -227,10 +227,74 @@ h1 {
 .payline.middle { top: calc(var(--symbol-height) * 1.5 + 4px); }
 .payline.bottom { top: calc(var(--symbol-height) * 2.5 + 4px); }
 .payline.inactive { opacity: 0.05; }
+.payline.diag1 {
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+.payline.diag2 {
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.diagonal-toggles {
+    position: absolute;
+    bottom: -7px;
+    left: 0px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0px;
+    z-index: 25;
+    pointer-events: none;
+}
+
+.diagonal-toggles input[type="checkbox"] {
+    pointer-events: auto;
+    cursor: pointer;
+    accent-color: var(--gold);
+    width: 20px;
+    height: 20px;
+}
+
+.hold-buttons {
+    position: absolute;
+    bottom: -7px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 20;
+}
+
+.hold-btn {
+    width: 85px;
+    height: 30px;
+    background: #444;
+    color: #fff;
+    border: 2px solid #666;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hold-btn.active {
+    background: var(--vintage-red);
+    border-color: var(--led-red);
+    box-shadow: 0 0 10px var(--led-red);
+}
 
 .line-toggles {
     position: absolute;
-    left: 10px;
+    left: 0px;
     top: 10px;
     height: calc(var(--symbol-height) * 3 + 8px);
     width: 30px;
@@ -253,6 +317,9 @@ h1 {
 #line-top { top: calc(var(--symbol-height) * 0.5 + 4px); }
 #line-middle { top: calc(var(--symbol-height) * 1.5 + 4px); }
 #line-bottom { top: calc(var(--symbol-height) * 2.5 + 4px); }
+#line-vert1 { top: calc(var(--symbol-height) * 0.2 + 4px); left: 10%; }
+#line-vert2 { top: calc(var(--symbol-height) * 1.5 + 4px); left: 10%; }
+#line-vert3 { top: calc(var(--symbol-height) * 2.8 + 4px); left: 10%; }
 
 .reel {
     width: 85px;
@@ -296,28 +363,37 @@ h1 {
 }
 
 #spin-btn {
-    background: radial-gradient(circle at 35% 35%, #ff5c5c, #b30000 75%);
-    border: 6px solid #b3b3b3;
-    border-radius: 50%;
-    width: 10vh;
-    height: 10vh;
-    color: white;
+    background: radial-gradient(circle at 35% 35%, #f2f2f2, #bfbfbf 75%);
+    border: 4px solid #000;
+    border-radius: 10px;
+    padding: 12px 24px;
+    color: black;
+    font-family: 'ITC Bookman', 'Bookman Old Style', 'Bookman', serif;
     font-size: 1.8vh;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
     box-shadow: 
-        0 8px 0 #400, 
+        0 4px 0 #000, 
         0 12px 20px rgba(0,0,0,0.5),
         inset 0 4px 8px rgba(255,255,255,0.4),
         inset 0 -4px 8px rgba(0,0,0,0.4);
     margin-bottom: 0;
     transition: all 0.1s ease;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    text-shadow: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     outline: none;
+}
+
+#spin-btn:hover:not(:disabled) {
+    box-shadow: 
+        0 4px 0 #000, 
+        0 0 20px rgba(255, 255, 255, 0.7),
+        0 12px 20px rgba(0,0,0,0.5),
+        inset 0 4px 8px rgba(255,255,255,0.4),
+        inset 0 -4px 8px rgba(0,0,0,0.4);
 }
 
 #auto-btn {
@@ -325,7 +401,7 @@ h1 {
     color: #fff;
     border: 4px solid #b3b3b3; /* Metallic border similar to spin-btn */
     padding: 12px 24px;
-    font-family: inherit;
+    font-family: 'Clarendon URW', 'Clarendon', serif;
     font-size: 1.1rem; /* Similar font size to spin-btn */
     font-weight: 900; /* Similar font weight to spin-btn */
     text-transform: uppercase;
@@ -361,9 +437,11 @@ h1 {
 
 #spin-btn:active {
     transform: translateY(4px);
+    transform: translateY(2px);
     box-shadow: 
-        0 4px 0 #400,
         0 6px 10px rgba(0,0,0,0.5),
+        0 2px 0 #000,
+        0 0 10px rgba(0,0,0,0.5),
         inset 0 2px 5px rgba(0,0,0,0.5);
 }
 
@@ -835,9 +913,13 @@ textarea {
 
     #spin-btn {
         width: 80px;
+        width: auto;
         height: 80px;
+        padding: 0 24px;
         font-size: 0.9rem;
         margin-bottom: 0;
+        display: inline-flex;
+        box-shadow: 0 6px 0 #000;
     }
 
     #auto-btn {
@@ -928,6 +1010,8 @@ th[data-tooltip], td[data-tooltip] {
 @media (max-height: 700px) {
     .subtitle { margin-bottom: 5px; }
     #spin-btn, #auto-btn { height: 70px; width: 70px; font-size: 0.8rem; }
+    #spin-btn, #auto-btn { height: 70px; font-size: 0.8rem; }
+    #spin-btn { width: auto; padding: 0 20px; }
     #auto-btn { width: auto; }
     .credit-main-box { padding: 5px; margin-bottom: 5px; }
 }
@@ -986,6 +1070,8 @@ th[data-tooltip], td[data-tooltip] {
     .total-cost-display { margin-bottom: 0.2vh; font-size: 1.5vh; }
     #spin-btn, #auto-btn { height: 12vh; width: 12vh; font-size: 1.8vh; margin-bottom: 0; }
     #auto-btn { width: auto; padding: 0 15px; height: 12vh; }
+    #spin-btn, #auto-btn { height: 12vh; font-size: 1.8vh; margin-bottom: 0; }
+    #spin-btn, #auto-btn { width: auto; padding: 0 15px; height: 12vh; }
     .lever-system { height: 40vh; top: 15vh; right: -5vh; left: auto; }
     /* Landscape-specific flip adjustments */
     .lever-left .lever-system { right: auto; left: -5vh; }

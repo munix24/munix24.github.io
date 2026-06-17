@@ -79,4 +79,9 @@ Can you add a chart or distribution showing how many clues it usually takes play
 
 separate mode to not randomize clues
 
+is there a way to clamp clue-item padding based on screen height
+use dvh instead of vh
 
+dvh (Dynamic Viewport Height): Automatically adjusts and updates live as the user scrolls. When the omnibox is visible, 100dvh represents the smaller visible area; when the omnibox hides, it expands to the full height.
+
+combine continent and capital into same clue so its more deterministic
