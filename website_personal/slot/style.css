@@ -10,8 +10,8 @@
     --led-red: #ff3131;
     --dark-metal: #1a1a1a;
     --brass: #b8860b;
-    --symbol-height: 10dvh;
-    --machine-padding: 2dvh;
+    --symbol-height: 10svh;
+    --machine-padding: 2svh;
 }
 
 body {
@@ -22,8 +22,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100dvh;
-    height: 100dvh;
+    height: 95svh;
+    width: 95svw;
     margin: 0;
     overflow: hidden;
 }
@@ -32,17 +32,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 30px;
-    width: 98%;
-    background-color: #1a0505; /* Deep mahogany/red base */
-    background-image: 
-        url('https://www.transparenttextures.com/patterns/shattered-island.png'),
-        radial-gradient(circle at center, #2d0a0a 0%, #000000 100%);
-    background-blend-mode: overlay;
-    padding: 3dvh;
-    border-radius: 40px;
-    box-shadow: inset 0 0 100px #000, 0 15px 40px rgba(0,0,0,0.8);
-    border: 10px solid #111;
+    width: 100%;
+    height: 100%;
+    margin-left: 3svh;          /* important to not shrink checkboxes on left */
+    /* border: 10px solid #111; */
 }
 
 .machine-container {
@@ -67,22 +60,22 @@ body {
         inset 0 0 40px rgba(0,0,0,0.8);
     overflow: visible;
     width: 95%;
-    height: 90dvh;
+    height: 95%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    max-width: 450px;           /* don't let it get too wide on large screens */
+    max-width: 400px;           /* don't let it get too wide on large screens */
     min-width: 300px;
+    max-height: 800px;
     text-align: center;
-    margin: auto;
     margin-left: 10px;
-    margin-right: 8dvh; /* Space for the lever */
+    margin-right: 8svh; /* Space for the lever */
     transform-origin: center top;
 }
 
 h1 {
     color: var(--gold);
-    font-size: 3.5dvh;
+    font-size: 3svh;
     margin: 0;
     letter-spacing: 2px;
     text-shadow: 2px 2px #000;
@@ -90,21 +83,21 @@ h1 {
 
 .subtitle {
     color: #666;
-    font-size: 1.2dvh;
-    margin-bottom: 1.5dvh;
+    font-size: 1.2svh;
+    margin-bottom: 1.5svh;
 }
 
 .credit-main-box {
     background: #050505;
     border: 2px solid var(--dark-gold);
-    padding: 1dvh;
-    margin-bottom: 1dvh;
+    padding: 1svh;
+    margin-bottom: 1svh;
     border-radius: 8px;
     box-shadow: inset 0 0 15px rgba(0,0,0,1);
 }
 
 .credit-main-box .label {
-    font-size: 1.8dvh;
+    font-size: 1.8svh;
     color: var(--led-red);
     letter-spacing: 2px;
     margin-bottom: 5px;
@@ -123,7 +116,7 @@ h1 {
 }
 
 #balance {
-    font-size: 5dvh;
+    font-size: 5svh;
     text-shadow: 0 0 15px rgba(255, 49, 49, 0.6);
     font-weight: bold;
 }
@@ -377,7 +370,7 @@ h1 {
     padding: 14px 18px;
     color: #000;
     font-family: 'Arial Black', Gadget, sans-serif;
-    font-size: 2.6dvh;
+    font-size: 2.6svh;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
@@ -471,7 +464,8 @@ h1 {
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-bottom: 1.5dvh;
+    margin-top: auto;
+    margin-bottom: 1.5svh;
     flex-direction: row-reverse; /* Spin on right by default (lever is on right) */
 }
 
@@ -555,7 +549,7 @@ h1 {
     left: -100%; /* Ensure it's fully hidden regardless of dynamic width */
     top: 0;
     bottom: 0;
-    width: 80dvw; /* Global safety: never exceed 80% of viewport width */
+    width: 80svw; /* Global safety: never exceed 80% of viewport width */
     max-width: 260px; /* Absolute max width for large screens */
     background: rgba(10, 10, 10, 0.95);
     border-right: 2px solid var(--gold);
@@ -575,8 +569,8 @@ h1 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
     height: 100%;
+    width: 100%;
     background: rgba(0, 0, 0, 0.7);
     z-index: 1999;
     opacity: 0;
@@ -710,7 +704,7 @@ h1 {
     user-select: none;
 }
 
-.modal-panel {
+ .settings-panel {
     background: #111;
     border: 1px solid var(--gold);
     padding: 0;
@@ -728,7 +722,7 @@ h1 {
         transform: none !important; */
 }
 
-.modal-panel.open {
+.settings-panel.open {
     display: block;
 }
 
@@ -744,7 +738,7 @@ h1 {
 /* Left-Handed Lever Mode Overrides */
 .lever-left .lever-system {
     right: auto;
-    left: -6dvh;
+    left: -6svh;
 }
 .lever-left .lever-base {
     background: 
@@ -758,11 +752,11 @@ h1 {
         linear-gradient(145deg, #2c2c2c, #111);
     border-radius: 10px 0 0 10px;
     left: auto;
-    right: 1.5dvh;
+    right: 1.5svh;
 }
 .lever-left .lever-arm {
     left: auto;
-    right: 3.5dvh;
+    right: 3.5svh;
 }
 
 .panel-header h3 {
@@ -817,10 +811,10 @@ textarea {
 /* Mechanical Lever Graphic */
 .lever-system {
     position: absolute;
-    right: -6dvh; 
-    top: 33dvh;   
-    width: 10dvh;
-    height: 40dvh;
+    right: -6svh; 
+    top: 33svh;   
+    width: 10svh;
+    height: 40svh;
     cursor: pointer;
     z-index: 5;
 }
@@ -828,8 +822,8 @@ textarea {
     position: absolute;
     width: 55px;
     height: 90px;
-    width: 6dvh;
-    height: 12dvh;
+    width: 6svh;
+    height: 12svh;
     background: 
         repeating-linear-gradient(
             90deg,
@@ -840,17 +834,17 @@ textarea {
         ),
         linear-gradient(145deg, #2c2c2c, #111);
     border-radius: 0 10px 10px 0;
-    left: 1.5dvh;
+    left: 1.5svh;
     bottom: 0;
 }
 .lever-arm {
     position: absolute;
     width: 22px;
     height: 210px;
-    width: 2.5dvh;
-    height: 28dvh;
+    width: 2.5svh;
+    height: 28svh;
     background: linear-gradient(to right, #888, #eee, #666);
-    left: 3.5dvh;
+    left: 3.5svh;
     top: 0px;
     transform-origin: bottom center;
     transition: transform 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
@@ -868,12 +862,12 @@ textarea {
     position: absolute;
     width: 75px;
     height: 75px;
-    width: 9dvh;
-    height: 9dvh;
+    width: 9svh;
+    height: 9svh;
     background: radial-gradient(circle at 25px 25px, #ff4d4d, #800);
     border-radius: 50%;
-    top: -8dvh;
-    left: -3.2dvh;
+    top: -8svh;
+    left: -3.2svh;
     box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
@@ -926,7 +920,7 @@ textarea {
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 850px) {
+@media (max-width: 450px) {
     .game-layout {
         flex-direction: column;
         align-items: center;
@@ -934,9 +928,6 @@ textarea {
 
     .side-panels {
         flex: none;
-        height: 100 dvh;
-        width: 80%; /* Only take up 80% of screen on mobile */
-        max-width: 450px;
         display: flex;
         flex-direction: column;
         gap: 15px;
@@ -956,7 +947,16 @@ textarea {
         width: 100% !important;
     }
 
-    .lever-left .machine-container { margin-right: 0; margin-left: 8dvh; }
+    .settings-panel {
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+        width: 92svw;
+        max-width: 280px;
+        min-width: 180px;
+    }
+
+    .lever-left .machine-container { margin-right: 0; margin-left: 8svh; }
 
     .sidebar-overlay.open {
         opacity: 1;
@@ -1001,8 +1001,8 @@ textarea {
     }
 
     .bet-adjust button {
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
         font-size: 0.65rem;
     }
 }
@@ -1095,8 +1095,8 @@ th[data-tooltip], td[data-tooltip] {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100dvh;
-    height: 100dvh;
+    height: 100%;
+    width: 100%;
     pointer-events: none;
     z-index: 9999;
     overflow: hidden;
@@ -1114,40 +1114,40 @@ th[data-tooltip], td[data-tooltip] {
 
 @keyframes coin-fall {
     0% { transform: translateY(0) rotateX(0) rotateY(0); opacity: 1; }
-    100% { transform: translateY(110dvh) rotateX(720deg) rotateY(360deg); opacity: 0.3; }
+    100% { transform: translateY(110svh) rotateX(720deg) rotateY(360deg); opacity: 0.3; }
 }
 
 /* Landscape Mobile Optimization */
 @media (orientation: landscape) and (max-height: 550px) {
     :root {
-        --symbol-height: 8.5dvh;
-        --machine-padding: 0.5dvh;
+        --symbol-height: 8.5svh;
+        --machine-padding: 0.5svh;
     }
     .machine-container {
         padding: var(--machine-padding);
         border-width: 6px;
         max-width: 380px; /* Slimmer profile to favor height-to-width ratio */
-        margin-right: 12dvh;
+        margin-right: 12svh;
         margin-left: 0;
     }
-    .lever-left .machine-container { margin-right: 0; margin-left: 12dvh; }
+    .lever-left .machine-container { margin-right: 0; margin-left: 12svh; }
 
-    h1 { font-size: 5dvh; }
+    h1 { font-size: 5svh; }
     .subtitle { display: none; } /* Hide secondary text to save vertical space */
-    .credit-main-box { padding: 0.2dvh; margin-bottom: 0.4dvh; }
-    .credit-main-box .label { font-size: 1.8dvh; margin-bottom: 0; }
-    #balance { font-size: 6dvh; }
+    .credit-main-box { padding: 0.2svh; margin-bottom: 0.4svh; }
+    .credit-main-box .label { font-size: 1.8svh; margin-bottom: 0; }
+    #balance { font-size: 6svh; }
     .reels-frame { padding: 2px; }
     .reels-container { gap: 4px; }
-    .bet-adjust { margin: 0.2dvh 0; font-size: 1.8dvh; gap: 10px; }
-    .total-cost-display { margin-bottom: 0.2dvh; font-size: 1.5dvh; }
-    #spin-btn, #auto-btn { height: 12dvh; width: 12dvh; font-size: 2.2dvh; margin-bottom: 0; }
-    #auto-btn { width: auto; padding: 0 15px; height: 12dvh; }
-    #spin-btn, #auto-btn { height: 12dvh; font-size: 2.2dvh; margin-bottom: 0; }
-    #spin-btn, #auto-btn { width: auto; padding: 0 15px; height: 12dvh; }
-    .lever-system { height: 40dvh; top: 15dvh; right: -5dvh; left: auto; }
+    .bet-adjust { margin: 0.2svh 0; font-size: 1.8svh; gap: 10px; }
+    .total-cost-display { margin-bottom: 0.2svh; font-size: 1.5svh; }
+    #spin-btn, #auto-btn { height: 12svh; width: 12svh; font-size: 2.2svh; margin-bottom: 0; }
+    #auto-btn { width: auto; padding: 0 15px; height: 12svh; }
+    #spin-btn, #auto-btn { height: 12svh; font-size: 2.2svh; margin-bottom: 0; }
+    #spin-btn, #auto-btn { width: auto; padding: 0 15px; height: 12svh; }
+    .lever-system { height: 40svh; top: 15svh; right: -5svh; left: auto; }
     /* Landscape-specific flip adjustments */
-    .lever-left .lever-system { right: auto; left: -5dvh; }
+    .lever-left .lever-system { right: auto; left: -5svh; }
     .lever-left .lever-base { 
         background: 
             repeating-linear-gradient(
@@ -1158,8 +1158,8 @@ th[data-tooltip], td[data-tooltip] {
                 transparent 2px
             ),
             linear-gradient(145deg, #2c2c2c, #111);
-        border-radius: 10px 0 0 10px; left: auto; right: 1.5dvh; }
-    .lever-left .lever-arm { left: auto; right: 3.5dvh; }
+        border-radius: 10px 0 0 10px; left: auto; right: 1.5svh; }
+    .lever-left .lever-arm { left: auto; right: 3.5svh; }
 
     .hold-buttons {
         left: 6px; /* 2px frame padding + 4px container border */
