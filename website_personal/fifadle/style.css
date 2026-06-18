@@ -63,7 +63,7 @@ body {
 h1 { 
     color: white; 
     margin: 0;
-    font-size: clamp(.5rem, 4.5svh, 2.2rem);
+    font-size: clamp(.5rem, 4.5svh, 2rem);
     position: relative;
     cursor: default;
 }
@@ -76,7 +76,7 @@ h1 {
     font-weight: bold; 
     color: #bbb; 
     margin: 0;
-    font-size: clamp(0.8rem, 2svh, 1.1rem);
+    font-size: clamp(0.8rem, 2svh, 1rem);
 }
 
 .score-indicator { 
@@ -93,7 +93,7 @@ h1 {
 .score-indicator span{
     background: #2a2a2a;
     border: 1px solid #444;
-    padding: clamp(2px, 0.8svh, 6px) clamp(6px, 2.5svw, 12px);
+    padding: clamp(2px, 0.8svh, 4px) clamp(6px, 2.5svw, 10px);
     border-radius: 15px;
     white-space: nowrap;
     position: relative;
@@ -224,7 +224,7 @@ h1 {
 
 .clue-item {
     position: relative;
-    padding: clamp(1px, 0.8svh, 8px) 6px;
+    padding: clamp(1px, 0.8svh, 4px) 6px;
     margin-bottom: clamp(2px, 0.5svh, 6px);
     border-radius: 6px;
     background: #333;
@@ -233,7 +233,7 @@ h1 {
     display: flex;
     align-items: center;
     gap: 3px;
-    min-height: clamp(30px, 4.5svh, 45px);
+    min-height: clamp(30px, 4.5svh, 35px);
     font-size: clamp(0.95rem, 2svh, 1rem);
 }
 
@@ -271,7 +271,7 @@ h1 {
 }
 
 .clue-icon {
-    font-size: clamp(.95rem, 3svh, 1.4rem);
+    font-size: clamp(.95rem, 3svh, 1.3rem);
     min-width: clamp(25px, 4.5svh, 35px);
     text-align: center;
 }
@@ -342,19 +342,24 @@ button:disabled { background-color: #ccc; }
     font-weight: bold; 
     padding: clamp(4px, 1.5svh, 12px) 10px; 
     border-radius: 12px; 
-    min-height: 70px;   /* don't clamp or it can grow shrink weirdly with different font sizes */
+    min-height: clamp(70px, 11svh, 90px);
     margin: clamp(4px, 1svh, 10px) 0;
     font-size: clamp(1.2rem, 5svh, 1.8rem);
     display: flex;
     align-items: center;
+    gap: 10px;
     justify-content: center;
     border: 2px dashed #333;
     color: #ffffff;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); */
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
 }
+
+/* #correctCountry span{ 
+    font-size: clamp(1.5rem, 6svh, 2.2rem);
+} */
 
 .success { 
     color: #ffffff; 
@@ -372,11 +377,12 @@ button:disabled { background-color: #ccc; }
     box-shadow: 0 0 25px rgba(198, 161, 91, 0.6), 0 0 15px rgba(0, 143, 76, 0.4);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
 }
+
 .error { 
     color: #ffb3b3; 
     background: #4a0e0e; 
     border: 2px solid #ff4d4d; 
-    box-shadow: 0 0 25px rgba(255, 77, 77, 0.3);
+    /* box-shadow: 0 0 25px rgba(255, 77, 77, 0.3); */
 }
 
 @keyframes pulse {
@@ -536,7 +542,7 @@ input[type="range"] {
 }
 
 p {
-    font-size: clamp(0.75rem, 1.8svh, 0.9rem);
+    font-size: clamp(0.75rem, 1.8svh, 0.85rem);
     color: #bbb;
     margin: .6rem 0;
 }

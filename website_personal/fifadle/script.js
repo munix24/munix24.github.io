@@ -402,8 +402,8 @@ function endGame(isWin) {
     }
 
     const winClue = currentClue;
-    lastResultEmoji = generateShareEmoji(isWin, winClue);
-    correctCountry.innerHTML = `${currentCountry.name} <span style="font-size: 2.2rem; margin-left: 10px;">${currentCountry.flag}</span>`;
+    lastResultEmoji = generateShareEmoji(isWin, winClue); // This line should be before setting innerHTML
+    correctCountry.innerHTML = `${currentCountry.name} <span>${currentCountry.flag}</span>`;
     correctCountry.className = isWin ? 'success' : 'error';
 }
 
