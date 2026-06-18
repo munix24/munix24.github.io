@@ -12,6 +12,10 @@ UI
 		putting focus on guess-input opens side-panel and clicking anywhere besides side-panel closes it
 		How can I make the side panel h3 count how many countries are left to guess?
 	make side-item text not selectable
+	How can I apply a similar clamp to the clue-item padding to make the list more compact on mobile?
+	Can we also clamp the icon size inside the clue-item to save more horizontal and vertical space?
+	is there a way to clamp clue-item padding based on screen height
+	use dvh instead of vh
 		
 	
 UX
@@ -56,20 +60,19 @@ progression:
 	Can you add a tool tip that shows a more detailed description of each stat when hovering over the badges?
 	add a badge counter for correct, accuracy (correct/countries) and best accuracy
 	change color of accuracy badge depending on performance
+	Can we add a progress bar that fills up as the player completes more countries?
+
 
 
 
 
 FIFA color theme?
 Can you add a leaderboard?
-
-Can you suggest how to make the clue list variable height so the game fits on one screen without scrolling?
+Can you suggest how to make the clue list clamp height
 
 
 
 in triggerCompletionAnimation display summary stats and allow player to start new game
-Can we add a progress bar that fills up as the player completes more countries?
-
 
 
 Can you add a "Daily Mode" where everyone gets the same country each day based on the date?
@@ -79,9 +82,7 @@ Can you add a chart or distribution showing how many clues it usually takes play
 
 separate mode to not randomize clues
 
-is there a way to clamp clue-item padding based on screen height
-use dvh instead of vh
-
-dvh (Dynamic Viewport Height): Automatically adjusts and updates live as the user scrolls. When the omnibox is visible, 100dvh represents the smaller visible area; when the omnibox hides, it expands to the full height.
 
 combine continent and capital into same clue so its more deterministic
+
+
