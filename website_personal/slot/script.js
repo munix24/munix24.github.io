@@ -373,20 +373,6 @@ function loadPanelOrder() {
     });
 }
 
-function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.panel:not(.dragging)')];
-
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-        } else {
-            return closest;
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
-
 function setupDraggable(container, header) {
     let isDragging = false;
     let mouseMoved = false;
@@ -462,6 +448,20 @@ function setupDraggable(container, header) {
     });
 }
 
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.panel:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
 function buyPowerUp(type, cost, spins) {
     if (credits >= cost) {
         credits -= cost;
@@ -472,216 +472,6 @@ function buyPowerUp(type, cost, spins) {
     } else {
         alert("Not enough credits!");
     }
-}
-
-function initLeverDraggable() {
-    const leverControl = document.getElementById('lever-control');
-    const leverArm = leverControl.querySelector('.lever-arm');
-    const spinBtn = document.getElementById('spin-btn');
-    
-    let isDragging = false;
-    let startY = 0;
-    let thresholdMet = false;
-    let clinkPlayed = false;
-    const maxRotation = 120; // Degrees for a full mechanical pull
-    const pullThreshold = 300; // Adjusted for more fluid, responsive movement
-
-    const startDrag = (e) => {
-        if (e.type === 'mousedown') e.preventDefault();
-        if (spinBtn.disabled) return;
-        isDragging = true;
-        thresholdMet = false;
-        clinkPlayed = false;
-        startY = e.clientY || e.touches[0].clientY;
-        leverArm.classList.add('no-transition');        // Normally, CSS says "take 0.4 seconds to change any transform."
-        document.body.classList.add('lever-active');
-        
-        // Play initial mechanical click
-        leverSound.currentTime = 0;
-        leverSound.play().catch(() => {});
-    };
-
-    const moveDrag = (e) => {
-        if (!isDragging) return;
-        
-        const currentY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-        const deltaY = Math.max(0, currentY - startY);
-        
-        // Map deltaY to rotation (0 to 80 degrees)
-        const rotation = Math.min(maxRotation, (deltaY / pullThreshold) * maxRotation);
-        
-        // Use the same 3D rotation logic from your CSS
-        leverArm.style.transform = `rotateX(${rotation}deg)`;
-
-        // Trigger spin only if pulled almost entirely to the bottom (99%)
-        if (rotation >= maxRotation * 0.99 && !spinBtn.disabled) {
-            if (!clinkPlayed) {
-                clinkSound.currentTime = 0;
-                clinkSound.play().catch(() => {});
-                clinkPlayed = true;
-            }
-            thresholdMet = true;
-            finishPull();
-        }
-    };
-
-    const finishPull = () => {
-        if (!isDragging) return;
-        isDragging = false;
-        
-        leverArm.classList.remove('no-transition');
-        document.body.classList.remove('lever-active');
-        leverArm.style.transform = ''; // Reset to CSS default (upright)
-        
-        if (!spinBtn.disabled && thresholdMet) {
-            handleSpin();
-        }
-    };
-
-    const cancelDrag = () => {
-        if (!isDragging) return;
-        isDragging = false;
-        document.body.classList.remove('lever-active');
-        leverArm.classList.remove('no-transition');
-        leverArm.style.transform = '';
-    };
-
-    // Mouse Events
-    leverControl.addEventListener('mousedown', startDrag);
-    document.addEventListener('mousemove', moveDrag);
-    document.addEventListener('mouseup', finishPull);
-
-    // Touch Events
-    leverControl.addEventListener('touchstart', (e) => {
-        startDrag(e);
-    }, { passive: true });
-    
-    document.addEventListener('touchmove', (e) => {
-        if (isDragging) {
-            e.preventDefault(); // Prevent scrolling while pulling the lever
-            moveDrag(e);
-        }
-    }, { passive: false });
-    
-    document.addEventListener('touchend', finishPull);
-}
-
-function updatePaytable() {
-    const tableBody = document.getElementById('symbol-stats-body');
-    const isLuckActive = activeLuck > 0;
-    const isDoubleActive = activeDouble > 0;
-
-    let tempSymbols = symbols.map(s => {
-        if (isLuckActive) {
-            if (s.char === '🍒') return { ...s, weight: 7 };
-            if (s.char === '🍋') return { ...s, weight: 40 };
-            if (s.char === '🍊') return { ...s, weight: 25 };
-            if (s.char === '🍇') return { ...s, weight: 15 };
-            if (s.char === '🔔') return { ...s, weight: 10 };
-        }
-        return s;
-    });
-
-    const totalWeight = tempSymbols.reduce((acc, s) => acc + s.weight, 0);
-    tableBody.innerHTML = '';
-    let theoreticalRTP = 0;
-    let totalChance = 0;
-    let totalHit3Chance = 0;
-
-    const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
-
-    // Define the row mapping for each payline across the 3 reels
-    const paylineRows = [
-        [0, 0, 0], // Top
-        [1, 1, 1], // Middle
-        [2, 2, 2], // Bottom
-        [0, 1, 2], // Diag 1
-        [2, 1, 0]  // Diag 2
-    ];
-
-    tempSymbols.forEach(s => {
-        const p = s.weight / totalWeight;
-        const chanceVal = p * 100;
-        const chance = chanceVal.toFixed(0);
-        totalChance += chanceVal;
-        // const p3 = Math.pow(p, 3);
-        // const hit3ChanceVal = p3 * 100;
-
-                let probNoWin = 1;
-        let sumProb = 0;
-
-        paylineRows.forEach((rows, lineIdx) => {
-            if (activeLines[lineIdx]) {
-                let lineProb = 1;
-                for (let i = 0; i < 3; i++) {
-                    if (heldReels[i] && lastResults[i] && lastResults[i].length > 0) {
-                        // If reel is held, probability is 1 if it matches the symbol on that line's row, 0 otherwise
-                        if (lastResults[i][rows[i]].char === s.char) {
-                            lineProb *= 1;
-                        } else {
-                            lineProb = 0;
-                            break;
-                        }
-                    } else {
-                        lineProb *= p;
-                    }
-                }
-                probNoWin *= (1 - lineProb);
-                sumProb += lineProb;
-            }
-        });
-
-        const lineCount = activeLines.filter(Boolean).length;
-        const numHeld = heldReels.filter((isHeld, i) => isHeld && lastResults[i] && lastResults[i].length > 0).length;
-        const holdCost = Math.min(10, Math.max(2, credits / 1000 + 1));
-
-        // The 3-hit% is the probability of at least one active line hitting 3-of-a-kind for this symbol
-        const hit3ChanceVal = lineCount > 0 ? (1 - probNoWin) * 100 : 0;
-        const hit3Chance = hit3ChanceVal.toFixed(3);
-        totalHit3Chance += hit3ChanceVal;
-
-        const effectiveMultiplier = isDoubleActive ? s.multiplier * 2 : s.multiplier;
-
-        // const rtpContribVal = p3 * effectiveMultiplier;
-        // RTP contribution is based on expected value across all lines divided by total cost multiplier
-        const rtpContribVal = lineCount > 0 ? (sumProb * effectiveMultiplier) / Math.ceil(lineCount * Math.pow(holdCost, numHeld)) : 0;
-        
-        theoreticalRTP += rtpContribVal;
-        const rtpContrib = (rtpContribVal * 100).toFixed(2);
-
-        // Determine specific column styles based on active boosts
-        const isSymbolBoosted = isLuckActive && s.char !== '🍒' && s.char !== '7️⃣';
-        const luckStyle = isSymbolBoosted ? 'style="color: #0f0; font-weight: bold;"' : '';
-        const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
-        const mixedStyle = 'style="color: #8cda21; font-weight: bold;"';
-
-        tableBody.innerHTML += `
-            <tr>
-                <td>${s.char}</td>
-                <td ${luckStyle}>${chance}%</td>
-                <td ${luckStyle}>${hit3Chance}%</td>
-                <td ${doubleStyle}>${s.multiplier}x${(isDoubleActive) ? '*2' : ''}</td>
-                <td ${(isSymbolBoosted && isDoubleActive) ? mixedStyle : (doubleStyle || luckStyle)}>${rtpContrib}%</td>
-            </tr>`;
-    });
-
-    const luckStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
-    const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
-    const mixedStyle = 'style="color: #8cda21; font-weight: bold;"';
-    const isBothActive = isLuckActive && isDoubleActive;
-
-    // Add bonus row for fun
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="5" data-tooltip="Reward redeemable only once one day. Only valid if hit while luck boost is not active">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
-    
-    // Add Total RTP row
-    tableBody.innerHTML += `
-        <tr style="border-top: 1px solid #333; font-weight: bold;">
-            <td data-tooltip="Theoretical totals for the game parameters.">Sum</td>
-            <td>${totalChance.toFixed(0)}%</td>
-            <td>${totalHit3Chance.toFixed(3)}%</td>
-            <td></td>
-            <td ${isBothActive ? mixedStyle : (doubleStyle || luckStyle)}>${(theoreticalRTP * 100).toFixed(2)}%</td>
-        </tr>`;
 }
 
 function changeBet(delta) {
@@ -781,29 +571,6 @@ function getRandomSymbol(isLuckActive = false) {
     }
 }
 
-async function handleLeverPull() {
-    const btn = document.getElementById('spin-btn');
-    if (btn.disabled) return;
-
-    // Fallback for button click or auto-spin
-    const lever = document.getElementById('lever-control');
-    const arm = lever.querySelector('.lever-arm');
-    
-    // Play mechanical sounds for programmatic pull
-    leverSound.currentTime = 0;
-    leverSound.play().catch(() => {});
-    
-    arm.style.transform = 'rotateX(120deg)';
-    
-    setTimeout(() => {
-        clinkSound.currentTime = 0;
-        clinkSound.play().catch(() => {});
-        arm.style.transform = '';
-    }, 400);
-    
-    handleSpin();
-}
-
 function toggleAutoSpin() {
     const autoBtn = document.getElementById('auto-btn');
     const spinBtn = document.getElementById('spin-btn');
@@ -831,6 +598,121 @@ function checkAutoSpin() {
     if (isAutoSpinning) {
         handleLeverPull();
     }
+}
+
+function initLeverDraggable() {
+    const leverControl = document.getElementById('lever-control');
+    const leverArm = leverControl.querySelector('.lever-arm');
+    const spinBtn = document.getElementById('spin-btn');
+    
+    let isDragging = false;
+    let startY = 0;
+    let thresholdMet = false;
+    let clinkPlayed = false;
+    const maxRotation = 120; // Degrees for a full mechanical pull
+    const pullThreshold = 300; // Adjusted for more fluid, responsive movement
+
+    const startDrag = (e) => {
+        if (e.type === 'mousedown') e.preventDefault();
+        if (spinBtn.disabled) return;
+        isDragging = true;
+        thresholdMet = false;
+        clinkPlayed = false;
+        startY = e.clientY || e.touches[0].clientY;
+        leverArm.classList.add('no-transition');        // Normally, CSS says "take 0.4 seconds to change any transform."
+        document.body.classList.add('lever-active');
+        
+        // Play initial mechanical click
+        leverSound.currentTime = 0;
+        leverSound.play().catch(() => {});
+    };
+
+    const moveDrag = (e) => {
+        if (!isDragging) return;
+        
+        const currentY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+        const deltaY = Math.max(0, currentY - startY);
+        
+        // Map deltaY to rotation (0 to 80 degrees)
+        const rotation = Math.min(maxRotation, (deltaY / pullThreshold) * maxRotation);
+        
+        // Use the same 3D rotation logic from your CSS
+        leverArm.style.transform = `rotateX(${rotation}deg)`;
+
+        // Trigger spin only if pulled almost entirely to the bottom (99%)
+        if (rotation >= maxRotation * 0.99 && !spinBtn.disabled) {
+            if (!clinkPlayed) {
+                clinkSound.currentTime = 0;
+                clinkSound.play().catch(() => {});
+                clinkPlayed = true;
+            }
+            thresholdMet = true;
+            finishPull();
+        }
+    };
+
+    const finishPull = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        leverArm.classList.remove('no-transition');
+        document.body.classList.remove('lever-active');
+        leverArm.style.transform = ''; // Reset to CSS default (upright)
+        
+        if (!spinBtn.disabled && thresholdMet) {
+            handleSpin();
+        }
+    };
+
+    const cancelDrag = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.classList.remove('lever-active');
+        leverArm.classList.remove('no-transition');
+        leverArm.style.transform = '';
+    };
+
+    // Mouse Events
+    leverControl.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('mouseup', finishPull);
+
+    // Touch Events
+    leverControl.addEventListener('touchstart', (e) => {
+        startDrag(e);
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            e.preventDefault(); // Prevent scrolling while pulling the lever
+            moveDrag(e);
+        }
+    }, { passive: false });
+    
+    document.addEventListener('touchend', finishPull);
+}
+
+async function handleLeverPull() {
+    const btn = document.getElementById('spin-btn');
+    if (btn.disabled) return;
+
+    // Fallback for button click or auto-spin
+    const lever = document.getElementById('lever-control');
+    const arm = lever.querySelector('.lever-arm');
+    
+    // Play mechanical sounds for programmatic pull
+    leverSound.currentTime = 0;
+    leverSound.play().catch(() => {});
+    
+    arm.style.transform = 'rotateX(120deg)';
+    
+    setTimeout(() => {
+        clinkSound.currentTime = 0;
+        clinkSound.play().catch(() => {});
+        arm.style.transform = '';
+    }, 400);
+    
+    handleSpin();
 }
 
 async function handleSpin() {
@@ -1139,11 +1021,129 @@ function updateStats() {
     localStorage.setItem('slot_activeDouble', activeDouble);
 }
 
+function updatePaytable() {
+    const tableBody = document.getElementById('symbol-stats-body');
+    const isLuckActive = activeLuck > 0;
+    const isDoubleActive = activeDouble > 0;
+
+    let tempSymbols = symbols.map(s => {
+        if (isLuckActive) {
+            if (s.char === '🍒') return { ...s, weight: 7 };
+            if (s.char === '🍋') return { ...s, weight: 40 };
+            if (s.char === '🍊') return { ...s, weight: 25 };
+            if (s.char === '🍇') return { ...s, weight: 15 };
+            if (s.char === '🔔') return { ...s, weight: 10 };
+        }
+        return s;
+    });
+
+    const totalWeight = tempSymbols.reduce((acc, s) => acc + s.weight, 0);
+    tableBody.innerHTML = '';
+    let theoreticalRTP = 0;
+    let totalChance = 0;
+    let totalHit3Chance = 0;
+
+    const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
+
+    // Define the row mapping for each payline across the 3 reels
+    const paylineRows = [
+        [0, 0, 0], // Top
+        [1, 1, 1], // Middle
+        [2, 2, 2], // Bottom
+        [0, 1, 2], // Diag 1
+        [2, 1, 0]  // Diag 2
+    ];
+
+    tempSymbols.forEach(s => {
+        const p = s.weight / totalWeight;
+        const chanceVal = p * 100;
+        const chance = chanceVal.toFixed(0);
+        totalChance += chanceVal;
+        // const p3 = Math.pow(p, 3);
+        // const hit3ChanceVal = p3 * 100;
+
+                let probNoWin = 1;
+        let sumProb = 0;
+
+        paylineRows.forEach((rows, lineIdx) => {
+            if (activeLines[lineIdx]) {
+                let lineProb = 1;
+                for (let i = 0; i < 3; i++) {
+                    if (heldReels[i] && lastResults[i] && lastResults[i].length > 0) {
+                        // If reel is held, probability is 1 if it matches the symbol on that line's row, 0 otherwise
+                        if (lastResults[i][rows[i]].char === s.char) {
+                            lineProb *= 1;
+                        } else {
+                            lineProb = 0;
+                            break;
+                        }
+                    } else {
+                        lineProb *= p;
+                    }
+                }
+                probNoWin *= (1 - lineProb);
+                sumProb += lineProb;
+            }
+        });
+
+        const lineCount = activeLines.filter(Boolean).length;
+        const numHeld = heldReels.filter((isHeld, i) => isHeld && lastResults[i] && lastResults[i].length > 0).length;
+        const holdCost = Math.min(10, Math.max(2, credits / 1000 + 1));
+
+        // The 3-hit% is the probability of at least one active line hitting 3-of-a-kind for this symbol
+        const hit3ChanceVal = lineCount > 0 ? (1 - probNoWin) * 100 : 0;
+        const hit3Chance = hit3ChanceVal.toFixed(3);
+        totalHit3Chance += hit3ChanceVal;
+
+        const effectiveMultiplier = isDoubleActive ? s.multiplier * 2 : s.multiplier;
+
+        // const rtpContribVal = p3 * effectiveMultiplier;
+        // RTP contribution is based on expected value across all lines divided by total cost multiplier
+        const rtpContribVal = lineCount > 0 ? (sumProb * effectiveMultiplier) / Math.ceil(lineCount * Math.pow(holdCost, numHeld)) : 0;
+        
+        theoreticalRTP += rtpContribVal;
+        const rtpContrib = (rtpContribVal * 100).toFixed(2);
+
+        // Determine specific column styles based on active boosts
+        const isSymbolBoosted = isLuckActive && s.char !== '🍒' && s.char !== '7️⃣';
+        const luckStyle = isSymbolBoosted ? 'style="color: #0f0; font-weight: bold;"' : '';
+        const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
+        const mixedStyle = 'style="color: #8cda21; font-weight: bold;"';
+
+        tableBody.innerHTML += `
+            <tr>
+                <td>${s.char}</td>
+                <td ${luckStyle}>${chance}%</td>
+                <td ${luckStyle}>${hit3Chance}%</td>
+                <td ${doubleStyle}>${s.multiplier}x${(isDoubleActive) ? '*2' : ''}</td>
+                <td ${(isSymbolBoosted && isDoubleActive) ? mixedStyle : (doubleStyle || luckStyle)}>${rtpContrib}%</td>
+            </tr>`;
+    });
+
+    const luckStyle = isLuckActive ? 'style="color: #0f0; font-weight: bold;"' : '';
+    const doubleStyle = isDoubleActive ? 'style="color: var(--gold); font-weight: bold;"' : '';
+    const mixedStyle = 'style="color: #8cda21; font-weight: bold;"';
+    const isBothActive = isLuckActive && isDoubleActive;
+
+    // Add bonus row for fun
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="5" data-tooltip="Reward redeemable only once one day. Only valid if hit while luck boost is not active">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
+    
+    // Add Total RTP row
+    tableBody.innerHTML += `
+        <tr style="border-top: 1px solid #333; font-weight: bold;">
+            <td data-tooltip="Theoretical totals for the game parameters.">Sum</td>
+            <td>${totalChance.toFixed(0)}%</td>
+            <td>${totalHit3Chance.toFixed(3)}%</td>
+            <td></td>
+            <td ${isBothActive ? mixedStyle : (doubleStyle || luckStyle)}>${(theoreticalRTP * 100).toFixed(2)}%</td>
+        </tr>`;
+}
+
 function logHistory(res, win, activeLines, num) {
     const history = document.getElementById('history');
-    const line1 = (activeLines[0] ? "" : "X ") + res[0][0].char + res[1][0].char + res[2][0].char;
-    const line2 = (activeLines[1] ? "" : "X ") + res[0][1].char + res[1][1].char + res[2][1].char;
-    const line3 = (activeLines[2] ? "" : "X ") + res[0][2].char + res[1][2].char + res[2][2].char;
+    const line1 = res[0][0].char + res[1][0].char + res[2][0].char;
+    const line2 = res[0][1].char + res[1][1].char + res[2][1].char;
+    const line3 = res[0][2].char + res[1][2].char + res[2][2].char;
     
     const entry = `Spin #${num}\n[${line1}]\n[${line2}] Payout: ${win}\n[${line3}]\n${"-".repeat(20)}\n`;
     history.value = entry + history.value;
@@ -1161,6 +1161,7 @@ function resetGame() {
         activeLuck = 0;
         activeSpeed = 0;
         activeDouble = 0;
+        heldReels = [false, false, false];
         updateStats();
 
         // Re-initialize UI to refresh reels and stats
