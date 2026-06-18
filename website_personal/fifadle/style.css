@@ -27,7 +27,7 @@ body {
 }
 
 .game-container {
-    height: 98vh;
+    height: 98%;
     max-width: 400px;
     max-height: 700px;
     margin-top: 1vh; 
