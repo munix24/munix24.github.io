@@ -10,8 +10,8 @@
     --led-red: #ff3131;
     --dark-metal: #1a1a1a;
     --brass: #b8860b;
-    --symbol-height: 10vh;
-    --machine-padding: 2vh;
+    --symbol-height: 10dvh;
+    --machine-padding: 2dvh;
 }
 
 body {
@@ -22,8 +22,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    height: 100vh;
+    min-height: 100dvh;
+    height: 100dvh;
     margin: 0;
     overflow: hidden;
 }
@@ -61,18 +61,19 @@ body {
         inset 0 0 40px rgba(0,0,0,0.8);
     overflow: visible;
     /* width: 90%; */
-    height: 90vh;
+    height: 98dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     max-width: 450px;
     text-align: center;
-    margin: auto;
+    margin-right: 40px;
+    transform-origin: center top;
 }
 
 h1 {
     color: var(--gold);
-    font-size: 3.5vh;
+    font-size: 3.5dvh;
     margin: 0;
     letter-spacing: 2px;
     text-shadow: 2px 2px #000;
@@ -80,21 +81,21 @@ h1 {
 
 .subtitle {
     color: #666;
-    font-size: 1.2vh;
-    margin-bottom: 1.5vh;
+    font-size: 1.2dvh;
+    margin-bottom: 1.5dvh;
 }
 
 .credit-main-box {
     background: #050505;
     border: 2px solid var(--dark-gold);
-    padding: 1vh;
-    margin-bottom: 1vh;
+    padding: 1dvh;
+    margin-bottom: 1dvh;
     border-radius: 8px;
     box-shadow: inset 0 0 15px rgba(0,0,0,1);
 }
 
 .credit-main-box .label {
-    font-size: 1.8vh;
+    font-size: 1.8dvh;
     color: var(--led-red);
     letter-spacing: 2px;
     margin-bottom: 5px;
@@ -113,7 +114,7 @@ h1 {
 }
 
 #balance {
-    font-size: 5vh;
+    font-size: 5dvh;
     text-shadow: 0 0 15px rgba(255, 49, 49, 0.6);
     font-weight: bold;
 }
@@ -369,7 +370,7 @@ h1 {
     padding: 12px 24px;
     color: black;
     font-family: 'ITC Bookman', 'Bookman Old Style', 'Bookman', serif;
-    font-size: 1.8vh;
+    font-size: 1.8dvh;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
@@ -457,7 +458,7 @@ h1 {
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-bottom: 1.5vh;
+    margin-bottom: 1.5dvh;
     flex-direction: row-reverse; /* Spin on right by default (lever is on right) */
 }
 
@@ -495,6 +496,22 @@ h1 {
     margin-bottom: 15px;
 }
 
+.cost-labels, .cost-values {
+    display: grid;
+    grid-template-columns: 1fr 15px 1fr 15px 1fr 15px 1.2fr;
+    align-items: center;
+    text-align: center;
+}
+
+.cost-labels {
+    font-size: 0.55rem;
+    color: #555;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.cost-values span { color: #444; }
+
 .bet-adjust button {
     background: #333;
     color: var(--gold);
@@ -516,7 +533,6 @@ h1 {
     left: -100%; /* Ensure it's fully hidden regardless of dynamic width */
     top: 0;
     bottom: 0;
-    width: 260px;
     max-width: 80vw; /* Global safety: never exceed 80% of viewport width */
     min-width: 260px;
     background: rgba(10, 10, 10, 0.95);
@@ -705,16 +721,16 @@ h1 {
 /* Left-Handed Lever Mode Overrides */
 .lever-left .lever-system {
     right: auto;
-    left: -6vh;
+    left: -6dvh;
 }
 .lever-left .lever-base {
     border-radius: 0 10px 10px 0;
     left: auto;
-    right: 1.5vh;
+    right: 1.5dvh;
 }
 .lever-left .lever-arm {
     left: auto;
-    right: 3.5vh;
+    right: 3.5dvh;
 }
 
 .panel-header h3 {
@@ -769,10 +785,10 @@ textarea {
 /* Mechanical Lever Graphic */
 .lever-system {
     position: absolute;
-    right: -6vh; 
-    top: 30vh;   
-    width: 10vh;
-    height: 40vh;
+    right: -6dvh; 
+    top: 30dvh;   
+    width: 10dvh;
+    height: 40dvh;
     cursor: pointer;
     z-index: 5;
 }
@@ -780,21 +796,21 @@ textarea {
     position: absolute;
     width: 55px;
     height: 90px;
-    width: 6vh;
-    height: 12vh;
+    width: 6dvh;
+    height: 12dvh;
     background: linear-gradient(to right, #333, #555, #222);
     border-radius: 10px 0 0 10px;
-    left: 1.5vh;
+    left: 1.5dvh;
     bottom: 0;
 }
 .lever-arm {
     position: absolute;
     width: 22px;
     height: 210px;
-    width: 2.5vh;
-    height: 28vh;
+    width: 2.5dvh;
+    height: 28dvh;
     background: linear-gradient(to right, #888, #eee, #666);
-    left: 3.5vh;
+    left: 3.5dvh;
     top: 0px;
     transform-origin: bottom center;
     transition: transform 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
@@ -812,12 +828,12 @@ textarea {
     position: absolute;
     width: 75px;
     height: 75px;
-    width: 9vh;
-    height: 9vh;
+    width: 9dvh;
+    height: 9dvh;
     background: radial-gradient(circle at 25px 25px, #ff4d4d, #800);
     border-radius: 50%;
-    top: -8vh;
-    left: -3.2vh;
+    top: -8dvh;
+    left: -3.2dvh;
     box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
@@ -899,10 +915,6 @@ textarea {
         width: 100% !important;
     }
 
-    .machine-container {
-        margin-right: 40px;
-        transform-origin: center top;
-    }
     .lever-left .machine-container { margin-right: 0; margin-left: 40px; }
 
     .sidebar-overlay.open {
@@ -936,6 +948,23 @@ textarea {
         justify-content: center;
     }
     #auto-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 #000; }
+
+    .line-toggles { width: 24px; }
+    .line-toggles input,
+    .diagonal-toggles input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hold-btn {
+        height: 26px;
+        font-size: 0.9rem;
+    }
+
+    .bet-adjust button {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
 }
 #powerup-panel {
     position: absolute;
@@ -1000,20 +1029,26 @@ th[data-tooltip], td[data-tooltip] {
     opacity: 1;
 }
 
-/* Height-based scaling to ensure "One Screen" fit */
-@media (max-height: 850px) {
+@media (max-height: 700px) {
     h1 { font-size: 1.5rem; }
     #balance { font-size: 2.2rem; }
     .machine-container { border-width: 8px; }
-}
-
-@media (max-height: 700px) {
     .subtitle { margin-bottom: 5px; }
     #spin-btn, #auto-btn { height: 70px; width: 70px; font-size: 0.8rem; }
     #spin-btn, #auto-btn { height: 70px; font-size: 0.8rem; }
     #spin-btn { width: auto; padding: 0 20px; }
     #auto-btn { width: auto; }
     .credit-main-box { padding: 5px; margin-bottom: 5px; }
+
+    .hold-btn {
+        height: 24px;
+        font-size: 0.85rem;
+    }
+
+    .bet-adjust button {
+        padding: 2px 6px;
+        font-size: 0.7rem;
+    }
 }
 
 /* Big Win Celebration - Falling Coins */
@@ -1021,8 +1056,8 @@ th[data-tooltip], td[data-tooltip] {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100dvh;
+    height: 100dvh;
     pointer-events: none;
     z-index: 9999;
     overflow: hidden;
@@ -1040,43 +1075,52 @@ th[data-tooltip], td[data-tooltip] {
 
 @keyframes coin-fall {
     0% { transform: translateY(0) rotateX(0) rotateY(0); opacity: 1; }
-    100% { transform: translateY(110vh) rotateX(720deg) rotateY(360deg); opacity: 0.3; }
+    100% { transform: translateY(110dvh) rotateX(720deg) rotateY(360deg); opacity: 0.3; }
 }
 
 /* Landscape Mobile Optimization */
 @media (orientation: landscape) and (max-height: 550px) {
     :root {
-        --symbol-height: 8.5vh;
-        --machine-padding: 0.5vh;
+        --symbol-height: 8.5dvh;
+        --machine-padding: 0.5dvh;
     }
     .machine-container {
-        height: 98vh;
         padding: var(--machine-padding);
         border-width: 6px;
         max-width: 380px; /* Slimmer profile to favor height-to-width ratio */
-        margin-right: 12vh;
+        margin-right: 12dvh;
         margin-left: 0;
     }
-    .lever-left .machine-container { margin-right: 0; margin-left: 12vh; }
+    .lever-left .machine-container { margin-right: 0; margin-left: 12dvh; }
 
-    h1 { font-size: 5vh; }
+    h1 { font-size: 5dvh; }
     .subtitle { display: none; } /* Hide secondary text to save vertical space */
-    .credit-main-box { padding: 0.2vh; margin-bottom: 0.4vh; }
-    .credit-main-box .label { font-size: 1.8vh; margin-bottom: 0; }
-    #balance { font-size: 6vh; }
+    .credit-main-box { padding: 0.2dvh; margin-bottom: 0.4dvh; }
+    .credit-main-box .label { font-size: 1.8dvh; margin-bottom: 0; }
+    #balance { font-size: 6dvh; }
     .reels-frame { padding: 2px; }
     .reels-container { gap: 4px; }
-    .bet-adjust { margin: 0.2vh 0; font-size: 1.8vh; gap: 10px; }
-    .total-cost-display { margin-bottom: 0.2vh; font-size: 1.5vh; }
-    #spin-btn, #auto-btn { height: 12vh; width: 12vh; font-size: 1.8vh; margin-bottom: 0; }
-    #auto-btn { width: auto; padding: 0 15px; height: 12vh; }
-    #spin-btn, #auto-btn { height: 12vh; font-size: 1.8vh; margin-bottom: 0; }
-    #spin-btn, #auto-btn { width: auto; padding: 0 15px; height: 12vh; }
-    .lever-system { height: 40vh; top: 15vh; right: -5vh; left: auto; }
+    .bet-adjust { margin: 0.2dvh 0; font-size: 1.8dvh; gap: 10px; }
+    .total-cost-display { margin-bottom: 0.2dvh; font-size: 1.5dvh; }
+    #spin-btn, #auto-btn { height: 12dvh; width: 12dvh; font-size: 1.8dvh; margin-bottom: 0; }
+    #auto-btn { width: auto; padding: 0 15px; height: 12dvh; }
+    #spin-btn, #auto-btn { height: 12dvh; font-size: 1.8dvh; margin-bottom: 0; }
+    #spin-btn, #auto-btn { width: auto; padding: 0 15px; height: 12dvh; }
+    .lever-system { height: 40dvh; top: 15dvh; right: -5dvh; left: auto; }
     /* Landscape-specific flip adjustments */
-    .lever-left .lever-system { right: auto; left: -5vh; }
-    .lever-left .lever-base { border-radius: 0 10px 10px 0; left: auto; right: 1.5vh; }
-    .lever-left .lever-arm { left: auto; right: 3.5vh; }
+    .lever-left .lever-system { right: auto; left: -5dvh; }
+    .lever-left .lever-base { border-radius: 0 10px 10px 0; left: auto; right: 1.5dvh; }
+    .lever-left .lever-arm { left: auto; right: 3.5dvh; }
+
+    .line-toggles input,
+    .diagonal-toggles input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+    }
+
+    .hold-btn { height: 22px; font-size: 0.8rem; width: 70px; }
+
+    .bet-adjust button { padding: 1px 4px; font-size: 0.65rem; }
 }
 
 .powerup-item button:disabled {

@@ -40,9 +40,14 @@ make the diagonals also playable lines toggleable by a checkbox
 make the the 3 vertical lines also playable lines toggleable by a checkbox
 How can I implement a "Hold" feature that lets me lock a vertical reel so it doesn't even spin and makes bet/line double in cost and can max hold two lines
 Can you replace current Hold buttons with "Locked" icon or unlock icon that toggles 
+create intermediary function to double check isAutoSpinning just in case user disables isAutoSpinning between the setTimeout and handleLeverPull
 
 
 
 How can I add "Wild" symbols that substitute for any other symbol to complete a winning line?
 How can I add a "Gamble" feature where I can double my win by guessing a card color?
 Can you help me add a "Nudge" feature that allows players to move a reel up or down by one symbol for a small cost?
+
+Can we add a mechanical sound effect specifically for locking and unlocking a reel?
+
+How can I add a tooltip to the total cost display that explains the dynamic 'Hold Cost' formula to the player?

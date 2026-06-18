@@ -19,8 +19,9 @@ let activeSpeed = parseInt(localStorage.getItem('slot_activeSpeed')) || 0;
 let currentVolume = localStorage.getItem('slot_volume') !== null ? parseFloat(localStorage.getItem('slot_volume')) : 0.5;
 let isMuted = localStorage.getItem('slot_muted') === 'true';
 let isLeverLeft = localStorage.getItem('slot_lever_left') === 'true';
-let heldReels = localStorage.getItem('slot_heldReels') ? JSON.parse(localStorage.getItem('slot_heldReels')) : [false, false, false]; // Stored boolean array
+let heldReels = [false, false, false]; // Stored boolean array
 let lastResults = [[], [], []];
+const lineIds = ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'];
 
 // Sound Effects
 const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
@@ -52,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
     });
     document.getElementById('bet-max').addEventListener('click', () => {
-        const lineIds = ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'];
         const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
         const lineCount = activeLines.filter(Boolean).length;
         if (lineCount > 0) {
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Listen for line toggles to update the Total Cost UI immediately
-    ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'].forEach(id => {
+    lineIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', updateStats);
     });
@@ -249,8 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
             heldReels[idx] = isTurningOn;
             target.classList.toggle('active', isTurningOn);
             target.innerText = isTurningOn ? '🔒' : '🔓';
-            // Save heldReels immediately on toggle
-            localStorage.setItem('slot_heldReels', JSON.stringify(heldReels));
             updateStats();
         });
     });
@@ -530,10 +528,7 @@ function updatePaytable() {
     let totalChance = 0;
     let totalHit3Chance = 0;
 
-    const lineIds = ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'];
     const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
-    const lineCount = activeLines.filter(Boolean).length;
-    const numHeld = heldReels.filter(Boolean).length;
 
     // Define the row mapping for each payline across the 3 reels
     const paylineRows = [
@@ -549,14 +544,48 @@ function updatePaytable() {
         const chanceVal = p * 100;
         const chance = chanceVal.toFixed(0);
         totalChance += chanceVal;
+        // const p3 = Math.pow(p, 3);
+        // const hit3ChanceVal = p3 * 100;
 
-        const p3 = Math.pow(p, 3);
-        const hit3ChanceVal = p3 * 100;
+                let probNoWin = 1;
+        let sumProb = 0;
+
+        paylineRows.forEach((rows, lineIdx) => {
+            if (activeLines[lineIdx]) {
+                let lineProb = 1;
+                for (let i = 0; i < 3; i++) {
+                    if (heldReels[i] && lastResults[i] && lastResults[i].length > 0) {
+                        // If reel is held, probability is 1 if it matches the symbol on that line's row, 0 otherwise
+                        if (lastResults[i][rows[i]].char === s.char) {
+                            lineProb *= 1;
+                        } else {
+                            lineProb = 0;
+                            break;
+                        }
+                    } else {
+                        lineProb *= p;
+                    }
+                }
+                probNoWin *= (1 - lineProb);
+                sumProb += lineProb;
+            }
+        });
+
+        const lineCount = activeLines.filter(Boolean).length;
+        const numHeld = heldReels.filter((isHeld, i) => isHeld && lastResults[i] && lastResults[i].length > 0).length;
+        const holdCost = Math.min(10, Math.max(2, credits / 1000 + 1));
+
+        // The 3-hit% is the probability of at least one active line hitting 3-of-a-kind for this symbol
+        const hit3ChanceVal = lineCount > 0 ? (1 - probNoWin) * 100 : 0;
         const hit3Chance = hit3ChanceVal.toFixed(3);
         totalHit3Chance += hit3ChanceVal;
 
         const effectiveMultiplier = isDoubleActive ? s.multiplier * 2 : s.multiplier;
-        const rtpContribVal = p3 * effectiveMultiplier;
+
+        // const rtpContribVal = p3 * effectiveMultiplier;
+        // RTP contribution is based on expected value across all lines divided by total cost multiplier
+        const rtpContribVal = lineCount > 0 ? (sumProb * effectiveMultiplier) / Math.ceil(lineCount * Math.pow(holdCost, numHeld)) : 0;
+        
         theoreticalRTP += rtpContribVal;
         const rtpContrib = (rtpContribVal * 100).toFixed(2);
 
@@ -603,8 +632,6 @@ function changeBet(delta) {
 }
 
 function initUI() {
-    updateStats();
-    
     // Initial visual state
     for (let i = 0; i < 3; i++) {
         fillStrip(i);
@@ -626,17 +653,17 @@ function initUI() {
             holdBtn.innerText = heldReels[i] ? '🔒' : '🔓';
         }
 
-        // If the reel is held, capture current visible symbols into lastResults.
-        // This ensures the first spin respects the hold even after a page reload.
-        if (heldReels[i]) {
-            const children = strip.children;
-            lastResults[i] = [
-                symbols.find(s => s.char === children[STRIP_LENGTH - 3].innerText),
-                symbols.find(s => s.char === children[STRIP_LENGTH - 2].innerText),
-                symbols.find(s => s.char === children[STRIP_LENGTH - 1].innerText)
-            ];
-        }
+        // Always capture current visible symbols into lastResults.
+        // This ensures updatePaytable has the correct symbol data whenever a "Hold" is toggled.
+        const children = strip.children;
+        lastResults[i] = [
+            symbols.find(s => s.char === children[STRIP_LENGTH - 3].innerText),
+            symbols.find(s => s.char === children[STRIP_LENGTH - 2].innerText),
+            symbols.find(s => s.char === children[STRIP_LENGTH - 1].innerText)
+        ];
     }
+    
+    updateStats();
 }
 
 function fillStrip(index) {
@@ -727,7 +754,6 @@ function toggleAutoSpin() {
         autoBtn.classList.remove('active-spinning');
     } else {
         // Basic validation before starting auto
-        const lineIds = ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'];
         const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
         const lineCount = activeLines.filter(Boolean).length;
         
@@ -741,22 +767,21 @@ function toggleAutoSpin() {
     }
 }
 
+function checkAutoSpin() {
+    if (isAutoSpinning) {
+        handleLeverPull();
+    }
+}
+
 async function handleSpin() {
     // Capture current active lines and calculate total cost
-    const lineIds = ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'];
     const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
     const lineCount = activeLines.filter(Boolean).length;
     
-    // Calculate Hold Cost
-    let holdCost = 0;
-    heldReels.forEach((isHeld, i) => {
-        if (isHeld && lastResults[i].length > 0) {
-            // Base cost for holding
-            holdCost += (currentBet * lineCount); 
-        }
-    });
-
-    const totalCost = (currentBet * lineCount) + holdCost;
+    // Calculate Total Cost: Base cost doubled for each valid held reel (Exponential)
+    const numHeld = heldReels.filter((isHeld, i) => isHeld && lastResults[i] && lastResults[i].length > 0).length;
+    const holdCost = Math.min(10, Math.max(2, credits / 1000 + 1));
+    const totalCost = Math.ceil((currentBet * lineCount) * Math.pow(holdCost, numHeld));
 
     if (lineCount === 0) {
         if (isAutoSpinning) toggleAutoSpin();
@@ -892,7 +917,8 @@ async function handleSpin() {
     }
 
     if (isAutoSpinning) {
-        setTimeout(handleLeverPull, 1000); // 1-second delay between automatic spins
+        const autoDelay = speedActive ? 500 : 1000;
+        setTimeout(checkAutoSpin, autoDelay); // Reduced delay if speed is active
     }
 }
 
@@ -991,7 +1017,6 @@ function animateReel(index, reelSymbols, allResults, activeLines, speedActive, i
 }
 
 function updateStats() {
-    const lineIds = ['line-top', 'line-middle', 'line-bottom', 'line-diag1', 'line-diag2'];
     const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
     
     // Visual feedback: Dim paylines if they are inactive
@@ -1002,14 +1027,24 @@ function updateStats() {
     });
 
     const lineCount = activeLines.filter(Boolean).length;
-    const numHeld = heldReels.filter(Boolean).length;
-    const totalCost = (currentBet * lineCount) * (1 + numHeld);
+    const numHeld = heldReels.filter((isHeld, i) => isHeld && lastResults[i] && lastResults[i].length > 0).length;
+    const holdCost = Math.min(10, Math.max(2, credits / 1000 + 1));
+    const heldMultiplier = Math.pow(holdCost, numHeld);
+    const totalCost = Math.ceil((currentBet * lineCount) * heldMultiplier);
 
     document.getElementById('balance').innerText = credits;
     document.getElementById('total-bet').innerText = totalBet;
     document.getElementById('total-payout').innerText = totalPayout;
     document.getElementById('bet-val').innerText = currentBet;
-    document.getElementById('total-spin-cost').innerText = totalCost;
+    const displayMultiplier = heldMultiplier % 1 === 0 ? heldMultiplier : heldMultiplier.toFixed(1);
+    document.getElementById('total-spin-cost').innerHTML = `
+        <div class="cost-labels">
+            <span>BET/LINE</span><span></span><span>LINES</span><span></span><span>HOLD</span><span></span><span>TOTAL</span>
+        </div>
+        <div class="cost-values">
+            ${currentBet} <span>&times;</span> ${lineCount} <span>&times;</span> ${displayMultiplier} <span>=</span> ${totalCost}
+        </div>
+    `;
 
     const boostCost = Math.max(50, Math.floor(credits * 0.10));
 
@@ -1042,7 +1077,6 @@ function updateStats() {
     localStorage.setItem('slot_activeLuck', activeLuck);
     localStorage.setItem('slot_activeSpeed', activeSpeed);
     localStorage.setItem('slot_activeDouble', activeDouble);
-    localStorage.setItem('slot_heldReels', JSON.stringify(heldReels));
 }
 
 function logHistory(res, win, activeLines, num) {
