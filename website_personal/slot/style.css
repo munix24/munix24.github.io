@@ -40,8 +40,7 @@ body {
 
 .machine-container {
     background: 
-        /* Metallic sheen highlight for depth */
-        /* Fine brushed vertical streaks */
+        /* Metallic sheen highlight for depth Fine brushed vertical streaks */
         repeating-linear-gradient(
             90deg,
             rgba(255, 255, 255, 0.01) 0px,
@@ -67,6 +66,8 @@ body {
     justify-content: center;
     max-width: 450px;
     text-align: center;
+    margin: auto;
+    margin-left: 10px;
     margin-right: 40px;
     transform-origin: center top;
 }
@@ -229,36 +230,37 @@ h1 {
 .payline.bottom { top: calc(var(--symbol-height) * 2.5 + 4px); }
 .payline.inactive { opacity: 0.05; }
 .payline.diag1 {
-    top: 50%;
-    left: 50%;
-    width: 150%;
-    transform: translate(-50%, -50%) rotate(45deg);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, transparent calc(50% - 1px), rgba(255, 0, 0, 0.3) 50%, transparent calc(50% + 1px));
+    transform: none;
 }
 .payline.diag2 {
-    top: 50%;
-    left: 50%;
-    width: 150%;
-    transform: translate(-50%, -50%) rotate(-45deg);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top right, transparent calc(50% - 1px), rgba(255, 0, 0, 0.3) 50%, transparent calc(50% + 1px));
+    transform: none;
 }
 
-.diagonal-toggles {
+.diag-checkbox {
     position: absolute;
     bottom: -7px;
-    left: 0px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 0px;
     z-index: 25;
-    pointer-events: none;
 }
+#line-diag2 { left: 0; }
+#line-diag1 { right: 0; }
 
-.diagonal-toggles input[type="checkbox"] {
-    pointer-events: auto;
+.line-toggles input,
+.diag-checkbox {
+    width: 24px;
+    height: 24px;
     cursor: pointer;
     accent-color: var(--gold);
-    width: 20px;
-    height: 20px;
+    margin: 0;
 }
 
 .hold-buttons {
@@ -268,12 +270,12 @@ h1 {
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 38px;
     z-index: 20;
 }
 
 .hold-btn {
-    width: 85px;
+    width: 55px;
     height: 30px;
     background: #444;
     color: #fff;
@@ -298,7 +300,6 @@ h1 {
     left: 0px;
     top: 10px;
     height: calc(var(--symbol-height) * 3 + 8px);
-    width: 30px;
     display: flex;
     flex-direction: column;
     z-index: 10;
@@ -308,19 +309,11 @@ h1 {
     position: absolute;
     left: 50%;
     transform: translate(-50%, -50%);
-    cursor: pointer;
-    accent-color: var(--gold);
-    width: 20px;
-    height: 20px;
-    margin: 0;
 }
 
 #line-top { top: calc(var(--symbol-height) * 0.5 + 4px); }
 #line-middle { top: calc(var(--symbol-height) * 1.5 + 4px); }
 #line-bottom { top: calc(var(--symbol-height) * 2.5 + 4px); }
-#line-vert1 { top: calc(var(--symbol-height) * 0.2 + 4px); left: 10%; }
-#line-vert2 { top: calc(var(--symbol-height) * 1.5 + 4px); left: 10%; }
-#line-vert3 { top: calc(var(--symbol-height) * 2.8 + 4px); left: 10%; }
 
 .reel {
     width: 85px;
@@ -364,37 +357,40 @@ h1 {
 }
 
 #spin-btn {
-    background: radial-gradient(circle at 35% 35%, #f2f2f2, #bfbfbf 75%);
-    border: 4px solid #000;
-    border-radius: 10px;
-    padding: 12px 24px;
-    color: black;
-    font-family: 'ITC Bookman', 'Bookman Old Style', 'Bookman', serif;
-    font-size: 1.8dvh;
+    background: #fdfdfd;
+    border: 12px solid #0a0a0a; /* Thick bezel matching button.png */
+    border-radius: 8px;
+    padding: 14px 18px;
+    color: #000;
+    font-family: 'Arial Black', Gadget, sans-serif;
+    font-size: 2.6dvh;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
     box-shadow: 
-        0 4px 0 #000, 
-        0 12px 20px rgba(0,0,0,0.5),
-        inset 0 4px 8px rgba(255,255,255,0.4),
-        inset 0 -4px 8px rgba(0,0,0,0.4);
+        0 0 0 4px #4d4d4d, /* The requested greyish border */
+        0 6px 15px rgba(0,0,0,0.7),
+        inset 0 0 0 3px #ddd, /* Inner plastic rim */
+        inset 0 5px 10px rgba(0,0,0,0.1),
+        inset 0 -5px 10px rgba(255,255,255,0.9);
     margin-bottom: 0;
     transition: all 0.1s ease;
     text-shadow: none;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     outline: none;
 }
 
 #spin-btn:hover:not(:disabled) {
+    background: #fff;
     box-shadow: 
-        0 4px 0 #000, 
-        0 0 20px rgba(255, 255, 255, 0.7),
-        0 12px 20px rgba(0,0,0,0.5),
-        inset 0 4px 8px rgba(255,255,255,0.4),
-        inset 0 -4px 8px rgba(0,0,0,0.4);
+        0 0 0 4px #4d4d4d,
+        0 0 20px rgba(255, 255, 255, 0.4),
+        0 6px 15px rgba(0,0,0,0.7),
+        inset 0 0 10px rgba(212, 175, 55, 0.2),
+        inset 0 0 0 3px #eee,
+        inset 0 -5px 10px rgba(255,255,255,1);
 }
 
 #auto-btn {
@@ -403,7 +399,7 @@ h1 {
     border: 4px solid #b3b3b3; /* Metallic border similar to spin-btn */
     padding: 12px 24px;
     font-family: 'Clarendon URW', 'Clarendon', serif;
-    font-size: 1.1rem; /* Similar font size to spin-btn */
+    font-size: 1.3rem; /* Similar font size to spin-btn */
     font-weight: 900; /* Similar font weight to spin-btn */
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -437,20 +433,23 @@ h1 {
 }
 
 #spin-btn:active {
-    transform: translateY(4px);
-    transform: translateY(2px);
+    transform: translateY(3px); /* Pressing into the bezel */
     box-shadow: 
-        0 6px 10px rgba(0,0,0,0.5),
-        0 2px 0 #000,
-        0 0 10px rgba(0,0,0,0.5),
-        inset 0 2px 5px rgba(0,0,0,0.5);
+        0 0 0 4px #4d4d4d,
+        0 3px 5px rgba(0,0,0,0.5),
+        inset 0 0 0 3px #ccc,
+        inset 0 4px 10px rgba(0,0,0,0.4),
+        inset 0 -2px 5px rgba(255,255,255,0.5);
 }
 
 #spin-btn:disabled {
     filter: grayscale(0.8) opacity(0.6);
     cursor: not-allowed;
-    box-shadow: 0 4px 0 #222;
-    transform: translateY(4px);
+    box-shadow: 
+        0 0 0 4px #333,
+        0 2px 5px rgba(0,0,0,0.3),
+        inset 0 0 15px rgba(0,0,0,0.5);
+    transform: translateY(2px);
 }
 
 .main-actions {
@@ -493,6 +492,11 @@ h1 {
 .total-cost-display {
     font-size: 0.8rem;
     color: #888;
+    margin-bottom: 5px;
+}
+
+#total-spin-cost {
+    width: 100%;
     margin-bottom: 15px;
 }
 
@@ -517,7 +521,11 @@ h1 {
     color: var(--gold);
     border: 1px solid var(--gold);
     border-radius: 5px;
-    padding: 5px 10px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     font-weight: bold;
 }
@@ -540,6 +548,7 @@ h1 {
     z-index: 2000;
     transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 20px 2px 2px 2px;
+    overflow-x: hidden;
     overflow-y: auto;
     box-shadow: 10px 0 30px rgba(0,0,0,0.8);
 }
@@ -724,7 +733,16 @@ h1 {
     left: -6dvh;
 }
 .lever-left .lever-base {
-    border-radius: 0 10px 10px 0;
+    background: 
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.01) 0px,
+            rgba(255, 255, 255, 0.01) 1px,
+            transparent 1px,
+            transparent 2px
+        ),
+        linear-gradient(145deg, #2c2c2c, #111);
+    border-radius: 10px 0 0 10px;
     left: auto;
     right: 1.5dvh;
 }
@@ -786,7 +804,7 @@ textarea {
 .lever-system {
     position: absolute;
     right: -6dvh; 
-    top: 30dvh;   
+    top: 33dvh;   
     width: 10dvh;
     height: 40dvh;
     cursor: pointer;
@@ -798,8 +816,16 @@ textarea {
     height: 90px;
     width: 6dvh;
     height: 12dvh;
-    background: linear-gradient(to right, #333, #555, #222);
-    border-radius: 10px 0 0 10px;
+    background: 
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.01) 0px,
+            rgba(255, 255, 255, 0.01) 1px,
+            transparent 1px,
+            transparent 2px
+        ),
+        linear-gradient(145deg, #2c2c2c, #111);
+    border-radius: 0 10px 10px 0;
     left: 1.5dvh;
     bottom: 0;
 }
@@ -894,6 +920,7 @@ textarea {
 
     .side-panels {
         flex: none;
+        height: 100 dvh;
         width: 80%; /* Only take up 80% of screen on mobile */
         max-width: 450px;
         display: flex;
@@ -928,15 +955,14 @@ textarea {
         width: auto;
         height: 80px;
         padding: 0 24px;
-        font-size: 0.9rem;
+        font-size: 1.1rem;
         margin-bottom: 0;
         display: inline-flex;
-        box-shadow: 0 6px 0 #000;
     }
 
     #auto-btn {
         padding: 0 15px;
-        font-size: 0.85rem;
+        font-size: 1.05rem;
         margin: 0;
         display: inline-flex;
         width: auto;
@@ -949,9 +975,8 @@ textarea {
     }
     #auto-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 #000; }
 
-    .line-toggles { width: 24px; }
     .line-toggles input,
-    .diagonal-toggles input[type="checkbox"] {
+    .diag-checkbox {
         width: 16px;
         height: 16px;
     }
@@ -962,8 +987,9 @@ textarea {
     }
 
     .bet-adjust button {
-        padding: 4px 8px;
-        font-size: 0.75rem;
+        width: 34px;
+        height: 34px;
+        font-size: 0.65rem;
     }
 }
 #powerup-panel {
@@ -1032,10 +1058,9 @@ th[data-tooltip], td[data-tooltip] {
 @media (max-height: 700px) {
     h1 { font-size: 1.5rem; }
     #balance { font-size: 2.2rem; }
-    .machine-container { border-width: 8px; }
     .subtitle { margin-bottom: 5px; }
-    #spin-btn, #auto-btn { height: 70px; width: 70px; font-size: 0.8rem; }
-    #spin-btn, #auto-btn { height: 70px; font-size: 0.8rem; }
+    #spin-btn, #auto-btn { height: 70px; width: 70px; font-size: 1rem; }
+    #spin-btn, #auto-btn { height: 70px; font-size: 1rem; }
     #spin-btn { width: auto; padding: 0 20px; }
     #auto-btn { width: auto; }
     .credit-main-box { padding: 5px; margin-bottom: 5px; }
@@ -1102,25 +1127,29 @@ th[data-tooltip], td[data-tooltip] {
     .reels-container { gap: 4px; }
     .bet-adjust { margin: 0.2dvh 0; font-size: 1.8dvh; gap: 10px; }
     .total-cost-display { margin-bottom: 0.2dvh; font-size: 1.5dvh; }
-    #spin-btn, #auto-btn { height: 12dvh; width: 12dvh; font-size: 1.8dvh; margin-bottom: 0; }
+    #spin-btn, #auto-btn { height: 12dvh; width: 12dvh; font-size: 2.2dvh; margin-bottom: 0; }
     #auto-btn { width: auto; padding: 0 15px; height: 12dvh; }
-    #spin-btn, #auto-btn { height: 12dvh; font-size: 1.8dvh; margin-bottom: 0; }
+    #spin-btn, #auto-btn { height: 12dvh; font-size: 2.2dvh; margin-bottom: 0; }
     #spin-btn, #auto-btn { width: auto; padding: 0 15px; height: 12dvh; }
     .lever-system { height: 40dvh; top: 15dvh; right: -5dvh; left: auto; }
     /* Landscape-specific flip adjustments */
     .lever-left .lever-system { right: auto; left: -5dvh; }
-    .lever-left .lever-base { border-radius: 0 10px 10px 0; left: auto; right: 1.5dvh; }
+    .lever-left .lever-base { 
+        background: 
+            repeating-linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.01) 0px,
+                rgba(255, 255, 255, 0.01) 1px,
+                transparent 1px,
+                transparent 2px
+            ),
+            linear-gradient(145deg, #2c2c2c, #111);
+        border-radius: 10px 0 0 10px; left: auto; right: 1.5dvh; }
     .lever-left .lever-arm { left: auto; right: 3.5dvh; }
-
-    .line-toggles input,
-    .diagonal-toggles input[type="checkbox"] {
-        width: 14px;
-        height: 14px;
-    }
 
     .hold-btn { height: 22px; font-size: 0.8rem; width: 70px; }
 
-    .bet-adjust button { padding: 1px 4px; font-size: 0.65rem; }
+    .bet-adjust button { width: 34px; height: 34px; font-size: 0.65rem; }
 }
 
 .powerup-item button:disabled {

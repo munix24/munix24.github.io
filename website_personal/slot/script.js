@@ -160,10 +160,70 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    document.getElementById('sidebar-toggle').addEventListener('click', () => {
-        const isOpen = sidebar.classList.contains('open');
-        toggleSidebar(!isOpen);
+        // Sidebar Toggle Vertical Dragging Logic
+    let isDraggingToggle = false;
+    let dragStartY = 0;
+    let initialTop = 0;
+    let hasMovedToggle = false;
+
+    const savedTop = localStorage.getItem('slot_sidebar_toggle_top');
+    if (savedTop) toggleBtn.style.top = savedTop;
+
+    toggleBtn.addEventListener('mousedown', (e) => {
+        isDraggingToggle = true;
+        hasMovedToggle = false;
+        dragStartY = e.clientY;
+        initialTop = toggleBtn.offsetTop;
     });
+
+    toggleBtn.addEventListener('touchstart', (e) => {
+        isDraggingToggle = true;
+        hasMovedToggle = false;
+        dragStartY = e.touches[0].clientY;
+        initialTop = toggleBtn.offsetTop;
+    }, { passive: true });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDraggingToggle) return;
+        const deltaY = e.clientY - dragStartY;
+        if (Math.abs(deltaY) > 5) hasMovedToggle = true;
+        let newTop = Math.max(10, Math.min(window.innerHeight - toggleBtn.offsetHeight - 10, initialTop + deltaY));
+        toggleBtn.style.top = newTop + 'px';
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        if (!isDraggingToggle) return;
+        const deltaY = e.touches[0].clientY - dragStartY;
+        if (Math.abs(deltaY) > 5) hasMovedToggle = true;
+        let newTop = Math.max(10, Math.min(window.innerHeight - toggleBtn.offsetHeight - 10, initialTop + deltaY));
+        toggleBtn.style.top = newTop + 'px';
+        e.preventDefault();
+    }, { passive: false });
+
+    const endToggleDrag = () => {
+        if (isDraggingToggle) {
+            isDraggingToggle = false;
+            localStorage.setItem('slot_sidebar_toggle_top', toggleBtn.style.top);
+        }
+    };
+
+    document.addEventListener('mouseup', endToggleDrag);
+    document.addEventListener('touchend', endToggleDrag);
+
+    toggleBtn.addEventListener('click', () => {
+        if (!hasMovedToggle) {
+            const isOpen = sidebar.classList.contains('open');
+            toggleSidebar(!isOpen);
+        }
+    });
+
+    toggleBtn.addEventListener('touch', () => {
+        if (!hasMovedToggle) {
+            const isOpen = sidebar.classList.contains('open');
+            toggleSidebar(!isOpen);
+        }
+    });
+
     overlay.addEventListener('click', () => toggleSidebar(false));
 
     // Click on empty space inside the sidebar to close it
@@ -1093,7 +1153,7 @@ function logHistory(res, win, activeLines, num) {
 }
 
 function resetGame() {
-    if (confirm("Are you sure you want to reset all progress and credits?")) {
+    if (confirm("Are you sure you want to reset all stats and credits?")) {
         credits = 100;
         totalBet = 0;
         totalPayout = 0;

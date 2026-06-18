@@ -41,6 +41,7 @@ make the the 3 vertical lines also playable lines toggleable by a checkbox
 How can I implement a "Hold" feature that lets me lock a vertical reel so it doesn't even spin and makes bet/line double in cost and can max hold two lines
 Can you replace current Hold buttons with "Locked" icon or unlock icon that toggles 
 create intermediary function to double check isAutoSpinning just in case user disables isAutoSpinning between the setTimeout and handleLeverPull
+Can you help me add a  label above to the total cost to label each multiplier in total cost?
 
 
 
@@ -50,4 +51,5 @@ Can you help me add a "Nudge" feature that allows players to move a reel up or d
 
 Can we add a mechanical sound effect specifically for locking and unlocking a reel?
 
-How can I add a tooltip to the total cost display that explains the dynamic 'Hold Cost' formula to the player?
+give spin button a dirty greyish and a dirty black second border.
+Can you add a subtle metallic "scratched" texture to the dirty greyish border using a background-image or linear-gradient?
