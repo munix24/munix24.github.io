@@ -83,7 +83,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: clamp(3px, 1svh, 8px);
+    gap: clamp(1px, 0.5svh, 6px);
     font-weight: bold; 
     color: var(--fifa-gold); 
     margin: 0;
