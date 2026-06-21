@@ -278,9 +278,9 @@ h1 {
 
 .hold-btn {
     justify-self: center;
-    width: 80%;
+    width: 75%;
     max-width: 140px;
-    height: 30px;
+    height: 24px;
     background: #444;
     color: #fff;
     border: 2px solid #666;
@@ -301,7 +301,7 @@ h1 {
 
 .line-toggles {
     position: absolute;
-    left: 0px;
+    /* left: 0px; */
     top: 10px;
     height: calc(var(--symbol-height) * 3 + 8px);
     display: flex;
@@ -311,7 +311,6 @@ h1 {
 
 .line-toggles input {
     position: absolute;
-    left: 50%;
     transform: translate(-50%, -50%);
 }
 
@@ -393,7 +392,7 @@ h1 {
     background: #fff;
     box-shadow: 
         0 0 0 4px #4d4d4d,
-        0 0 20px rgba(255, 255, 255, 0.4),
+        0 0 30px rgba(255, 255, 255, 0.9),
         0 6px 15px rgba(0,0,0,0.7),
         inset 0 0 10px rgba(212, 175, 55, 0.2),
         inset 0 0 0 3px #eee,
@@ -529,13 +528,16 @@ h1 {
     color: var(--gold);
     border: 1px solid var(--gold);
     border-radius: 5px;
-    width: 44px;
-    height: 44px;
+    /* Responsive, clamped sizing to avoid oversized buttons on large screens
+       and keep them usable on small screens */
+    width: clamp(32px, 4.5svw, 44px);
+    height: clamp(32px, 4.5svw, 44px);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-weight: bold;
+    font-size: clamp(0.65rem, 1.4vw, 1rem);
 }
 
 .bet-adjust button:disabled {
@@ -991,21 +993,16 @@ textarea {
 
     .line-toggles input,
     .diag-checkbox {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
     }
 
     .hold-btn {
-        height: 26px;
-        font-size: 0.9rem;
-    }
-
-    .bet-adjust button {
-        width: 40px;
-        height: 40px;
-        font-size: 0.65rem;
+        height: 18px;
+        font-size: 0.85rem;
     }
 }
+
 #powerup-panel {
     position: absolute;
 }
@@ -1078,16 +1075,6 @@ th[data-tooltip], td[data-tooltip] {
     #spin-btn { width: auto; padding: 0 20px; }
     #auto-btn { width: auto; }
     .credit-main-box { padding: 5px; margin-bottom: 5px; }
-
-    .hold-btn {
-        height: 24px;
-        font-size: 0.85rem;
-    }
-
-    .bet-adjust button {
-        padding: 2px 6px;
-        font-size: 0.7rem;
-    }
 }
 
 /* Big Win Celebration - Falling Coins */
@@ -1161,15 +1148,21 @@ th[data-tooltip], td[data-tooltip] {
         border-radius: 10px 0 0 10px; left: auto; right: 1.5svh; }
     .lever-left .lever-arm { left: auto; right: 3.5svh; }
 
-    .hold-buttons {
-        left: 6px; /* 2px frame padding + 4px container border */
-        right: 6px;
-        gap: 4px;
+    .hold-buttons {left: 6px; right: 6px; gap: 4px;}
+
+    .line-toggles input,
+    .diag-checkbox {
+        width: 14px;
+        height: 14px;
     }
 
-    .hold-btn { height: 22px; font-size: 0.8rem; }
+    .hold-btn { height: 16px; width: 14px; font-size: 0.8rem; width: 60%;}
 
-    .bet-adjust button { width: 34px; height: 34px; font-size: 0.65rem; }
+    .bet-adjust button { width: 24px; height: 24px; font-size: 0.65rem; }
+
+    .cost-labels, .cost-values {
+        grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 0.5fr 1.5fr; font-size: 0.65rem; 
+    }
 }
 
 .powerup-item button:disabled {

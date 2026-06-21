@@ -303,8 +303,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const isTurningOn = !heldReels[idx];
             const numHeld = heldReels.filter(Boolean).length;
 
-            // Prevent holding more than 2 reels
-            if (isTurningOn && numHeld >= 2) return;
+            // Prevent holding more than 2 reels and inform the player
+            if (isTurningOn && numHeld >= 2) {
+                // Provide immediate feedback so the player knows why the action failed
+                try {
+                    alert("You may only hold up to 2 reels at once.");
+                } catch (e) {
+                    // If alert is blocked, fallback to console message
+                    console.warn('Hold limit reached: only 2 reels allowed');
+                }
+                return;
+            }
 
             heldReels[idx] = isTurningOn;
             target.classList.toggle('active', isTurningOn);
@@ -524,15 +533,15 @@ function fillStrip(index) {
         div.className = 'symbol';
         let symbol = getRandomSymbol();
 
-        // Rigging: prevent 7-7-7 jackpot on initial load/reset for rows and diagonals
+        // Rigged: prevent 7-7-7 jackpot on initial load/reset for rows and diagonals
         if (index === 2 && i >= STRIP_LENGTH - 3) {
             const rowIdx = i - (STRIP_LENGTH - 3);
-            const rigChecks = [
+            const riggedChecks = [
                 [0, 0, 0], [1, 1, 1], [2, 2, 2], // Rows
                 [0, 1, 2], [2, 1, 0]             // Diagonals
             ];
 
-            const isJackpot = rigChecks.some(r => {
+            const isJackpot = riggedChecks.some(r => {
                 if (r[2] !== rowIdx) return false;
                 const s0 = document.getElementById('strip-0').children[STRIP_LENGTH - 3 + r[0]];
                 const s1 = document.getElementById('strip-1').children[STRIP_LENGTH - 3 + r[1]];
@@ -551,6 +560,7 @@ function fillStrip(index) {
 }
 
 function getRandomSymbol(isLuckActive = false) {
+    // return symbols[5];  // TEMPORARY RIGGED: Always return 7 for testing purposes
     let tempSymbols = [...symbols];
     if (isLuckActive) {
         // Boost all symbol weights temporarily except Cherry and 7
@@ -715,8 +725,7 @@ async function handleLeverPull() {
     handleSpin();
 }
 
-async function handleSpin() {
-    // Capture current active lines and calculate total cost
+async function handleSpin(predefinedResults) {
     const activeLines = lineIds.map(id => document.getElementById(id)?.checked || false);
     const lineCount = activeLines.filter(Boolean).length;
     
@@ -746,7 +755,6 @@ async function handleSpin() {
     // Deduct total cost
     credits -= totalCost;
     totalBet += totalCost;
-    updateStats();
 
     const btn = document.getElementById('spin-btn');
     btn.disabled = true;
@@ -755,8 +763,6 @@ async function handleSpin() {
     document.getElementById('bet-min').disabled = true;
     document.getElementById('bet-max').disabled = true;
 
-    // Logic: Determine winners for 3 lines (top, mid, bot) across 3 reels
-    // results[reelIndex] = [topSymbol, midSymbol, botSymbol]
     const luckActive = activeLuck > 0;
     const doubleActive = activeDouble > 0;
     const speedActive = activeSpeed > 0;
@@ -767,20 +773,45 @@ async function handleSpin() {
     if (activeSpeed > 0) activeSpeed--;
     updateStats();
 
-    const results = lastResults.map((oldReel, i) => {
-        if (heldReels[i] && oldReel.length > 0) return [...oldReel];
-        return [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)];
-    });
+    // Logic: Determine winners for 3 lines (top, mid, bot) across 3 reels
+    // results[reelIndex] = [topSymbol, midSymbol, botSymbol]
+    let results;
+    if (Array.isArray(predefinedResults)) {
+        results = predefinedResults.map((reel, i) => {
+            // If a reel is a plain array of 3 values
+            if (!Array.isArray(reel)) 
+                {
+                    return [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)];
+                }
+            if (heldReels[i] && lastResults[i].length > 0) return [...lastResults[i]];
+            
+            return reel.map(sym => {
+                if (!sym) return getRandomSymbol(luckActive);
+                if (typeof sym === 'string') {
+                    // Find symbol object by char, fallback to random
+                    return symbols.find(s => s.char === sym) || getRandomSymbol(luckActive);
+                }
+                if (typeof sym === 'object' && sym.char) {
+                    return symbols.find(s => s.char === sym.char) || sym;
+                }
+                return getRandomSymbol(luckActive);
+            });
+        });
+    } else {
+        results = lastResults.map((oldReel, i) => {
+            if (heldReels[i] && oldReel.length > 0) return [...oldReel];
+            return [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)];
+        });
+    }
 
-    // Reset holds after use
     lastResults = results.map(r => [...r]);
 
-    // Rigging: If triple 7 is rolled on any row or diagonal, change the last symbol so the jackpot is impossible
-    const rigChecks = [
+    // Rigged: If triple 7 is rolled on any row or diagonal, change the last symbol so the jackpot is impossible
+    const riggedChecks = [
         [0, 0, 0], [1, 1, 1], [2, 2, 2], // Rows
         [0, 1, 2], [2, 1, 0]             // Diagonals
     ];
-    rigChecks.forEach(r => {
+    riggedChecks.forEach(r => {
         if (results[0][r[0]].char === '7️⃣' && results[1][r[1]].char === '7️⃣' && results[2][r[2]].char === '7️⃣') {
             results[2][r[2]] = symbols.find(s => s.char === '🍇');
         }
@@ -883,7 +914,7 @@ function animateReel(index, reelSymbols, allResults, activeLines, speedActive, i
         strip.style.transform = 'translateY(0)';
         
         // Place the target symbols at the end of the strip
-        // Visible area at the end shows indices: STRIP_LENGTH-3, -2, -1
+        // Visible area at the end shows indices: STRIP_LENGTH -3, -2, -1
         strip.children[STRIP_LENGTH - 3].innerText = reelSymbols[0].char; // Top row
         strip.children[STRIP_LENGTH - 2].innerText = reelSymbols[1].char; // Middle row
         strip.children[STRIP_LENGTH - 1].innerText = reelSymbols[2].char; // Bottom row
@@ -1169,9 +1200,7 @@ function resetGame() {
     }
 }
 
-/**
- * Triggers a burst of falling gold coins across the screen
- */
+/** Triggers a burst of falling gold coins across the screen */
 function triggerBigWinCelebration() {
     const container = document.getElementById('coin-container');
     const coinCount = 60; // Total coins in the burst
@@ -1214,4 +1243,114 @@ function testSymbolDistribution(iterations = 10000, isLuckActive = false) {
         const percent = ((count / iterations) * 100).toFixed(2);
         console.log(`${s.char}: ${count} (${percent}%)`);
     });
+}
+
+/**
+ * testSpin(predef)
+ * - predef: array of 3 reels, each reel is an array of 3 symbols (either emoji chars or symbol objects)
+ * Example: testSpin([["🍒","🍋","🍊"],["🍋","🍋","🍋"],["🍇","🍇","🍇"]])
+ * Example: testSpin([[0,0,0],[0,0,0],[0,0,0]])
+ * Example: testSpin([0, 0, 0])
+ * Example: testSpin(0, 0, 0)
+ */
+function testSpin(predef) {
+    // Allow calling testSpin with numeric varargs like testSpin(0,0,0)
+    // or a single numeric index like testSpin(5).
+    if (arguments.length > 1 || typeof predef === 'number') {
+        predef = Array.from(arguments);
+    }
+
+    const toSymbolObject = (entry) => {
+        // numeric index
+        if (Number.isInteger(entry)) {
+            const idx = entry;
+            if (idx >= 0 && idx < symbols.length) return symbols[idx];
+            console.warn(`testSpin: symbol index ${idx} out of range, using random symbol.`);
+            return getRandomSymbol();
+        }
+
+        // numeric string like "2"
+        if (typeof entry === 'string' && /^\d+$/.test(entry)) {
+            const idx = parseInt(entry, 10);
+            if (idx >= 0 && idx < symbols.length) return symbols[idx];
+        }
+
+        // emoji string
+        if (typeof entry === 'string') {
+            const found = symbols.find(s => s.char === entry);
+            if (found) return found;
+            console.warn(`testSpin: unrecognized symbol string "${entry}", using random symbol.`);
+            return getRandomSymbol();
+        }
+
+        // object with char property
+        if (entry && typeof entry === 'object') {
+            if (entry.char) {
+                const found = symbols.find(s => s.char === entry.char);
+                return found || entry;
+            }
+            return entry;
+        }
+
+        // fallback
+        return getRandomSymbol();
+    };
+
+    // Normalize and convert any numeric indices in predef to actual symbol objects.
+    // Supports:
+    // - predef = [ [0,1,2], [0,1,2], [0,1,2] ]  (indices per reel)
+    // - predef = [0,1,2]                         (shorthand: each value -> repeated across 3 rows)
+    // - predef = [a..i] (length 9)                (flattened 3x3, filled row-major)
+    // - mixed arrays of emoji chars, symbol objects, numeric strings, or indices
+    const normalize = (predef) => {
+        // Attempt to coerce various input shapes into an array of 3 reels, each an array of 3 symbol objects
+        let normalized = null;
+        if (!Array.isArray(predef)) {
+            console.warn('testSpin: predef not an array — falling back to a random spin.');
+            normalized = null;
+        } else if (predef.length === 9) {
+            // Flattened 3x3 -> chunk into 3 reels
+            normalized = [];
+            for (let i = 0; i < 3; i++) {
+                normalized.push(predef.slice(i * 3, i * 3 + 3));
+            }
+        } else if (predef.length === 3 && predef.every(r => !Array.isArray(r))) {
+            // Shorthand: [a,b,c] -> each becomes [a,a,a], [b,b,b], [c,c,c]
+            normalized = predef.map(v => [v, v, v]);
+        } else if (predef.length === 3 && predef.every(r => Array.isArray(r))) {
+            // Already 3 reels; ensure each reel is length 3
+            normalized = predef.map(r => {
+                const copy = r.slice(0, 3);
+                while (copy.length < 3) copy.push(undefined);
+                return copy;
+            });
+        } else {
+            // Fallback: try to map whatever is present into up to 3 reels
+            console.warn('testSpin: unexpected predef shape — attempting to coerce to 3x3.');
+            normalized = [];
+            for (let i = 0; i < 3; i++) {
+                const predefReel = predef[i];
+                if (Array.isArray(predefReel)) {
+                    const copy = predefReel.slice(0, 3);
+                    while (copy.length < 3) copy.push(undefined);
+                    normalized.push(copy);
+                } else if (typeof predefReel !== 'undefined') {
+                    normalized.push([predefReel, predefReel, predefReel]);
+                } else {
+                    // if missing, fill with randoms
+                    normalized.push([undefined, undefined, undefined]);
+                }
+            }
+        }
+
+        return normalized;
+    }
+
+    normalized = normalize(predef)
+
+    if (normalized) {
+        predef = normalized.map(reel => reel.map(toSymbolObject));
+    } 
+
+    handleSpin(predef);
 }
