@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-        // Sidebar Toggle Vertical Dragging Logic
+    // Sidebar Toggle Vertical Dragging Logic
     let isDraggingToggle = false;
     let dragStartY = 0;
     let initialTop = 0;
@@ -779,10 +779,10 @@ async function handleSpin(predefinedResults) {
     if (Array.isArray(predefinedResults)) {
         results = predefinedResults.map((reel, i) => {
             // If a reel is a plain array of 3 values
-            if (!Array.isArray(reel)) 
-                {
+            if (!Array.isArray(reel)) {
                     return [getRandomSymbol(luckActive), getRandomSymbol(luckActive), getRandomSymbol(luckActive)];
                 }
+
             if (heldReels[i] && lastResults[i].length > 0) return [...lastResults[i]];
             
             return reel.map(sym => {
@@ -804,8 +804,6 @@ async function handleSpin(predefinedResults) {
         });
     }
 
-    lastResults = results.map(r => [...r]);
-
     // Rigged: If triple 7 is rolled on any row or diagonal, change the last symbol so the jackpot is impossible
     const riggedChecks = [
         [0, 0, 0], [1, 1, 1], [2, 2, 2], // Rows
@@ -813,9 +811,16 @@ async function handleSpin(predefinedResults) {
     ];
     riggedChecks.forEach(r => {
         if (results[0][r[0]].char === '7️⃣' && results[1][r[1]].char === '7️⃣' && results[2][r[2]].char === '7️⃣') {
-            results[2][r[2]] = symbols.find(s => s.char === '🍇');
+            // Prefer to modify a reel that is not held by the player.
+            // Prefer third reel (index 2), then 1, then 0. If all reels are held, skip rigging.
+            const preferred = [2, 1, 0];
+            const targetReel = preferred.find(j => !heldReels[j]);
+            const pos = r[targetReel];
+            results[targetReel][pos] = symbols.find(s => s.char === '🍇');
         }
     });
+
+    lastResults = results.map(r => [...r]);
 
     // Animation: Visual staggers
     const anims = results.map((reelSymbols, i) => animateReel(i, reelSymbols, results, activeLines, speedActive, heldReels[i]));
@@ -1157,7 +1162,7 @@ function updatePaytable() {
     const isBothActive = isLuckActive && isDoubleActive;
 
     // Add bonus row for fun
-    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="5" data-tooltip="Reward redeemable only once one day. Only valid if hit while luck boost is not active">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
+    tableBody.innerHTML += `<tr style="border-top: 1px solid #333; font-weight: bold;"><td colspan="5" data-tooltip="Reward redeemable only once one day. Redeemed 6/17/26 by Tio.">7️⃣ bonus: Tio will go to Philippines</td></tr>`;
     
     // Add Total RTP row
     tableBody.innerHTML += `
@@ -1246,12 +1251,11 @@ function testSymbolDistribution(iterations = 10000, isLuckActive = false) {
 }
 
 /**
- * testSpin(predef)
  * - predef: array of 3 reels, each reel is an array of 3 symbols (either emoji chars or symbol objects)
  * Example: testSpin([["🍒","🍋","🍊"],["🍋","🍋","🍋"],["🍇","🍇","🍇"]])
  * Example: testSpin([[0,0,0],[0,0,0],[0,0,0]])
- * Example: testSpin([0, 0, 0])
- * Example: testSpin(0, 0, 0)
+ * Example: testSpin([5, 5, 5])
+ * Example: testSpin(5, 5, 5)
  */
 function testSpin(predef) {
     // Allow calling testSpin with numeric varargs like testSpin(0,0,0)
@@ -1314,9 +1318,6 @@ function testSpin(predef) {
             for (let i = 0; i < 3; i++) {
                 normalized.push(predef.slice(i * 3, i * 3 + 3));
             }
-        } else if (predef.length === 3 && predef.every(r => !Array.isArray(r))) {
-            // Shorthand: [a,b,c] -> each becomes [a,a,a], [b,b,b], [c,c,c]
-            normalized = predef.map(v => [v, v, v]);
         } else if (predef.length === 3 && predef.every(r => Array.isArray(r))) {
             // Already 3 reels; ensure each reel is length 3
             normalized = predef.map(r => {
