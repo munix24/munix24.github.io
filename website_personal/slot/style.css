@@ -886,6 +886,10 @@ textarea {
     font-weight: bold;
 }
 
+#powerup-panel {
+    position: absolute;
+}
+
 .powerup-item {
     display: flex;
     justify-content: space-between;
@@ -904,10 +908,103 @@ textarea {
     min-width: 70px;
 }
 
+.powerup-item button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(1);
+    border-color: #555;
+}
+
 #volume-control {
     width: 80px;
     accent-color: var(--gold);
     cursor: pointer;
+}
+
+/* Custom Vintage Tooltip Styling */
+th[data-tooltip], td[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 125%; /* Move below the element to avoid clipping at the top of panels */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: 'Courier New', Courier, monospace;
+    width: 200px;
+    text-align: center;
+    line-height: 1.4;
+    z-index: 10000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.4);
+    pointer-events: none;
+    white-space: normal;
+}
+
+/* Tooltip Arrow */
+[data-tooltip]::before {
+    content: "";
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: var(--gold) transparent transparent transparent;
+    z-index: 10000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+[data-tooltip]:hover::after {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+[data-tooltip]:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Big Win Celebration - Falling Coins */
+.coin-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.coin {
+    position: absolute;
+    top: -50px;
+    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+    border: 2px solid #996515;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    animation: coin-fall linear forwards;
+}
+
+@keyframes coin-fall {
+    0% { transform: translateY(0) rotateX(0) rotateY(0); opacity: 1; }
+    100% { transform: translateY(110svh) rotateX(720deg) rotateY(360deg); opacity: 0.3; }
 }
 
 /* Mobile Responsiveness */
@@ -977,69 +1074,6 @@ textarea {
     .hold-btn { font-size: 0.85rem; }
 }
 
-#powerup-panel {
-    position: absolute;
-}
-
-/* Custom Vintage Tooltip Styling */
-th[data-tooltip], td[data-tooltip] {
-    position: relative;
-    cursor: help;
-}
-
-[data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    top: 125%; /* Move below the element to avoid clipping at the top of panels */
-    left: 50%;
-    transform: translateX(-50%);
-    background: #000;
-    color: var(--gold);
-    border: 2px solid var(--gold);
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-family: 'Courier New', Courier, monospace;
-    width: 200px;
-    text-align: center;
-    line-height: 1.4;
-    z-index: 10000;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.4);
-    pointer-events: none;
-    white-space: normal;
-}
-
-/* Tooltip Arrow */
-[data-tooltip]::before {
-    content: "";
-    position: absolute;
-    bottom: 130%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 8px;
-    border-style: solid;
-    border-color: var(--gold) transparent transparent transparent;
-    z-index: 10000;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-}
-
-[data-tooltip]:hover::after {
-    visibility: visible;
-    opacity: 1;
-    transform: translateX(-50%) translateY(-5px);
-}
-
-[data-tooltip]:hover::before {
-    visibility: visible;
-    opacity: 1;
-}
-
 @media (max-height: 700px) {
     h1 { font-size: 1.5rem; }
     #balance { font-size: 2.2rem; }
@@ -1051,33 +1085,6 @@ th[data-tooltip], td[data-tooltip] {
     .credit-main-box { padding: 5px; margin-bottom: 5px; }
 }
 
-/* Big Win Celebration - Falling Coins */
-.coin-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    overflow: hidden;
-}
-
-.coin {
-    position: absolute;
-    top: -50px;
-    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
-    border: 2px solid #996515;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    animation: coin-fall linear forwards;
-}
-
-@keyframes coin-fall {
-    0% { transform: translateY(0) rotateX(0) rotateY(0); opacity: 1; }
-    100% { transform: translateY(110svh) rotateX(720deg) rotateY(360deg); opacity: 0.3; }
-}
-
 /* Landscape Mobile Optimization */
 @media (orientation: landscape) and (max-height: 550px) {
     :root {
@@ -1087,7 +1094,7 @@ th[data-tooltip], td[data-tooltip] {
     .machine-container {
         padding: var(--machine-padding);
         border-width: 6px;
-        max-width: 380px; /* Slimmer profile to favor height-to-width ratio */
+        max-width: 280px; /* Slimmer profile to favor height-to-width ratio */
         margin-right: 12svh;
         margin-left: 0;
     }
@@ -1101,10 +1108,8 @@ th[data-tooltip], td[data-tooltip] {
     .reels-frame { padding: 2px; }
     .reels-container { gap: 4px; }
     .bet-adjust { margin: 0.2svh 0; font-size: 1.8svh; gap: 10px; }
-    .total-cost-display { margin-bottom: 0.2svh; font-size: 1.5svh; }
-    #spin-btn, #auto-btn { height: 12svh; width: 12svh; font-size: 2.2svh; margin-bottom: 0; }
     #auto-btn { width: auto; padding: 0 15px; height: 12svh; }
-    #spin-btn, #auto-btn { height: 12svh; font-size: 2.2svh; margin-bottom: 0; }
+    #spin-btn, #auto-btn { height: 12svh; width: 12svh; font-size: 2.2svh; margin-bottom: 0; }
     #spin-btn, #auto-btn { width: auto; padding: 0 15px; height: 12svh; }
     .lever-system { height: 40svh; top: 15svh; right: -5svh; left: auto; }
     /* Landscape-specific flip adjustments */
@@ -1122,25 +1127,12 @@ th[data-tooltip], td[data-tooltip] {
         border-radius: 10px 0 0 10px; left: auto; right: 1.5svh; }
     .lever-left .lever-arm { left: auto; right: 3.5svh; }
 
-    .line-toggles input {
-        width: 14px;
-        height: 14px;
-    }
+    .line-toggles input {width: 14px; height: 14px;}
 
     .hold-buttons {left: 6px; right: 6px; gap: 4px;}
-
     .hold-btn { height: 16px; font-size: 0.8rem; width: 60%;}
-
     .bet-adjust button { width: 24px; height: 24px; font-size: 0.65rem; }
-
     .cost-labels, .cost-values {
         grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 0.5fr 1.5fr; font-size: 0.65rem; 
     }
-}
-
-.powerup-item button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    filter: grayscale(1);
-    border-color: #555;
 }
