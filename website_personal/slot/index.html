@@ -123,17 +123,17 @@
                 <div class="payline diag1"></div>
                 <div class="payline diag2"></div>
             </div>
-            <input type="checkbox" id="line-diag1" checked class="diag-checkbox" title="Toggle Diagonal 1">
-            <input type="checkbox" id="line-diag2" checked class="diag-checkbox" title="Toggle Diagonal 2">
             <div class="hold-buttons">
                 <button class="hold-btn" data-reel="0" id="hold-0" title="Hold Reel 1">🔓</button>
                 <button class="hold-btn" data-reel="1" id="hold-1" title="Hold Reel 2">🔓</button>
                 <button class="hold-btn" data-reel="2" id="hold-2" title="Hold Reel 3">🔓</button>
             </div>
             <div class="line-toggles">
+                <input type="checkbox" id="line-diag1" checked class="diag-checkbox" title="Toggle Diagonal 1">
                 <input type="checkbox" id="line-top" checked title="Toggle Top Line">
                 <input type="checkbox" id="line-middle" checked title="Toggle Middle Line">
                 <input type="checkbox" id="line-bottom" checked title="Toggle Bottom Line">
+                <input type="checkbox" id="line-diag2" checked class="diag-checkbox" title="Toggle Diagonal 2">
             </div>
         </div>
 
@@ -153,8 +153,14 @@
                 <button id="bet-inc">+</button>
                 <button id="bet-max">MAX</button>
             </div>
-            <div class="total-cost-display">TOTAL COST: </div>
-            <div id="total-spin-cost"></div>
+            <div id="total-spin-cost">        
+                <div class="cost-labels">
+                    <span>BET/LINE</span><span></span><span>LINES</span><span></span><span>HOLD</span><span></span><span>TOTAL COST</span>
+                </div>        
+                <div id="cost-values" class="cost-values">
+                    1 <span>&times;</span> 1<span>&times;</span> 1<span>=</span> 1
+                </div>
+            </div>
             <div class="main-actions">
                 <button id="spin-btn">SPIN</button>
                 <button id="auto-btn">AUTO SPIN</button>

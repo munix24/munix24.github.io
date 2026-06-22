@@ -1015,13 +1015,8 @@ function updateStats() {
     document.getElementById('total-payout').innerText = totalPayout;
     document.getElementById('bet-val').innerText = currentBet;
     const displayMultiplier = heldMultiplier % 1 === 0 ? heldMultiplier : heldMultiplier.toFixed(1);
-    document.getElementById('total-spin-cost').innerHTML = `
-        <div class="cost-labels">
-            <span>BET/LINE</span><span></span><span>LINES</span><span></span><span>HOLD</span><span></span><span>TOTAL</span>
-        </div>
-        <div class="cost-values">
+    document.getElementById('cost-values').innerHTML = `
             ${currentBet} <span>&times;</span> ${lineCount} <span>&times;</span> ${displayMultiplier} <span>=</span> ${totalCost}
-        </div>
     `;
 
     const boostCost = Math.max(50, Math.floor(credits * 0.10));

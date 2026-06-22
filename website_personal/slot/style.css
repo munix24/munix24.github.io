@@ -121,6 +121,13 @@ h1 {
     font-weight: bold;
 }
 
+/* Ensure the bet display reserves space for at least 3 characters */
+#bet-val {
+    min-width: 3ch;
+    display: inline-block;
+    text-align: center;
+}
+
 .balance-container {
     position: relative;
     display: inline-block;
@@ -246,62 +253,10 @@ h1 {
     transform: none;
 }
 
-.diag-checkbox {
-    position: absolute;
-    bottom: -7px;
-    z-index: 25;
-}
-#line-diag2 { left: 0; }
-#line-diag1 { right: 0; }
-
-.line-toggles input,
-.diag-checkbox {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    accent-color: var(--gold);
-    margin: 0;
-}
-
-.hold-buttons {
-    position: absolute;
-    bottom: -7px;
-    left: 14px;
-    right: 14px;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 140px));
-    justify-content: center;
-    gap: 8px;
-    z-index: 20;
-}
-
-.hold-btn {
-    justify-self: center;
-    width: 75%;
-    max-width: 140px;
-    height: 24px;
-    background: #444;
-    color: #fff;
-    border: 2px solid #666;
-    font-size: 1.1rem;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hold-btn.active {
-    background: var(--vintage-red);
-    border-color: var(--led-red);
-    box-shadow: 0 0 10px var(--led-red);
-}
-
 .line-toggles {
     position: absolute;
-    /* left: 0px; */
-    top: 10px;
+    left: 0px;
+    top: 0px;
     height: calc(var(--symbol-height) * 3 + 8px);
     display: flex;
     flex-direction: column;
@@ -310,12 +265,19 @@ h1 {
 
 .line-toggles input {
     position: absolute;
-    transform: translate(-50%, -50%);
+    /* Responsive clamped size: min 12px, prefer based on viewport, max 24px */
+    width: clamp(20px, 2.5vw, 24px);
+    height: clamp(20px, 2.5vw, 24px);
+    cursor: pointer;
+    accent-color: var(--gold);
+    margin: 0;
 }
 
-#line-top { top: calc(var(--symbol-height) * 0.5 + 4px); }
-#line-middle { top: calc(var(--symbol-height) * 1.5 + 4px); }
-#line-bottom { top: calc(var(--symbol-height) * 2.5 + 4px); }
+#line-diag1 { top: calc(var(--symbol-height) * 0); }
+#line-top { top: calc(var(--symbol-height) * 0.5 + 8px); }
+#line-middle { top: calc(var(--symbol-height) * 1.5 + 8px); }
+#line-bottom { top: calc(var(--symbol-height) * 2.5 + 8px); }
+#line-diag2 { top: calc(var(--symbol-height) * 3 + 8px); }
 
 .reel {
     flex: 1;
@@ -359,6 +321,41 @@ h1 {
         text-shadow: 0 0 20px #fff, 0 0 30px #ff0, 0 0 40px #ff0;
         transform: scale(1.15);
     }
+}
+
+.hold-buttons {
+    position: absolute;
+    bottom: -7px;
+    left: 14px;
+    right: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 140px));
+    justify-content: center;
+    gap: 8px;
+    z-index: 20;
+}
+
+.hold-btn {
+    justify-self: center;
+    width: 75%;
+    max-width: 140px;
+    height: 24px;
+    background: #444;
+    color: #fff;
+    border: 2px solid #666;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hold-btn.active {
+    background: var(--vintage-red);
+    border-color: var(--led-red);
+    box-shadow: 0 0 10px var(--led-red);
 }
 
 #spin-btn {
@@ -473,7 +470,7 @@ h1 {
 
 #reset-btn {
     background: transparent;
-    color: #555;
+    color: #888;
     border: 1px solid #333;
     padding: 4px 8px;
     cursor: pointer;
@@ -495,14 +492,9 @@ h1 {
     margin-bottom: 15px;
 }
 
-.total-cost-display {
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 5px;
-}
-
 #total-spin-cost {
     width: 100%;
+    color: #999;
     margin-bottom: 15px;
 }
 
@@ -515,7 +507,6 @@ h1 {
 
 .cost-labels {
     font-size: 0.55rem;
-    color: #555;
     letter-spacing: 1px;
     margin-bottom: 2px;
 }
@@ -921,11 +912,6 @@ textarea {
 
 /* Mobile Responsiveness */
 @media (max-width: 450px) {
-    .game-layout {
-        flex-direction: column;
-        align-items: center;
-    }
-
     .side-panels {
         flex: none;
         display: flex;
@@ -988,16 +974,7 @@ textarea {
     }
     #auto-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 #000; }
 
-    .line-toggles input,
-    .diag-checkbox {
-        width: 18px;
-        height: 18px;
-    }
-
-    .hold-btn {
-        height: 18px;
-        font-size: 0.85rem;
-    }
+    .hold-btn { font-size: 0.85rem; }
 }
 
 #powerup-panel {
@@ -1145,12 +1122,14 @@ th[data-tooltip], td[data-tooltip] {
         border-radius: 10px 0 0 10px; left: auto; right: 1.5svh; }
     .lever-left .lever-arm { left: auto; right: 3.5svh; }
 
+    .line-toggles input {
+        width: 14px;
+        height: 14px;
+    }
+
     .hold-buttons {left: 6px; right: 6px; gap: 4px;}
 
-    .line-toggles input,
-    .diag-checkbox {width: 14px; height: 14px;}
-
-    .hold-btn { height: 16px; width: 14px; font-size: 0.8rem; width: 60%;}
+    .hold-btn { height: 16px; font-size: 0.8rem; width: 60%;}
 
     .bet-adjust button { width: 24px; height: 24px; font-size: 0.65rem; }
 
