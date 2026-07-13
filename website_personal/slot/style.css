@@ -68,7 +68,7 @@ body {
     min-width: 300px;
     max-height: 800px;
     text-align: center;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     margin-right: 8svh; /* Space for the lever */
     transform-origin: center top;
 }

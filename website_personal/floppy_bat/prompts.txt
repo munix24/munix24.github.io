@@ -1,0 +1,1 @@
+create html and javascript of a playable floppy bat game, lets start with an exact replica of flappy bird but name it floppy bat
